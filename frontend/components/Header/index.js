@@ -10,21 +10,22 @@ const navigation = [
 ]
 
 export default function Header () {
+  const [mounted, setMounted] = useState(false)
   const [enabled, setEnabled] = useState(false)
   const { theme, setTheme } = useTheme()
 
-  useEffect(() => {
-    setTheme(enabled === false ? 'light' : 'dark')
-  }, [])
   const toggleDarkMode = () => {
     setTheme(theme === 'light' ? 'dark' : 'light')
   }
+
+  useEffect(() => setMounted(true), [])
+  if (!mounted) return null
   return (
-    <div className='relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-full lg:w-full lg:pb-28 xl:pb-32 dark:bg-gray-800'>
+    <div className='relative lg:h-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-full lg:w-full lg:pb-28 xl:pb-32 dark:bg-gray-800'>
       <Popover>
         <div className='relative pt-6 px-4 sm:px-6 lg:px-8'>
           <nav
-            className='relative flex items-center justify-between sm:h-10 lg:justify-cen'
+            className='relative flex items-center justify-between sm:h-10 lg:justify-right'
             aria-label='Global'
           >
             <div className='flex items-center flex-grow flex-shrink-0 lg:flex-grow-0'>

@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function Home () {
   return (
-    <div className='relative z-10 max-w-full max-h-full bg-white overflow-hidden dark:bg-gray-800 text-white'>
+    <div className='relative max-w-full h-screen bg-white overflow-hidden dark:bg-gray-800 text-white'>
       <Head>
         <title>LFScript</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />

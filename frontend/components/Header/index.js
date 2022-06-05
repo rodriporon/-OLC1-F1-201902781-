@@ -2,6 +2,7 @@ import { Fragment, useState, useEffect } from 'react'
 import { Popover, Transition, Switch } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { useTheme } from 'next-themes'
+import Link from 'next/link'
 
 const navigation = [
   { name: 'Archivo', href: '#' },
@@ -30,14 +31,18 @@ export default function Header () {
           >
             <div className='flex items-center flex-grow flex-shrink-0 lg:flex-grow-0'>
               <div className='flex items-center justify-between w-full md:w-auto'>
-                <a href='#'>
-                  <span className='sr-only'>Workflow</span>
-                  <img
-                    alt='Logo'
-                    className='h-10 w-auto sm:h-10'
-                    src='/tomoon.svg'
-                  />
-                </a>
+
+                <span className='sr-only'>Workflow</span>
+                <Link href='/'>
+                  <a>
+                    <img
+                      alt='Logo'
+                      className='h-10 w-auto sm:h-10'
+                      src='/tomoon.svg'
+                    />
+                  </a>
+                </Link>
+
                 <div className='-mr-2 flex items-center md:hidden'>
                   <Popover.Button className='bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500'>
                     <span className='sr-only'>Open main menu</span>

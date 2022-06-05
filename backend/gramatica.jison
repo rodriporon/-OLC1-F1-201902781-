@@ -1,7 +1,3 @@
-/**
- * Ejemplo mi primer proyecto con Jison utilizando Nodejs en Ubuntu
- */
-
 /* Definición Léxica */
 %lex
 

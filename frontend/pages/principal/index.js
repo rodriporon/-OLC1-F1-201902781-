@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Header from '../../components/Header'
 import Head from 'next/head'
+import Pestaña from '../../components/Pestaña'
 
 export default function Principal () {
   const [notes, setNotes] = useState([])
@@ -18,6 +19,7 @@ export default function Principal () {
       </Head>
       <Header />
       <div>{notes.map(note => note.name)}</div>
+      <Pestaña hidden={false} />
     </div>
   )
 }

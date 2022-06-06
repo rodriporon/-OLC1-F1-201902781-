@@ -1,67 +1,116 @@
-/* Definición Léxica */
+/* analizador léxico */
 %lex
 
 %options case-insensitive
 
 %%
 
-"Evaluar"           return 'REVALUAR';
-";"                 return 'PTCOMA';
-"("                 return 'PARIZQ';
-")"                 return 'PARDER';
-"["                 return 'CORIZQ';
-"]"                 return 'CORDER';
+//Tipo de dato
+"int"                               return 'INT';
+"double"                            return 'DOUBLE';
+"char"                              return 'CHAR';
+"boolean"                           return 'BOOLEAN';
+"String"                            return 'STRING';
 
-"+"                 return 'MAS';
-"-"                 return 'MENOS';
-"*"                 return 'POR';
-"/"                 return 'DIVIDIDO';
+";"                                 return 'PUNTO_COMA';   
+","                                 return 'COMA';      
+":"                                 return 'DOS_PUNTOS';  
 
-/* Espacios en blanco */
-[ \r\t]+            {}
-\n                  {}
+"++"                                return 'INCREMENTO';
+"--"                                return 'DECREMENTO'; 
 
-[0-9]+("."[0-9]+)?\b    return 'DECIMAL';
-[0-9]+\b                return 'ENTERO';
+// Logics
+">="                                return 'MAYOR_IGUAL';        
+"<="                                return 'MENOR_IGUAL';
+">"                                 return 'MAYOR';             
+"<"                                 return 'MENOR'; 
+"!="                                return 'DIFERENTEA';   
+"=="                                return 'DOBLE_IGUAL';   
+"!"                                 return 'NOT';
+"="                                 return 'IGUAL';   
+"||"                                return 'OR';           
+"&&"                                return 'AND';
 
-<<EOF>>                 return 'EOF';
+// Operation
+"+"                                 return 'SUMA';
+"-"                                 return 'RESTA';  
+"/"                                 return 'DIVISION';      
+"*"                                 return 'MULTIPLICACION';
+"^"                                 return 'POTENCIA';
+"%"                                 return 'MODULO';
+"("                                 return 'PARENTESIS_APERTURA';
+")"                                 return 'PARENTESIS_CIERRE'; 
+"{"                                 return 'LLAVE_APERTURA';     
+"}"                                 return 'LLAVE_CIERRE';
 
-.                       { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); }
+//RESERVADAs
+"true"                              return 'TRUE';
+"false"                             return 'FALSE';
+"import"                            return 'IMPORT';
+"main"                              return 'MAIN';
+
+//Control Statements
+"if"                                return 'IF';
+"else"                              return 'ELSE';
+"switch"                            return 'SWITCH';
+"case"				                return 'CASE';
+"default"			                return 'DEFAULT';
+"break"                             return 'BREAK';
+"for"                               return 'FOR';
+"while"                             return 'WHILE';
+"do"                                return 'DO';
+"continue"                          return 'CONTINUE';
+
+//Methods and functions
+"void"                              return 'VOID';
+"return"                            return 'RETURN';
+"call"                              return 'CALL';
+"return"                            return 'RETURN';
+"println"                           return 'PRINTLN';
+"typeof"                            return 'TYPEOF';
+
+// Blanks 
+[ \r\t]+                            {}
+\n                                  {}
+
+//Comments
+[/][][^][]+([^/][^][]+)*[/] //multiline comments
+[/][/].*                            //comment
+
+//literals
+\"([^\\\"]|\\.)*\"                  { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
+\'[^\']*\'                          { yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }
+
+[0-9]+("."[0-9]+)?\b                return 'DECIMAL';
+[0-9]+\b                            return 'ENTERO';
+([a-zA-Z_])[a-zA-Z0-9_]*            return 'IDENTIFICADOR';
+
+<<EOF>>                             return 'EOF';
+.   { 
+        console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);     
+    }
+
 /lex
 
-/* Asociación de operadores y precedencia */
+/* ------------------------ Parcer ------------------------ */
 
-%left 'MAS' 'MENOS'
-%left 'POR' 'DIVIDIDO'
-%left UMENOS
+/* Precedence */
+%left   'OR'                                                    //  ||
+%left   'AND'                                                   //  &&
+%left   'POTENCIA'                                              //  ^
+%left   'MAYOR_IGUAL' 'MENOR_IGUAL' 'MAYOR' 'MENOR' 'DIFERENTEA'
+%left   'DOBLE_IGUAL'                                  // wathh ?
+%left   'SUMA' 'RESTA'                                          //  + -
+%left   'MULTIPLICACION' 'DIVISION' 'MODULO'                    //  " * / % "
+%right  'NOT'                                                   //  " !
 
-%start ini
+%start init
 
-%% /* Definición de la gramática */
+%% 
+/* 
+productions  */
 
-ini
-	: instrucciones EOF
-;
-
-instrucciones
-	: instruccion instrucciones
-	| instruccion
-	| error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
-;
-
-instruccion
-	: REVALUAR CORIZQ expresion CORDER PTCOMA {
-		console.log('El valor de la expresión es: ' + $3);
-	}
-;
-
-expresion
-	: MENOS expresion %prec UMENOS  { $$ = $2 *-1; }
-	| expresion MAS expresion       { $$ = $1 + $3; }
-	| expresion MENOS expresion     { $$ = $1 - $3; }
-	| expresion POR expresion       { $$ = $1 * $3; }
-	| expresion DIVIDIDO expresion  { $$ = $1 / $3; }
-	| ENTERO                        { $$ = Number($1); }
-	| DECIMAL                       { $$ = Number($1); }
-	| PARIZQ expresion PARDER       { $$ = $2; }
+//Start
+init
+	: instructions EOF
 ;

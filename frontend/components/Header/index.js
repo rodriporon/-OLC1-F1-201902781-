@@ -1,28 +1,33 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Popover, Transition, Switch } from '@headlessui/react'
+
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { useTheme } from 'next-themes'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
-
-const navigation = [
-  { name: 'Archivo', href: '#' },
-  { name: 'Reportes', href: '#' },
-  { name: 'Ejecutor', href: '#' }
-]
 
 export default function Header () {
   const [mounted, setMounted] = useState(false)
   const [enabled, setEnabled] = useState(false)
   const { theme, setTheme } = useTheme()
+  const router = useRouter()
+
+  const navigation = [
+    { name: 'Reportes', href: '#' },
+    { name: 'Ejecutor', href: '#' }
+  ]
 
   const toggleDarkMode = () => {
     setTheme(theme === 'light' ? 'dark' : 'light')
   }
 
-  useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   if (!mounted) return null
   return (
     <div className='relative lg:h-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-full lg:w-full lg:pb-28 xl:pb-32 dark:bg-gray-800'>
+
       <Popover>
         <div className='relative pt-6 px-4 sm:px-6 lg:px-8'>
           <nav
@@ -52,15 +57,18 @@ export default function Header () {
               </div>
             </div>
             <div className='hidden md:block md:ml-10 md:pr-4 md:space-x-8'>
-              {navigation.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className='font-normal text-gray-800 dark:text-white hover:underline decoration-indigo-500 dark:decoration-indigo-300'
-                >
-                  {item.name}
-                </a>
-              ))}
+
+              {router.pathname === '/'
+                ? ''
+                : navigation.map((item) => (
+                  <Link href={item.href} key={item.name}>
+                    <a
+                      className='font-normal text-gray-800 dark:text-white hover:underline decoration-indigo-500 dark:decoration-indigo-300'
+                    >
+                      {item.name}
+                    </a>
+                  </Link>
+                ))}
               <Switch.Group>
                 <Switch.Label className='text-lg'>
                   {theme === 'light' ? '🌚' : '🌞'}
@@ -114,15 +122,17 @@ export default function Header () {
                 </div>
               </div>
               <div className='px-2 pt-2 pb-3 space-y-1'>
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className='block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-white hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800'
-                  >
-                    {item.name}
-                  </a>
-                ))}
+                {router.pathname === '/'
+                  ? ''
+                  : navigation.map((item) => (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      className='block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-white hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800'
+                    >
+                      {item.name}
+                    </a>
+                  ))}
               </div>
               <Switch.Group>
                 <Switch.Label className='text-lg'>

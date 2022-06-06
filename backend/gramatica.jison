@@ -5,7 +5,7 @@
 
 %%
 
-//Tipo de dato
+*/ primitivos */
 "int"                               return 'INT';
 "double"                            return 'DOUBLE';
 "char"                              return 'CHAR';
@@ -19,7 +19,7 @@
 "++"                                return 'INCREMENTO';
 "--"                                return 'DECREMENTO'; 
 
-// Logics
+*/ operadores logicos y de comparacion */
 ">="                                return 'MAYOR_IGUAL';        
 "<="                                return 'MENOR_IGUAL';
 ">"                                 return 'MAYOR';             
@@ -31,7 +31,7 @@
 "||"                                return 'OR';           
 "&&"                                return 'AND';
 
-// Operation
+*/ operadores aritméticos */
 "+"                                 return 'SUMA';
 "-"                                 return 'RESTA';  
 "/"                                 return 'DIVISION';      
@@ -43,13 +43,13 @@
 "{"                                 return 'LLAVE_APERTURA';     
 "}"                                 return 'LLAVE_CIERRE';
 
-//RESERVADAs
+*/ palabras reservadas */
 "true"                              return 'TRUE';
 "false"                             return 'FALSE';
 "import"                            return 'IMPORT';
 "main"                              return 'MAIN';
 
-//Control Statements
+*/ palabras de control */
 "if"                                return 'IF';
 "else"                              return 'ELSE';
 "switch"                            return 'SWITCH';
@@ -60,8 +60,6 @@
 "while"                             return 'WHILE';
 "do"                                return 'DO';
 "continue"                          return 'CONTINUE';
-
-//Methods and functions
 "void"                              return 'VOID';
 "return"                            return 'RETURN';
 "call"                              return 'CALL';
@@ -69,15 +67,15 @@
 "println"                           return 'PRINTLN';
 "typeof"                            return 'TYPEOF';
 
-// Blanks 
+*/ blancos */
 [ \r\t]+                            {}
 \n                                  {}
 
-//Comments
-[/][][^][]+([^/][^][]+)*[/] //multiline comments
-[/][/].*                            //comment
+*/ comentarios multi y solo linea */
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]
+[/][/].*                            
 
-//literals
+*/ cadenas numeros e identifiacores */
 \"([^\\\"]|\\.)*\"                  { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
 \'[^\']*\'                          { yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }
 
@@ -110,7 +108,84 @@
 /* 
 productions  */
 
+/*
+
+        Nota: la primera pasada que reconozca los metodos y la segunda pasada linea a linea
+
+*/
+
+
+
 //Start
+
 init
-	: instructions EOF
+	: instructions EOF              {   return $1;  } // return AST
 ;
+
+instructions
+	: instructions instruction      {   $1.push($2); $$ = $1;   }
+	| instruction					{   $$ = [$1];  }
+;
+
+
+/*  Metodos  */
+
+
+
+/*  Control Statements */
+If 
+    :IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS 
+        {
+
+        } 
+    |IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS
+        { 
+
+         } 
+    |IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS ListELSEIF
+        { 
+
+         }
+    |IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS ListELSEIF Else 
+        {
+
+        } 
+;
+Else
+    : ELSE BLOQUE_INS { 
+
+    }
+;
+ListELSEIF 
+    : ListELSEIF  Elseif {  }
+    | Elseif  {  }
+;
+Elseif
+    : ELSE IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS 
+        {  }
+;
+Switch
+    : SWITCH PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE LLAVE_APERTURA Lista_Case LLAVE_CIERRE
+        {  }
+;
+Lista_Case
+    : Lista_Case Case {   }
+    | Case { }
+;
+Case
+    : CASE Expresion DOS_PUNTOS BloqueCASES { }
+    | DEFAULT DOS_PUNTOS BloqueCASES { }
+;
+Do
+    : DO BLOQUE_INS WHILE PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA  
+        { }
+;
+While
+    :WHILE PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS 
+        { 
+           
+        }
+;
+
+
+// Nota: Secuencia en notas Aux del Desktop

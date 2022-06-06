@@ -1,11 +1,20 @@
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import { Fragment, useState } from 'react'
 import { Menu, Transition, Dialog } from '@headlessui/react'
+import { saveAs, save } from 'file-saver'
 
 export default function Pestaña ({ hidden }) {
   const [isOpen, setIsOpen] = useState(false)
   const [fileValue, setFileValue] = useState('')
 
+  const handlerGuardar = () => {
+    const blob = new window.Blob([fileValue], { type: 'text/plain;charset=utf-8' })
+    saveAs(blob, 'archivo.lf')
+  }
+  const handlerGuardarComo = () => {
+    const blob = new window.Blob([fileValue], { type: 'text/plain;charset=utf-8' })
+    saveAs(blob, 'archivo.lf')
+  }
   const handlerOnChangeTextArea = e => {
     setFileValue(e.target.value)
   }
@@ -129,6 +138,7 @@ export default function Pestaña ({ hidden }) {
                         className={`${
                       active ? 'bg-rose-400 text-white' : 'text-gray-900'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        onClick={handlerGuardar}
                       >
                         Guardar
                       </button>
@@ -142,6 +152,7 @@ export default function Pestaña ({ hidden }) {
                         className={`${
                       active ? 'bg-rose-400 text-white' : 'text-gray-900'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        onClick={handlerGuardarComo}
                       >
                         Guardar como
                       </button>
@@ -168,11 +179,11 @@ export default function Pestaña ({ hidden }) {
         <div className='relative items-center px-8 grid lg:grid-cols-2 gap-10'>
           <div className='relative'>
             <h4 className='font-medium underline dark:decoration-sky-400 decoration-sky-500 py-4'>Editor</h4>
-            <textarea value={fileValue} className='shadow-xl bg-gray-200 dark:bg-zinc-700 resize-none rounded-md relative h-96 w-full max-w-full' onChange={handlerOnChangeTextArea} />
+            <textarea value={fileValue} spellCheck={false} className='no-underline shadow-xl bg-gray-200 dark:bg-zinc-700 resize-none rounded-md relative h-96 w-full max-w-full' onChange={handlerOnChangeTextArea} />
           </div>
           <div className='relative'>
             <h4 className='font-medium underline dark:decoration-pink-400 decoration-pink-500 py-4'>Consola</h4>
-            <textarea className='shadow-xl bg-gray-200 dark:bg-zinc-700 resize-none rounded-md relative h-96 w-full max-w-full' />
+            <textarea spellCheck={false} className='shadow-xl bg-gray-200 dark:bg-zinc-700 resize-none rounded-md relative h-96 w-full max-w-full' />
           </div>
 
         </div>

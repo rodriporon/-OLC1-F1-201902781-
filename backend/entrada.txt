@@ -1,0 +1,5 @@
+println("Hola \n mundo");
+
+String cadena = "Hola";
+
+int contador = 100 + 1;

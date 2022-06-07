@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import { Fragment, useState } from 'react'
 import { Menu, Transition, Dialog } from '@headlessui/react'
-import { saveAs, save } from 'file-saver'
+import { saveAs } from 'file-saver'
 
 export default function Pestaña ({ hidden }) {
   const [isOpen, setIsOpen] = useState(false)

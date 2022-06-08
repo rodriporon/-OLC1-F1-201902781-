@@ -1,0 +1,34 @@
+[
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "tipo": "VAL_CADENA",
+      "valor": "Hola \\n mundo"
+    }
+  },
+  {
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "cadena",
+    "tipoDato": "STRING",
+    "expresion": {
+      "tipo": "VAL_CADENA",
+      "valor": "Hola"
+    }
+  },
+  {
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "contador",
+    "tipoDato": "INT",
+    "expresion": {
+      "operandoIzq": {
+        "tipo": "VAL_NUMERO",
+        "valor": 100
+      },
+      "operandoDer": {
+        "tipo": "VAL_NUMERO",
+        "valor": 1
+      },
+      "tipo": "OP_SUMA"
+    }
+  }
+]

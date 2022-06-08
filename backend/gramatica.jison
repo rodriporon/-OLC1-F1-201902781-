@@ -84,6 +84,12 @@
 
 /* ------------------ Analizador sintáctico --------------------- */
 
+%{
+        const TIPO_OPERACION = require('./operaciones').TIPO_OPERACION
+        const TIPO_VALOR = require('./operaciones').TIPO_VALOR
+        const TIPO_DATO = require('./tablaSimbolos').TIPO_DATO
+        const instruccionesAPI = require('./operaciones').instruccionesAPI
+%}
 
 /* Precedencia */
 %left 'MAS' 'MENOS'
@@ -95,42 +101,45 @@
 %% /* Definiendo la gramática */
 
 init
-        : instrucciones EOF
+        : instrucciones EOF     {
+                return $1
+        }
 ;
 
 instrucciones
-        : instrucciones instruccion         { }
-        | instruccion                       { }
+        : instrucciones instruccion         { $1.push($2); $$ = $1; }
+        | instruccion                       { $$ = [$1] }
 ;
 
 instruccion
-        : PRINTLN PARENTESISABRE CADENA PARENTESISCIERRA PUNTOCOMA          { console.log($3) }
-        | tipo_dato IDENTIFICADOR IGUAL asignacionOperacion PUNTOCOMA          { console.log("El valor de la variable es: " + $4)}
+        : PRINTLN PARENTESISABRE asignacionOperacion PARENTESISCIERRA PUNTOCOMA          { $$ = instruccionesAPI.nuevoPrintln($3) }
+        | tipo_dato IDENTIFICADOR IGUAL asignacionOperacion PUNTOCOMA          { $$ = instruccionesAPI.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4)}
+        | IDENTIFICADOR IGUAL asignacionOperacion PUNTOCOMA                    { $$ = instruccionesAPI.nuevoAsignacion($1, $3)}                     
         
 ;
 
 tipo_dato
-        : INT
-        | DOUBLE
-        | CHAR
-        | BOOLEAN
-        | STRING
+        : INT           {$$ = $1}
+        | DOUBLE        {$$ = $1}
+        | CHAR          {$$ = $1}
+        | BOOLEAN       {$$ = $1}
+        | STRING        {$$ = $1}
 ;
 
 asignacionOperacion
-        : CADENA                                                    { $$ = $1; }
+        : CADENA                                                    { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.CADENA) }
         | operacionNumerica                                         { $$ = $1; }
 ;
 
 operacionNumerica
-        : operacionNumerica MAS operacionNumerica                   { $$ = $1 + $3; }
-        | operacionNumerica MENOS operacionNumerica                 { $$ = $1 - $3; }
-        | operacionNumerica MULTIPLICADO operacionNumerica          { $$ = $1 * $3; }
-        | operacionNumerica DIVIDIDO operacionNumerica              { $$ = $1 / $3; }
-        | PARENTESISABRE operacionNumerica PARENTESISCIERRA         { $$ = $2; }
-        | MENOS operacionNumerica %prec UMENOS                      { $$ = $2 * -1; }
-        | ENTERO                                                    { $$ = Number($1); }  
-        | DECIMAL                                                   { $$ = Number($1); }
-        | IDENTIFICADOR                                             { $$ = $1; }
+        : operacionNumerica MAS operacionNumerica                   { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.SUMA) }
+        | operacionNumerica MENOS operacionNumerica                 { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.RESTA) }
+        | operacionNumerica MULTIPLICADO operacionNumerica          { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MULTIPLICACION) }
+        | operacionNumerica DIVIDIDO operacionNumerica              { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIVISION) }
+        | PARENTESISABRE operacionNumerica PARENTESISCIERRA         { $$ = $2 }
+        | MENOS operacionNumerica %prec UMENOS                      { $$ = instruccionesAPI.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO) }
+        | ENTERO                                                    { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.NUMERO) } 
+        | DECIMAL                                                   { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.NUMERO)}
+        | IDENTIFICADOR                                             { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.IDENTIFICADOR)}
 ;
 

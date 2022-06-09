@@ -9,18 +9,26 @@
     }
   },
   {
-    "tipo": "INSTR_ASIGANCION",
-    "identificador": "cadena",
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "numero",
+    "tipoDato": "DOUBLE",
     "expresionNumerica": {
-      "tipo": "VAL_CADENA",
-      "valor": "cadena cambiada"
+      "tipo": "VAL_DOUBLE",
+      "valor": 4.33
     }
   },
   {
     "tipo": "INSTR_PRINTLN",
     "expresionCadena": {
-      "tipo": "VAL_IDENTIFICADOR",
-      "valor": "cadena"
+      "operandoIzq": {
+        "tipo": "VAL_DOUBLE",
+        "valor": 4.2
+      },
+      "operandoDer": {
+        "tipo": "VAL_DOUBLE",
+        "valor": 4.2
+      },
+      "tipo": "OP_SUMA"
     }
   }
 ]

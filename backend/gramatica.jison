@@ -70,9 +70,9 @@
 
 \"([^\\\"]|\\.)*\"                  { yytext = yytext.substr(1,yyleng-2); console.log("Se reconoció una cadena: " + yytext); return 'CADENA'; }
 \'[^\']*\'                          { yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }
-[0-9]+("."[0-9]+)?\b                return 'DECIMAL';
-[0-9]+\b                            return 'ENTERO';
-([a-zA-Z_])[a-zA-Z0-9_]*            return 'IDENTIFICADOR';
+[0-9]+("."[0-9]+)?\b                { console.log("Se reconoció un DECIMAL: " + yytext); return 'DECIMAL'; }
+[0-9]+\b                            { console.log("Se reconoció un entero: " + yytext); return 'ENTERO'; }
+([a-zA-Z_])[a-zA-Z0-9_]*            { console.log("Se reconoció un identificador: " + yytext); return 'IDENTIFICADOR'; }
 
 <<EOF>>                             return 'EOF';
 .   { 
@@ -113,7 +113,7 @@ instrucciones
 
 instruccion
         : PRINTLN PARENTESISABRE asignacionOperacion PARENTESISCIERRA PUNTOCOMA          { $$ = instruccionesAPI.nuevoPrintln($3) }
-        | tipo_dato IDENTIFICADOR IGUAL asignacionOperacion PUNTOCOMA          { $$ = instruccionesAPI.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4)}
+        | tipo_dato IDENTIFICADOR IGUAL asignacionOperacion PUNTOCOMA          { $$ = instruccionesAPI.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4)}        
         | IDENTIFICADOR IGUAL asignacionOperacion PUNTOCOMA                    { $$ = instruccionesAPI.nuevoAsignacion($1, $3)}                     
         
 ;
@@ -139,7 +139,7 @@ operacionNumerica
         | PARENTESISABRE operacionNumerica PARENTESISCIERRA         { $$ = $2 }
         | MENOS operacionNumerica %prec UMENOS                      { $$ = instruccionesAPI.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO) }
         | ENTERO                                                    { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.NUMERO) } 
-        | DECIMAL                                                   { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.NUMERO)}
+        | DECIMAL                                                   { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.DOUBLE)}
         | IDENTIFICADOR                                             { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.IDENTIFICADOR)}
 ;
 

@@ -134,7 +134,7 @@ case 20:
  this.$ = instruccionesAPI.nuevoValor(Number($$[$0]), TIPO_VALOR.NUMERO) 
 break;
 case 21:
- this.$ = instruccionesAPI.nuevoValor(Number($$[$0]), TIPO_VALOR.NUMERO)
+ this.$ = instruccionesAPI.nuevoValor(Number($$[$0]), TIPO_VALOR.DOUBLE)
 break;
 case 22:
  this.$ = instruccionesAPI.nuevoValor($$[$0], TIPO_VALOR.IDENTIFICADOR)
@@ -736,11 +736,11 @@ case 55: yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2); console.log("Se reconoc
 break;
 case 56: yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2); return 'CARACTER'; 
 break;
-case 57:return 27;
+case 57: console.log("Se reconoció un DECIMAL: " + yy_.yytext); return 27; 
 break;
-case 58:return 26;
+case 58: console.log("Se reconoció un entero: " + yy_.yytext); return 26; 
 break;
-case 59:return 13;
+case 59: console.log("Se reconoció un identificador: " + yy_.yytext); return 13; 
 break;
 case 60:return 5;
 break;

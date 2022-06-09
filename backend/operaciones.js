@@ -26,7 +26,7 @@ const TIPO_OPERACION = {
 const TIPO_INSTRUCCION = {
   PRINTLN: 'INSTR_PRINTLN',
   WHILE: 'INSTR_WHILE',
-  DECLARACION: 'INSTR_DECLARACION',
+  DECLARACION_ASIGNACION: 'INSTR_DECLARACION',
   ASIGNACION: 'INSTR_ASIGANCION',
   IF: 'INSTR_IF',
   IF_ELSE: 'INSTR_ELSE',
@@ -89,12 +89,12 @@ const instruccionesAPI = {
     }
   },
 
-  nuevoDeclaracionAsignacion: (tipoDato, identificador, expresion) => {
+  nuevoDeclaracionAsignacion: (tipoDato, identificador, expresionNumerica) => {
     return {
-      tipo: TIPO_INSTRUCCION.DECLARACION,
+      tipo: TIPO_INSTRUCCION.DECLARACION_ASIGNACION,
       identificador,
       tipoDato,
-      expresion
+      expresionNumerica
     }
   },
 

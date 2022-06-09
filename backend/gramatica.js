@@ -137,7 +137,7 @@ case 21:
  this.$ = instruccionesAPI.nuevoValor(Number($$[$0]), TIPO_VALOR.NUMERO)
 break;
 case 22:
- this.$ = instruccionesAPI.nuevoValor(Number($$[$0]), TIPO_VALOR.IDENTIFICADOR)
+ this.$ = instruccionesAPI.nuevoValor($$[$0], TIPO_VALOR.IDENTIFICADOR)
 break;
 }
 },

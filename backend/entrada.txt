@@ -1,5 +1,4 @@
-println("Hola \n mundo");
+String cadena = "hola mundo";
+cadena = "cadena cambiada";
 
-String cadena = "Hola";
-
-int contador = 100 + 1;
+println(cadena);

@@ -1,34 +1,26 @@
 [
   {
-    "tipo": "INSTR_PRINTLN",
-    "expresionCadena": {
-      "tipo": "VAL_CADENA",
-      "valor": "Hola \\n mundo"
-    }
-  },
-  {
     "tipo": "INSTR_DECLARACION",
     "identificador": "cadena",
     "tipoDato": "STRING",
-    "expresion": {
+    "expresionNumerica": {
       "tipo": "VAL_CADENA",
-      "valor": "Hola"
+      "valor": "hola mundo"
     }
   },
   {
-    "tipo": "INSTR_DECLARACION",
-    "identificador": "contador",
-    "tipoDato": "INT",
-    "expresion": {
-      "operandoIzq": {
-        "tipo": "VAL_NUMERO",
-        "valor": 100
-      },
-      "operandoDer": {
-        "tipo": "VAL_NUMERO",
-        "valor": 1
-      },
-      "tipo": "OP_SUMA"
+    "tipo": "INSTR_ASIGANCION",
+    "identificador": "cadena",
+    "expresionNumerica": {
+      "tipo": "VAL_CADENA",
+      "valor": "cadena cambiada"
+    }
+  },
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "tipo": "VAL_IDENTIFICADOR",
+      "valor": "cadena"
     }
   }
 ]

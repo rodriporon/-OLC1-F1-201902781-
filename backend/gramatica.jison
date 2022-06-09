@@ -140,6 +140,6 @@ operacionNumerica
         | MENOS operacionNumerica %prec UMENOS                      { $$ = instruccionesAPI.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO) }
         | ENTERO                                                    { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.NUMERO) } 
         | DECIMAL                                                   { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.NUMERO)}
-        | IDENTIFICADOR                                             { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.IDENTIFICADOR)}
+        | IDENTIFICADOR                                             { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.IDENTIFICADOR)}
 ;
 

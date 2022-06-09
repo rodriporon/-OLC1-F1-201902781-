@@ -42,10 +42,21 @@ const interpretarExpresionCadena = (expresion, tablaDeSimbolos) => {
 const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
   if (expresion.tipo === TIPO_OPERACION.NEGATIVO) {
     const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
-
+    const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo
     const res = valor * -1
-    return { valor: res, tipo: TIPO_DATO.NUMERO }
-  } else if (expresion.tipo === TIPO_OPERACION.SUMA || expresion.tipo === TIPO_OPERACION.RESTA || expresion.tipo === TIPO_OPERACION.MULTIPLICACION || expresion.tipo === TIPO_OPERACION.DIVISION) {
+
+    if (valorTipo === TIPO_DATO.INT) {
+      return { valor: res, tipo: TIPO_DATO.INT }
+    } else if (valorTipo === TIPO_DATO.DOUBLE) {
+      return { valor: res, tipo: TIPO_DATO.DOUBLE }
+    } else {
+      return { valor: res, tipo: TIPO_DATO.NUMERO }
+    }
+  } else if (expresion.tipo === TIPO_OPERACION.SUMA ||
+     expresion.tipo === TIPO_OPERACION.RESTA ||
+      expresion.tipo === TIPO_OPERACION.MULTIPLICACION ||
+       expresion.tipo === TIPO_OPERACION.DIVISION ||
+        expresion.tipo === TIPO_OPERACION.POTENCIA) {
     const valorIzq = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos)
     const valorDer = interpretarExpresionNumerica(expresion.operandoDer, tablaDeSimbolos)
     /*     if (valorIzq.tipo !== TIPO_DATO.NUMERO || valorDer.tipo !== TIPO_DATO.NUMERO || valorIzq.tipo !== TIPO_DATO.DOUBLE || valorDer.tipo !== TIPO_DATO.DOUBLE) {
@@ -58,7 +69,15 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     valorDer = valorDer.valor */
     if (expresion.tipo === TIPO_OPERACION.SUMA) {
       /* VERIFICAR CADA TIPO_DATO */
-      const res = valorIzq.valor + valorDer.valor
+      let res
+      if (valorIzq.tipo === TIPO_DATO.CHAR) {
+        res = valorIzq.valor.charCodeAt(0) + valorDer.valor
+      } else if (valorDer.tipo === TIPO_DATO.CHAR) {
+        res = valorIzq.valor + valorDer.valor.charCodeAt(0)
+      } else {
+        res = valorIzq.valor + valorDer.valor
+      }
+
       if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
@@ -96,19 +115,127 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       }
     }
     if (expresion.tipo === TIPO_OPERACION.RESTA) {
-      const res = valorIzq - valorDer
-      return { valor: res, tipo: TIPO_DATO.NUMERO }
+      let res
+      if (valorIzq.tipo === TIPO_DATO.CHAR) {
+        res = valorIzq.valor.charCodeAt(0) - valorDer.valor
+      } else if (valorDer.tipo === TIPO_DATO.CHAR) {
+        res = valorIzq.valor - valorDer.valor.charCodeAt(0)
+      } else {
+        res = valorIzq.valor - valorDer.valor
+      }
+
+      if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.INT }
+      } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.INT }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.INT }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.INT }
+      }
     }
     if (expresion.tipo === TIPO_OPERACION.MULTIPLICACION) {
-      const res = valorIzq * valorDer
-      return { valor: res, tipo: TIPO_DATO.NUMERO }
+      let res
+      if (valorIzq.tipo === TIPO_DATO.CHAR) {
+        res = valorIzq.valor.charCodeAt(0) * valorDer.valor
+      } else if (valorDer.tipo === TIPO_DATO.CHAR) {
+        res = valorIzq.valor * valorDer.valor.charCodeAt(0)
+      } else {
+        res = valorIzq.valor * valorDer.valor
+      }
+      if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.INT }
+      } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.INT }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.INT }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.INT }
+      }
     }
     if (expresion.tipo === TIPO_OPERACION.DIVISION) {
-      if (valorDer === 0) {
+      if (valorDer.valor === 0) {
         throw new Error('ERROR: no se puede dividir entre cero')
       } else {
-        const res = valorIzq / valorDer
-        return { valor: res, tipo: TIPO_DATO.NUMERO }
+        let res
+        if (valorIzq.tipo === TIPO_DATO.CHAR) {
+          res = valorIzq.valor.charCodeAt(0) / valorDer.valor
+        } else if (valorDer.tipo === TIPO_DATO.CHAR) {
+          res = valorIzq.valor / valorDer.valor.charCodeAt(0)
+        } else {
+          res = valorIzq.valor / valorDer.valor
+        }
+
+        if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
+          return { valor: res, tipo: TIPO_DATO.INT }
+        } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
+          return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
+          return { valor: res, tipo: TIPO_DATO.INT }
+        } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
+          return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
+          return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
+          return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
+          return { valor: res, tipo: TIPO_DATO.INT }
+        } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
+          return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
+          return { valor: res, tipo: TIPO_DATO.INT }
+        }
+      }
+    }
+    if (expresion.tipo === TIPO_OPERACION.POTENCIA) {
+      let res
+      if (valorIzq.tipo === TIPO_DATO.CHAR) {
+        res = valorIzq.valor.charCodeAt(0) ** valorDer.valor
+      } else if (valorDer.tipo === TIPO_DATO.CHAR) {
+        res = valorIzq.valor ** valorDer.valor.charCodeAt(0)
+      } else {
+        res = valorIzq.valor ** valorDer.valor
+      }
+      parseFloat(res)
+      console.log('TIPO: ' + typeof (res) + 'VALOR: ' + res)
+      if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       }
     }
   } else if (expresion.tipo === TIPO_VALOR.NUMERO) {

@@ -1,6 +1,7 @@
 String cadena = "Hola";
-char cadChar = '☼';
-double numero = 5.2 + cadChar;
+char cadChar = ' ';
+int numero = (-2) + 2;
+double num2 = -1.2;
 
 
 println(numero);

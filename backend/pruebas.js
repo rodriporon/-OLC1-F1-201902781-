@@ -46,20 +46,54 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     const res = valor * -1
     return { valor: res, tipo: TIPO_DATO.NUMERO }
   } else if (expresion.tipo === TIPO_OPERACION.SUMA || expresion.tipo === TIPO_OPERACION.RESTA || expresion.tipo === TIPO_OPERACION.MULTIPLICACION || expresion.tipo === TIPO_OPERACION.DIVISION) {
-    let valorIzq = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos)
-    let valorDer = interpretarExpresionNumerica(expresion.operandoDer, tablaDeSimbolos)
+    const valorIzq = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos)
+    const valorDer = interpretarExpresionNumerica(expresion.operandoDer, tablaDeSimbolos)
     /*     if (valorIzq.tipo !== TIPO_DATO.NUMERO || valorDer.tipo !== TIPO_DATO.NUMERO || valorIzq.tipo !== TIPO_DATO.DOUBLE || valorDer.tipo !== TIPO_DATO.DOUBLE) {
       throw new Error('ERROR: se esperaban <NUMERO/DOUBLE> para operar: ' + expresion.tipo)
     } else {
       valorIzq = valorIzq.valor
       valorDer = valorIzq.valor
     } */
-    valorIzq = valorIzq.valor
-    valorDer = valorDer.valor
-    console.log(typeof (valorIzq))
+    /* valorIzq = valorIzq.valor
+    valorDer = valorDer.valor */
     if (expresion.tipo === TIPO_OPERACION.SUMA) {
-      const res = valorIzq + valorDer
-      return { valor: res, tipo: TIPO_DATO.NUMERO }
+      /* VERIFICAR CADA TIPO_DATO */
+      const res = valorIzq.valor + valorDer.valor
+      if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.INT }
+      } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.INT }
+      } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.STRING) {
+        return { valor: res, tipo: TIPO_DATO.STRING }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.STRING) {
+        return { valor: res, tipo: TIPO_DATO.STRING }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.INT }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.INT }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.STRING) {
+        return { valor: res, tipo: TIPO_DATO.STRING }
+      } else if (valorIzq.tipo === TIPO_DATO.STRING && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.STRING }
+      } else if (valorIzq.tipo === TIPO_DATO.STRING && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.STRING }
+      } else if (valorIzq.tipo === TIPO_DATO.STRING && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.STRING }
+      } else if (valorIzq.tipo === TIPO_DATO.STRING && valorDer.tipo === TIPO_DATO.STRING) {
+        return { valor: res, tipo: TIPO_DATO.STRING }
+      } else if (valorIzq.tipo === TIPO_DATO.STRING && valorDer.tipo === TIPO_DATO.BOOLEAN) {
+        return { valor: res, tipo: TIPO_DATO.STRING }
+      }
     }
     if (expresion.tipo === TIPO_OPERACION.RESTA) {
       const res = valorIzq - valorDer
@@ -78,7 +112,7 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       }
     }
   } else if (expresion.tipo === TIPO_VALOR.NUMERO) {
-    return { valor: expresion.valor, tipo: TIPO_DATO.INT }
+    return { valor: expresion.valor, tipo: TIPO_DATO.NUMERO }
   } else if (expresion.tipo === TIPO_VALOR.DOUBLE) {
     return { valor: expresion.valor, tipo: TIPO_DATO.DOUBLE }
   } else if (expresion.tipo === TIPO_VALOR.INT) {
@@ -86,6 +120,8 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
   } else if (expresion.tipo === TIPO_VALOR.IDENTIFICADOR) {
     const sym = tablaDeSimbolos.getValue(expresion.valor)
     return { valor: sym.valor, tipo: sym.tipo }
+  } else if (expresion.tipo === TIPO_VALOR.CHAR) {
+    return { valor: expresion.valor, tipo: TIPO_DATO.CHAR }
   } else {
     throw new Error('ERROR: expresión numerica no válida: ' + expresion.tipo)
   }

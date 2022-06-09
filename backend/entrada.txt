@@ -1,4 +1,6 @@
-String cadena = " hola mundo";
-int numero = 5;
+String cadena = "Hola";
+char cadChar = '☼';
+double numero = 5.2 + cadChar;
 
-println(4.2 + cadena);
+
+println(numero);

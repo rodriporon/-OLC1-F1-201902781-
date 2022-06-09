@@ -5,30 +5,39 @@
     "tipoDato": "STRING",
     "expresionNumerica": {
       "tipo": "VAL_CADENA",
-      "valor": " hola mundo"
+      "valor": "Hola"
+    }
+  },
+  {
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "cadChar",
+    "tipoDato": "CHAR",
+    "expresionNumerica": {
+      "tipo": "VAL_CHAR",
+      "valor": "☼"
     }
   },
   {
     "tipo": "INSTR_DECLARACION",
     "identificador": "numero",
-    "tipoDato": "INT",
+    "tipoDato": "DOUBLE",
     "expresionNumerica": {
-      "tipo": "VAL_INT",
-      "valor": 5
+      "operandoIzq": {
+        "tipo": "VAL_DOUBLE",
+        "valor": 5.2
+      },
+      "operandoDer": {
+        "tipo": "VAL_IDENTIFICADOR",
+        "valor": "cadChar"
+      },
+      "tipo": "OP_SUMA"
     }
   },
   {
     "tipo": "INSTR_PRINTLN",
     "expresionCadena": {
-      "operandoIzq": {
-        "tipo": "VAL_DOUBLE",
-        "valor": 4.2
-      },
-      "operandoDer": {
-        "tipo": "VAL_IDENTIFICADOR",
-        "valor": "cadena"
-      },
-      "tipo": "OP_SUMA"
+      "tipo": "VAL_IDENTIFICADOR",
+      "valor": "numero"
     }
   }
 ]

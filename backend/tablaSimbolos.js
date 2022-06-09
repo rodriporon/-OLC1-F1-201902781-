@@ -50,7 +50,7 @@ class TablaSimbolos {
           }
         }
       } else {
-        throw new Error('ERROR DE TIPOS -> variable: ' + id + ' tiene tipo: ' + simbolo.tipo + ' y el valor a asignar es de tipo: ' + valor.tipo)
+        console.error('ERROR DE TIPOS -> variable: ' + id + ' tiene tipo: ' + simbolo.tipo + ' y el valor a asignar es de tipo: ' + valor.tipo)
       }
     } else {
       throw new Error('ERROR: variable: ' + id + ' no ha sido definida')

@@ -5,16 +5,16 @@
     "tipoDato": "STRING",
     "expresionNumerica": {
       "tipo": "VAL_CADENA",
-      "valor": "hola mundo"
+      "valor": " hola mundo"
     }
   },
   {
     "tipo": "INSTR_DECLARACION",
     "identificador": "numero",
-    "tipoDato": "DOUBLE",
+    "tipoDato": "INT",
     "expresionNumerica": {
-      "tipo": "VAL_DOUBLE",
-      "valor": 4.33
+      "tipo": "VAL_INT",
+      "valor": 5
     }
   },
   {
@@ -25,8 +25,8 @@
         "valor": 4.2
       },
       "operandoDer": {
-        "tipo": "VAL_DOUBLE",
-        "valor": 4.2
+        "tipo": "VAL_IDENTIFICADOR",
+        "valor": "cadena"
       },
       "tipo": "OP_SUMA"
     }

@@ -57,7 +57,6 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     valorIzq = valorIzq.valor
     valorDer = valorDer.valor
     console.log(typeof (valorIzq))
-    console.log(typeof (valorDer))
     if (expresion.tipo === TIPO_OPERACION.SUMA) {
       const res = valorIzq + valorDer
       return { valor: res, tipo: TIPO_DATO.NUMERO }
@@ -79,9 +78,11 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       }
     }
   } else if (expresion.tipo === TIPO_VALOR.NUMERO) {
-    return { valor: expresion.valor, tipo: TIPO_DATO.NUMERO }
+    return { valor: expresion.valor, tipo: TIPO_DATO.INT }
   } else if (expresion.tipo === TIPO_VALOR.DOUBLE) {
     return { valor: expresion.valor, tipo: TIPO_DATO.DOUBLE }
+  } else if (expresion.tipo === TIPO_VALOR.INT) {
+    return { valor: expresion.valor, tipo: TIPO_DATO.INT }
   } else if (expresion.tipo === TIPO_VALOR.IDENTIFICADOR) {
     const sym = tablaDeSimbolos.getValue(expresion.valor)
     return { valor: sym.valor, tipo: sym.tipo }

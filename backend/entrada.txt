@@ -1,4 +1,4 @@
-String cadena = "hola mundo";
-Double numero = 4.33;
+String cadena = " hola mundo";
+int numero = 5;
 
-println(4.2 + 4.2);
+println(4.2 + cadena);

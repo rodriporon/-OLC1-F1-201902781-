@@ -70,7 +70,7 @@
 
 \"([^\\\"]|\\.)*\"                  { yytext = yytext.substr(1,yyleng-2); console.log("Se reconoció una cadena: " + yytext); return 'CADENA'; }
 \'[^\']*\'                          { yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }
-[0-9]+("."[0-9]+)?\b                { console.log("Se reconoció un DECIMAL: " + yytext); return 'DECIMAL'; }
+[0-9]+"."([0-9]+)?\b                { console.log("Se reconoció un DECIMAL: " + yytext); return 'DECIMAL'; }
 [0-9]+\b                            { console.log("Se reconoció un entero: " + yytext); return 'ENTERO'; }
 ([a-zA-Z_])[a-zA-Z0-9_]*            { console.log("Se reconoció un identificador: " + yytext); return 'IDENTIFICADOR'; }
 
@@ -138,8 +138,8 @@ operacionNumerica
         | operacionNumerica DIVIDIDO operacionNumerica              { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIVISION) }
         | PARENTESISABRE operacionNumerica PARENTESISCIERRA         { $$ = $2 }
         | MENOS operacionNumerica %prec UMENOS                      { $$ = instruccionesAPI.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO) }
-        | ENTERO                                                    { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.NUMERO) } 
-        | DECIMAL                                                   { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.DOUBLE)}
+        | ENTERO                                                    { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.INT) } 
+        | DECIMAL                                                   { $$ = instruccionesAPI.nuevoValor(parseFloat($1), TIPO_VALOR.DOUBLE)}
         | IDENTIFICADOR                                             { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.IDENTIFICADOR)}
 ;
 

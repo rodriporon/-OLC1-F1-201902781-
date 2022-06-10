@@ -89,6 +89,20 @@ const instruccionesAPI = {
     }
   },
 
+  nuevoPreIncremento: (identificador) => {
+    return {
+      tipo: TIPO_INSTRUCCION.PRE_INCREMENTO,
+      identificador
+    }
+  },
+
+  nuevoPreDecremento: (identificador) => {
+    return {
+      tipo: TIPO_INSTRUCCION.PRE_DECREMENTO,
+      identificador
+    }
+  },
+
   nuevoPrintln: (expresionCadena) => {
     return {
       tipo: TIPO_INSTRUCCION.PRINTLN,

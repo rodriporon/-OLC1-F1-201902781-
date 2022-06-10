@@ -27,6 +27,12 @@ const interpretarAst = (instruccion, tablaSimbolos) => {
       interpretarAsignacion(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.POST_INCREMENTO) {
       interpretarPostIncremento(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.POST_DECREMENTO) {
+      interpretarPostDecremento(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.PRE_INCREMENTO) {
+      interpretarPreIncremento(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.PRE_INCREMENTO) {
+      interpretarPreDecremento(instruccion, tablaSimbolos)
     } else {
       throw new Error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
     }
@@ -68,6 +74,20 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
 
     tablaDeSimbolos.update(expresion.operandoIzq.valor, { valor: res, tipo: valorTipo })
     return { valor: res + 1, tipo: valorTipo }
+  } else if (expresion.tipo === TIPO_OPERACION.PRE_INCREMENTO) {
+    const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
+    const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo
+    const res = valor + 1
+
+    tablaDeSimbolos.update(expresion.operandoIzq.valor, { valor: res, tipo: valorTipo })
+    return { valor: res, tipo: valorTipo }
+  } else if (expresion.tipo === TIPO_OPERACION.PRE_DECREMENTO) {
+    const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
+    const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo
+    const res = valor - 1
+
+    tablaDeSimbolos.update(expresion.operandoIzq.valor, { valor: res, tipo: valorTipo })
+    return { valor: res, tipo: valorTipo }
   } else if (expresion.tipo === TIPO_INSTRUCCION.POST_INCREMENTO) {
     const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
     const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo
@@ -327,6 +347,24 @@ const interpretarAsignacion = (instruccion, tablaDeSimbolos) => {
 const interpretarPostIncremento = (instruccion, tablaDeSimbolos) => {
   const valor = tablaDeSimbolos.getValue(instruccion.identificador)
   valor.valor = valor.valor + 1
+  tablaDeSimbolos.update(instruccion.identificador, valor)
+}
+
+const interpretarPostDecremento = (instruccion, tablaDeSimbolos) => {
+  const valor = tablaDeSimbolos.getValue(instruccion.identificador)
+  valor.valor = valor.valor - 1
+  tablaDeSimbolos.update(instruccion.identificador, valor)
+}
+
+const interpretarPreIncremento = (instruccion, tablaDeSimbolos) => {
+  const valor = tablaDeSimbolos.getValue(instruccion.identificador)
+  valor.valor = valor.valor + 1
+  tablaDeSimbolos.update(instruccion.identificador, valor)
+}
+
+const interpretarPreDecremento = (instruccion, tablaDeSimbolos) => {
+  const valor = tablaDeSimbolos.getValue(instruccion.identificador)
+  valor.valor = valor.valor - 1
   tablaDeSimbolos.update(instruccion.identificador, valor)
 }
 

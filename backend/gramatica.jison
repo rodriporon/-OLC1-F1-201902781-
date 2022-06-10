@@ -5,6 +5,9 @@
 
 %%
 
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] // Multicomentario
+"//".*                              // Comentario
+
 "int"                               return 'INT';
 "double"                            return 'DOUBLE';
 "char"                              return 'CHAR';
@@ -64,8 +67,7 @@
 \n                                  {}
 
 
-[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] // Multicomentario
-"//".*                              // Comentario
+
 
 
 \"([^\\\"]|\\.)*\"                  { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
@@ -118,6 +120,8 @@ instruccion
         | IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA                    { $$ = instruccionesAPI.nuevoAsignacion($1, $3)}                     
         | IDENTIFICADOR INCREMENTO PUNTOCOMA                                   { $$ = instruccionesAPI.nuevoPostIncremento($1) }
         | IDENTIFICADOR DECREMENTO PUNTOCOMA                                   { $$ = instruccionesAPI.nuevoPostDecremento($1) }
+        | INCREMENTO IDENTIFICADOR PUNTOCOMA                                   { $$ = instruccionesAPI.nuevoPreIncremento($2) }
+        | DECREMENTO IDENTIFICADOR PUNTOCOMA                                   { $$ = instruccionesAPI.nuevoPreDecremento($2) }
         
 ;
 
@@ -143,6 +147,8 @@ operacionNumerica
         | operacionNumerica DIVIDIDO operacionNumerica              { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIVISION) }
         | operacionNumerica INCREMENTO                              { $$ = instruccionesAPI.nuevoOperacionUnaria($1, TIPO_OPERACION.POST_INCREMENTO) }
         | operacionNumerica DECREMENTO                              { $$ = instruccionesAPI.nuevoOperacionUnaria($1, TIPO_OPERACION.POST_DECREMENTO) }
+        | INCREMENTO operacionNumerica                              { $$ = instruccionesAPI.nuevoOperacionUnaria($2, TIPO_OPERACION.PRE_INCREMENTO) }
+        | DECREMENTO operacionNumerica                              { $$ = instruccionesAPI.nuevoOperacionUnaria($2, TIPO_OPERACION.PRE_DECREMENTO) }
         | PARENTESISABRE operacionNumerica PARENTESISCIERRA         { $$ = $2 }
         | MENOS operacionNumerica %prec UMENOS                      { $$ = instruccionesAPI.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO) }
         | ENTERO                                                    { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.INT) } 

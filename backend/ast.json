@@ -62,40 +62,6 @@
     }
   },
   {
-    "tipo": "INSTR_DECLARACION",
-    "identificador": "incrementar",
-    "tipoDato": "INT",
-    "expresionNumerica": {
-      "tipo": "VAL_INT",
-      "valor": 1
-    }
-  },
-  {
-    "tipo": "INSTR_PRINTLN",
-    "expresionCadena": {
-      "operandoIzq": {
-        "tipo": "VAL_CADENA",
-        "valor": "POST INCREMENTO: "
-      },
-      "operandoDer": {
-        "operandoIzq": {
-          "tipo": "VAL_IDENTIFICADOR",
-          "valor": "incrementar"
-        },
-        "tipo": "OP_POSTINCREMENTO"
-      },
-      "tipo": "OP_SUMA"
-    }
-  },
-  {
-    "tipo": "POST_INCREMENTO",
-    "identificador": "incrementar"
-  },
-  {
-    "tipo": "POST_INCREMENTO",
-    "identificador": "incrementar"
-  },
-  {
     "tipo": "INSTR_PRINTLN",
     "expresionCadena": {
       "operandoIzq": {
@@ -117,22 +83,8 @@
     }
   },
   {
-    "tipo": "INSTR_PRINTLN",
-    "expresionCadena": {
-      "operandoIzq": {
-        "tipo": "VAL_CADENA",
-        "valor": "Valor incrementar: "
-      },
-      "operandoDer": {
-        "tipo": "VAL_IDENTIFICADOR",
-        "valor": "incrementar"
-      },
-      "tipo": "OP_SUMA"
-    }
-  },
-  {
     "tipo": "INSTR_DECLARACION",
-    "identificador": "decrementar",
+    "identificador": "postIncrementar",
     "tipoDato": "INT",
     "expresionNumerica": {
       "tipo": "VAL_INT",
@@ -143,13 +95,88 @@
     "tipo": "INSTR_PRINTLN",
     "expresionCadena": {
       "operandoIzq": {
-        "tipo": "VAL_CADENA",
-        "valor": "POST DECREMENTAR: "
+        "operandoIzq": {
+          "operandoIzq": {
+            "operandoIzq": {
+              "tipo": "VAL_CADENA",
+              "valor": "POST INCREMENTAR: "
+            },
+            "operandoDer": {
+              "tipo": "VAL_CADENA",
+              "valor": "inicial: "
+            },
+            "tipo": "OP_SUMA"
+          },
+          "operandoDer": {
+            "tipo": "VAL_IDENTIFICADOR",
+            "valor": "postIncrementar"
+          },
+          "tipo": "OP_SUMA"
+        },
+        "operandoDer": {
+          "tipo": "VAL_CADENA",
+          "valor": " final: "
+        },
+        "tipo": "OP_SUMA"
       },
       "operandoDer": {
         "operandoIzq": {
           "tipo": "VAL_IDENTIFICADOR",
-          "valor": "decrementar"
+          "valor": "postIncrementar"
+        },
+        "tipo": "OP_POSTINCREMENTO"
+      },
+      "tipo": "OP_SUMA"
+    }
+  },
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "tipo": "VAL_IDENTIFICADOR",
+      "valor": "postIncrementar"
+    }
+  },
+  {
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "postDecrementar",
+    "tipoDato": "INT",
+    "expresionNumerica": {
+      "tipo": "VAL_INT",
+      "valor": 5
+    }
+  },
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "operandoIzq": {
+        "operandoIzq": {
+          "operandoIzq": {
+            "operandoIzq": {
+              "tipo": "VAL_CADENA",
+              "valor": "POST DECREMENTAR: "
+            },
+            "operandoDer": {
+              "tipo": "VAL_CADENA",
+              "valor": "inicial: "
+            },
+            "tipo": "OP_SUMA"
+          },
+          "operandoDer": {
+            "tipo": "VAL_IDENTIFICADOR",
+            "valor": "postDecrementar"
+          },
+          "tipo": "OP_SUMA"
+        },
+        "operandoDer": {
+          "tipo": "VAL_CADENA",
+          "valor": " final: "
+        },
+        "tipo": "OP_SUMA"
+      },
+      "operandoDer": {
+        "operandoIzq": {
+          "tipo": "VAL_IDENTIFICADOR",
+          "valor": "postDecrementar"
         },
         "tipo": "OP_POSTDECREMENTO"
       },
@@ -160,7 +187,115 @@
     "tipo": "INSTR_PRINTLN",
     "expresionCadena": {
       "tipo": "VAL_IDENTIFICADOR",
-      "valor": "decrementar"
+      "valor": "postDecrementar"
+    }
+  },
+  {
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "preIncrementar",
+    "tipoDato": "INT",
+    "expresionNumerica": {
+      "tipo": "VAL_INT",
+      "valor": 5
+    }
+  },
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "operandoIzq": {
+        "operandoIzq": {
+          "operandoIzq": {
+            "operandoIzq": {
+              "tipo": "VAL_CADENA",
+              "valor": "PRE INCREMENTAR: "
+            },
+            "operandoDer": {
+              "tipo": "VAL_CADENA",
+              "valor": "inicial: "
+            },
+            "tipo": "OP_SUMA"
+          },
+          "operandoDer": {
+            "tipo": "VAL_IDENTIFICADOR",
+            "valor": "preIncrementar"
+          },
+          "tipo": "OP_SUMA"
+        },
+        "operandoDer": {
+          "tipo": "VAL_CADENA",
+          "valor": " final: "
+        },
+        "tipo": "OP_SUMA"
+      },
+      "operandoDer": {
+        "operandoIzq": {
+          "tipo": "VAL_IDENTIFICADOR",
+          "valor": "preIncrementar"
+        },
+        "tipo": "OP_PREINCREMENTO"
+      },
+      "tipo": "OP_SUMA"
+    }
+  },
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "tipo": "VAL_IDENTIFICADOR",
+      "valor": "preIncrementar"
+    }
+  },
+  {
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "preDecrementar",
+    "tipoDato": "INT",
+    "expresionNumerica": {
+      "tipo": "VAL_INT",
+      "valor": 5
+    }
+  },
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "operandoIzq": {
+        "operandoIzq": {
+          "operandoIzq": {
+            "operandoIzq": {
+              "tipo": "VAL_CADENA",
+              "valor": "PRE DECREMENTAR: "
+            },
+            "operandoDer": {
+              "tipo": "VAL_CADENA",
+              "valor": "inicial: "
+            },
+            "tipo": "OP_SUMA"
+          },
+          "operandoDer": {
+            "tipo": "VAL_IDENTIFICADOR",
+            "valor": "preDecrementar"
+          },
+          "tipo": "OP_SUMA"
+        },
+        "operandoDer": {
+          "tipo": "VAL_CADENA",
+          "valor": " final: "
+        },
+        "tipo": "OP_SUMA"
+      },
+      "operandoDer": {
+        "operandoIzq": {
+          "tipo": "VAL_IDENTIFICADOR",
+          "valor": "preDecrementar"
+        },
+        "tipo": "OP_PREDECREMENTO"
+      },
+      "tipo": "OP_SUMA"
+    }
+  },
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "tipo": "VAL_IDENTIFICADOR",
+      "valor": "preDecrementar"
     }
   }
 ]

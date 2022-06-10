@@ -3,17 +3,25 @@ char cadChar = ' ';
 double numero = 4.2 + 2;
 double mod = 4 % 2;
 double num2 = -numero;
-int incrementar = 1;
-
-println("POST INCREMENTO: " + incrementar++);
-
-incrementar++;
-incrementar++;
 
 println(numero + cadena);
 println(mod);
-println("Valor incrementar: " + incrementar);
 
-int decrementar = 5;
-println("POST DECREMENTAR: " + decrementar--);
-println(decrementar);
+//COMENTARIO
+/* otro comentario */
+
+int postIncrementar = 5;
+println("POST INCREMENTAR: " + "inicial: " + postIncrementar + " final: " + postIncrementar++);
+println(postIncrementar);
+
+int postDecrementar = 5;
+println("POST DECREMENTAR: " + "inicial: " + postDecrementar + " final: " + postDecrementar--);
+println(postDecrementar);
+
+int preIncrementar = 5;
+println("PRE INCREMENTAR: " + "inicial: " + preIncrementar + " final: " + ++preIncrementar);
+println(preIncrementar);
+
+int preDecrementar = 5;
+println("PRE DECREMENTAR: " + "inicial: " + preDecrementar + " final: " + --preDecrementar);
+println(preDecrementar);

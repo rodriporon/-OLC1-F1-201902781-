@@ -62,10 +62,44 @@
     }
   },
   {
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "incrementar",
+    "tipoDato": "INT",
+    "expresionNumerica": {
+      "tipo": "VAL_INT",
+      "valor": 1
+    }
+  },
+  {
     "tipo": "INSTR_PRINTLN",
     "expresionCadena": {
-      "tipo": "VAL_IDENTIFICADOR",
-      "valor": "numero"
+      "operandoIzq": {
+        "tipo": "VAL_CADENA",
+        "valor": "Valor incrementar: "
+      },
+      "operandoDer": {
+        "tipo": "VAL_IDENTIFICADOR",
+        "valor": "incrementar"
+      },
+      "tipo": "OP_SUMA"
+    }
+  },
+  {
+    "tipo": "POST_INCREMENTO",
+    "identificador": "incrementar"
+  },
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "operandoIzq": {
+        "tipo": "VAL_IDENTIFICADOR",
+        "valor": "numero"
+      },
+      "operandoDer": {
+        "tipo": "VAL_IDENTIFICADOR",
+        "valor": "cadena"
+      },
+      "tipo": "OP_SUMA"
     }
   },
   {
@@ -73,6 +107,20 @@
     "expresionCadena": {
       "tipo": "VAL_IDENTIFICADOR",
       "valor": "mod"
+    }
+  },
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "operandoIzq": {
+        "tipo": "VAL_CADENA",
+        "valor": "Valor incrementar: "
+      },
+      "operandoDer": {
+        "tipo": "VAL_IDENTIFICADOR",
+        "valor": "incrementar"
+      },
+      "tipo": "OP_SUMA"
     }
   }
 ]

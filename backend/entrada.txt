@@ -3,7 +3,11 @@ char cadChar = ' ';
 int numero = 4 + 2;
 double mod = 4 % 2;
 double num2 = -1.2;
+int incrementar = 1;
+println("Valor incrementar: " + incrementar);
+incrementar++;
 
 
-println(numero);
+println(numero + cadena);
 println(mod);
+println("Valor incrementar: " + incrementar);

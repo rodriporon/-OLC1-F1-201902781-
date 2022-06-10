@@ -71,7 +71,7 @@
 \"([^\\\"]|\\.)*\"                  { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
 [0-9]+"."([0-9]+)?\b                {return 'DECIMAL'; }
 [0-9]+\b                            { return 'ENTERO'; }
-([a-zA-Z_])[a-zA-Z0-9_]*            { return 'IDENTIFICADOR'; }
+([a-zA-Z_])[a-zA-Z0-9_ñÑ]*            { return 'IDENTIFICADOR'; }
 (\'(\\(["'\\bfnrt]|u[0-9A-Fa-f]{4})|[^\\'])\') { yytext = yytext.substr(1, yyleng-2); return 'CHAR'}
 
 <<EOF>>                             return 'EOF';
@@ -113,9 +113,10 @@ instrucciones
 ;
 
 instruccion
-        : PRINTLN PARENTESISABRE asignacionOperacion PARENTESISCIERRA PUNTOCOMA          { $$ = instruccionesAPI.nuevoPrintln($3) }
-        | tipo_dato IDENTIFICADOR IGUAL asignacionOperacion PUNTOCOMA          { $$ = instruccionesAPI.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4)}        
-        | IDENTIFICADOR IGUAL asignacionOperacion PUNTOCOMA                    { $$ = instruccionesAPI.nuevoAsignacion($1, $3)}                     
+        : PRINTLN PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instruccionesAPI.nuevoPrintln($3) }
+        | tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instruccionesAPI.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4)}        
+        | IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA                    { $$ = instruccionesAPI.nuevoAsignacion($1, $3)}                     
+        | IDENTIFICADOR INCREMENTO PUNTOCOMA                                   { $$ = instruccionesAPI.nuevoPostIncremento($1) }
         
 ;
 
@@ -145,5 +146,6 @@ operacionNumerica
         | DECIMAL                                                   { $$ = instruccionesAPI.nuevoValor(parseFloat($1), TIPO_VALOR.DOUBLE)}
         | CHAR                                                      { $$ = instruccionesAPI.nuevoValor($1.charAt(0), TIPO_VALOR.CHAR)}
         | IDENTIFICADOR                                             { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.IDENTIFICADOR)}
+        | CADENA                                                    { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.CADENA)}
 ;
 

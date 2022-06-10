@@ -25,6 +25,8 @@ const interpretarAst = (instruccion, tablaSimbolos) => {
       interpretarDeclaracionAsignacion(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.ASIGNACION) {
       interpretarAsignacion(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.POST_INCREMENTO) {
+      interpretarPostIncremento(instruccion, tablaSimbolos)
     } else {
       throw new Error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
     }
@@ -52,6 +54,11 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     } else {
       return { valor: res, tipo: TIPO_DATO.NUMERO }
     }
+  } else if (expresion.tipo === TIPO_OPERACION.POSTINCREMENTO) {
+    const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
+    const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo
+    const res = valor + 1
+    return { valor: res, tipo: valorTipo }
   } else if (expresion.tipo === TIPO_OPERACION.SUMA ||
      expresion.tipo === TIPO_OPERACION.RESTA ||
       expresion.tipo === TIPO_OPERACION.MULTIPLICACION ||
@@ -280,6 +287,8 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     return { valor: sym.valor, tipo: sym.tipo }
   } else if (expresion.tipo === TIPO_VALOR.CHAR) {
     return { valor: expresion.valor, tipo: TIPO_DATO.CHAR }
+  } else if (expresion.tipo === TIPO_VALOR.CADENA) {
+    return { valor: expresion.valor, tipo: TIPO_DATO.STRING }
   } else {
     throw new Error('ERROR: expresión numerica no válida: ' + expresion.tipo)
   }
@@ -298,6 +307,12 @@ const interpretarDeclaracionAsignacion = (instruccion, tablaDeSimbolos) => {
 
 const interpretarAsignacion = (instruccion, tablaDeSimbolos) => {
   const valor = interpretarExpresionCadena(instruccion.expresionNumerica, tablaDeSimbolos)
+  tablaDeSimbolos.update(instruccion.identificador, valor)
+}
+
+const interpretarPostIncremento = (instruccion, tablaDeSimbolos) => {
+  const valor = tablaDeSimbolos.getValue(instruccion.identificador)
+  valor.valor = valor.valor + 1
   tablaDeSimbolos.update(instruccion.identificador, valor)
 }
 

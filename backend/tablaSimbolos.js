@@ -8,11 +8,12 @@ const TIPO_DATO = {
   NUMERO: 'NUMERO'
 }
 
-const crearSimbolo = (id, tipo, valor) => {
+const crearSimbolo = (id, tipo, valor, constante) => {
   return {
     id,
     tipo,
-    valor
+    valor,
+    constante
   }
 }
 
@@ -21,8 +22,8 @@ class TablaSimbolos {
     this._simbolos = simbolos
   }
 
-  add (id, tipo) {
-    const nuevoSimbolo = crearSimbolo(id, tipo)
+  add (id, tipo, constante) {
+    const nuevoSimbolo = crearSimbolo(id, tipo, undefined, constante)
     this._simbolos.push(nuevoSimbolo)
   }
 

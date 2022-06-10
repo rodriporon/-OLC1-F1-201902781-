@@ -21,13 +21,13 @@ const TIPO_OPERACION = {
   POST_INCREMENTO: 'OP_POSTINCREMENTO',
   POST_DECREMENTO: 'OP_POSTDECREMENTO',
 
-  MAYOR_QUE: 'OP_MAYOR_QUE',
-  MENOR_QUE: 'OP_MENOR_QUE',
+  MAYOR: 'OP_MAYOR',
+  MENOR: 'OP_MENOR',
 
   MAYOR_IGUAL: 'OP_MAYOR_IGUAL',
   MENOR_IGUAL: 'OP_MENOR_IGUAL',
   DOBLE_IGUAL: 'OP_DOBLE_IGUAL',
-  NO_IGUAL: 'OP_NO_IGUAL',
+  DIFERENTE: 'OP_DIFERENTE',
 
   AND: 'OP_AND',
   OR: 'OP_OR',
@@ -36,6 +36,7 @@ const TIPO_OPERACION = {
 
 const TIPO_INSTRUCCION = {
   PRINTLN: 'INSTR_PRINTLN',
+  PRINTLN_LOGICO: 'INSTR_PRINTLN_LOGICO',
   WHILE: 'INSTR_WHILE',
   DECLARACION_ASIGNACION: 'INSTR_DECLARACION',
   ASIGNACION: 'INSTR_ASIGANCION',
@@ -62,7 +63,7 @@ const nuevaOperacion = (operandoIzq, operandoDer, tipo) => {
   }
 }
 
-const instruccionesAPI = {
+const instrucciones = {
 
   nuevoOperacionBinaria: (operandoIzq, operandoDer, tipo) => nuevaOperacion(operandoIzq, operandoDer, tipo),
 
@@ -107,6 +108,13 @@ const instruccionesAPI = {
     return {
       tipo: TIPO_INSTRUCCION.PRINTLN,
       expresionCadena
+    }
+  },
+
+  nuevoPrintlnLogico: (expresionLogica) => {
+    return {
+      tipo: TIPO_INSTRUCCION.PRINTLN_LOGICO,
+      expresionLogica
     }
   },
 
@@ -210,5 +218,5 @@ const instruccionesAPI = {
 module.exports.TIPO_OPERACION = TIPO_OPERACION
 module.exports.TIPO_INSTRUCCION = TIPO_INSTRUCCION
 module.exports.TIPO_VALOR = TIPO_VALOR
-module.exports.instruccionesAPI = instruccionesAPI
+module.exports.instrucciones = instrucciones
 module.exports.TIPO_OPCION_SWITCH = TIPO_OPCION_SWITCH

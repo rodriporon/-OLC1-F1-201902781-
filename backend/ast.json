@@ -6,7 +6,8 @@
     "expresionNumerica": {
       "tipo": "VAL_CADENA",
       "valor": "Hola"
-    }
+    },
+    "constante": false
   },
   {
     "tipo": "INSTR_DECLARACION",
@@ -15,7 +16,8 @@
     "expresionNumerica": {
       "tipo": "VAL_CHAR",
       "valor": " "
-    }
+    },
+    "constante": false
   },
   {
     "tipo": "INSTR_DECLARACION",
@@ -31,7 +33,8 @@
         "valor": 2
       },
       "tipo": "OP_SUMA"
-    }
+    },
+    "constante": false
   },
   {
     "tipo": "INSTR_DECLARACION",
@@ -40,14 +43,15 @@
     "expresionNumerica": {
       "operandoIzq": {
         "tipo": "VAL_INT",
-        "valor": 4
+        "valor": 3
       },
       "operandoDer": {
         "tipo": "VAL_INT",
         "valor": 2
       },
       "tipo": "OP_MODULO"
-    }
+    },
+    "constante": false
   },
   {
     "tipo": "INSTR_DECLARACION",
@@ -59,7 +63,18 @@
         "valor": "numero"
       },
       "tipo": "OP_NEGATIVO"
-    }
+    },
+    "constante": false
+  },
+  {
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "comparacion",
+    "tipoDato": "INT",
+    "expresionNumerica": {
+      "tipo": "VAL_INT",
+      "valor": 3
+    },
+    "constante": false
   },
   {
     "tipo": "INSTR_PRINTLN",
@@ -76,31 +91,49 @@
     }
   },
   {
-    "tipo": "INSTR_PRINTLN",
-    "expresionCadena": {
-      "tipo": "VAL_IDENTIFICADOR",
-      "valor": "mod"
-    }
-  },
-  {
-    "tipo": "INSTR_PRINTLN",
-    "expresionCadena": {
+    "tipo": "INSTR_PRINTLN_LOGICO",
+    "expresionLogica": {
       "operandoIzq": {
         "operandoIzq": {
-          "tipo": "VAL_INT",
-          "valor": 10
+          "tipo": "VAL_IDENTIFICADOR",
+          "valor": "comparacion"
         },
         "operandoDer": {
           "tipo": "VAL_INT",
-          "valor": 1
+          "valor": 10
         },
-        "tipo": "OP_SUMA"
+        "tipo": "OP_MENOR_IGUAL"
       },
       "operandoDer": {
-        "tipo": "VAL_INT",
-        "valor": 3
+        "operandoIzq": {
+          "tipo": "VAL_INT",
+          "valor": 4
+        },
+        "operandoDer": {
+          "tipo": "VAL_INT",
+          "valor": 5
+        },
+        "tipo": "OP_MAYOR"
       },
-      "tipo": "OP_MULTIPLICACION"
+      "tipo": "OP_AND"
+    }
+  },
+  {
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "numConstante",
+    "tipoDato": "INT",
+    "expresionNumerica": {
+      "tipo": "VAL_INT",
+      "valor": 4
+    },
+    "constante": false
+  },
+  {
+    "tipo": "INSTR_ASIGANCION",
+    "identificador": "numConstante",
+    "expresionNumerica": {
+      "tipo": "VAL_INT",
+      "valor": 3
     }
   }
 ]

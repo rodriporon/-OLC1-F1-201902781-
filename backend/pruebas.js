@@ -21,6 +21,8 @@ const interpretarAst = (instruccion, tablaSimbolos) => {
   instruccion.forEach(instruccion => {
     if (instruccion.tipo === TIPO_INSTRUCCION.PRINTLN) {
       interpretarPrintln(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.PRINTLN_LOGICO) {
+      interpretarPrintlnLogico(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.DECLARACION_ASIGNACION) {
       interpretarDeclaracionAsignacion(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.ASIGNACION) {
@@ -323,6 +325,14 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     return { valor: expresion.valor, tipo: TIPO_DATO.CHAR }
   } else if (expresion.tipo === TIPO_VALOR.CADENA) {
     return { valor: expresion.valor, tipo: TIPO_DATO.STRING }
+  } else if (expresion.tipo === TIPO_OPERACION.MENOR) {
+    return { valor: expresion.valor, tipo: expresion.tipo }
+  } else if (expresion.tipo === TIPO_OPERACION.MAYOR) {
+    return { valor: expresion.valor, tipo: expresion.tipo }
+  } else if (expresion.tipo === TIPO_OPERACION.MAYORIGUAL) {
+    return { valor: expresion.valor, tipo: expresion.tipo }
+  } else if (expresion.tipo === TIPO_OPERACION.MENOR_IGUAL) {
+    return { valor: expresion.valor, tipo: expresion.tipo }
   } else {
     throw new Error('ERROR: expresión numerica no válida: ' + expresion.tipo)
   }
@@ -333,16 +343,25 @@ const interpretarPrintln = (instruccion, tablaDeSimbolos) => {
   console.log('>> ' + cadena)
 }
 
+const interpretarPrintlnLogico = (expresion, tablaDeSimbolos) => {
+  const cadena = interpretarExpresionLogica(expresion.expresionLogica, tablaDeSimbolos)
+  console.log('>> ' + cadena)
+}
+
 const interpretarDeclaracionAsignacion = (instruccion, tablaDeSimbolos) => {
-  tablaDeSimbolos.add(instruccion.identificador, instruccion.tipoDato)
+  tablaDeSimbolos.add(instruccion.identificador, instruccion.tipoDato, instruccion.constante)
   const valor = interpretarExpresionCadena(instruccion.expresionNumerica, tablaDeSimbolos)
   tablaDeSimbolos.update(instruccion.identificador, valor)
 }
 
 const interpretarAsignacion = (instruccion, tablaDeSimbolos) => {
-  console.log(instruccion)
-  const valor = interpretarExpresionCadena(instruccion.expresionNumerica, tablaDeSimbolos)
-  tablaDeSimbolos.update(instruccion.identificador, valor)
+  const identificador = tablaDeSimbolos.getValue(instruccion.identificador)
+  if (!identificador.constante) {
+    const valor = interpretarExpresionCadena(instruccion.expresionNumerica, tablaDeSimbolos)
+    tablaDeSimbolos.update(instruccion.identificador, valor)
+  } else {
+    throw new Error('ERROR: variable: ' + identificador.id + ' es de tipo constante')
+  }
 }
 
 const interpretarPostIncremento = (instruccion, tablaDeSimbolos) => {
@@ -369,4 +388,36 @@ const interpretarPreDecremento = (instruccion, tablaDeSimbolos) => {
   tablaDeSimbolos.update(instruccion.identificador, valor)
 }
 
+const interpretarExpresionRelacional = (expresion, tablaDeSimbolos) => {
+  let valorIzq = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos)
+  let valorDer = interpretarExpresionNumerica(expresion.operandoDer, tablaDeSimbolos)
+
+  valorIzq = valorIzq.valor
+  valorDer = valorDer.valor
+
+  if (expresion.tipo === TIPO_OPERACION.MAYOR) return valorIzq > valorDer
+  if (expresion.tipo === TIPO_OPERACION.MENOR) return valorIzq < valorDer
+  if (expresion.tipo === TIPO_OPERACION.MAYOR_IGUAL) return valorIzq >= valorDer
+  if (expresion.tipo === TIPO_OPERACION.MENOR_IGUAL) return valorIzq <= valorDer
+  if (expresion.tipo === TIPO_OPERACION.DOBLE_IGUAL) return valorIzq === valorDer
+  if (expresion.tipo === TIPO_OPERACION.DIFERENTE) return valorIzq !== valorDer
+}
+
+const interpretarExpresionLogica = (expresion, tablaDeSimbolos) => {
+  if (expresion.tipo === TIPO_OPERACION.AND) {
+    const valorIzq = interpretarExpresionRelacional(expresion.operandoIzq, tablaDeSimbolos)
+    const valorDer = interpretarExpresionRelacional(expresion.operandoDer, tablaDeSimbolos)
+    return valorIzq && valorDer
+  }
+  if (expresion.tipo === TIPO_OPERACION.OR) {
+    const valorIzq = interpretarExpresionRelacional(expresion.operandoIzq, tablaDeSimbolos)
+    const valorDer = interpretarExpresionRelacional(expresion.operandoDer, tablaDeSimbolos)
+    return valorIzq || valorDer
+  }
+  if (expresion.tipo === TIPO_OPERACION.NOT) {
+    const valor = interpretarExpresionRelacional(expresion.operandoIzq, tablaDeSimbolos)
+    return !valor
+  }
+  return interpretarExpresionRelacional(expresion, tablaDeSimbolos)
+}
 interpretarAst(ast, TablaSimbolosGlobal)

@@ -1,11 +1,16 @@
 String cadena = "Hola";
 char cadChar = ' ';
 double numero = 4.2 + 2;
-double mod = 4 % 2;
+double mod = 3 % 2;
 double num2 = -numero;
 
+int comparacion = 3;
+
 println(numero + cadena);
-println(mod);
+println(comparacion <= 10 && 4 > 5);
+
+int numConstante = 4;
+numConstante = 3;
 
 //COMENTARIO
 /* otro comentario */

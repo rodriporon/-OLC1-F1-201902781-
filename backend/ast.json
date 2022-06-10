@@ -129,5 +129,38 @@
       },
       "tipo": "OP_SUMA"
     }
+  },
+  {
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "decrementar",
+    "tipoDato": "INT",
+    "expresionNumerica": {
+      "tipo": "VAL_INT",
+      "valor": 5
+    }
+  },
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "operandoIzq": {
+        "tipo": "VAL_CADENA",
+        "valor": "POST DECREMENTAR: "
+      },
+      "operandoDer": {
+        "operandoIzq": {
+          "tipo": "VAL_IDENTIFICADOR",
+          "valor": "decrementar"
+        },
+        "tipo": "OP_POSTDECREMENTO"
+      },
+      "tipo": "OP_SUMA"
+    }
+  },
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "tipo": "VAL_IDENTIFICADOR",
+      "valor": "decrementar"
+    }
   }
 ]

@@ -117,6 +117,7 @@ instruccion
         | tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instruccionesAPI.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4)}        
         | IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA                    { $$ = instruccionesAPI.nuevoAsignacion($1, $3)}                     
         | IDENTIFICADOR INCREMENTO PUNTOCOMA                                   { $$ = instruccionesAPI.nuevoPostIncremento($1) }
+        | IDENTIFICADOR DECREMENTO PUNTOCOMA                                   { $$ = instruccionesAPI.nuevoPostDecremento($1) }
         
 ;
 
@@ -141,6 +142,7 @@ operacionNumerica
         | operacionNumerica POTENCIA operacionNumerica               { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $4, TIPO_OPERACION.POTENCIA) }
         | operacionNumerica DIVIDIDO operacionNumerica              { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIVISION) }
         | operacionNumerica INCREMENTO                              { $$ = instruccionesAPI.nuevoOperacionUnaria($1, TIPO_OPERACION.POST_INCREMENTO) }
+        | operacionNumerica DECREMENTO                              { $$ = instruccionesAPI.nuevoOperacionUnaria($1, TIPO_OPERACION.POST_DECREMENTO) }
         | PARENTESISABRE operacionNumerica PARENTESISCIERRA         { $$ = $2 }
         | MENOS operacionNumerica %prec UMENOS                      { $$ = instruccionesAPI.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO) }
         | ENTERO                                                    { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.INT) } 

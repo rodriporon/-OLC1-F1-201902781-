@@ -82,6 +82,13 @@ const instruccionesAPI = {
     }
   },
 
+  nuevoPostDecremento: (identificador) => {
+    return {
+      tipo: TIPO_INSTRUCCION.POST_DECREMENTO,
+      identificador
+    }
+  },
+
   nuevoPrintln: (expresionCadena) => {
     return {
       tipo: TIPO_INSTRUCCION.PRINTLN,

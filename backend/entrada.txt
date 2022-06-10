@@ -13,3 +13,7 @@ incrementar++;
 println(numero + cadena);
 println(mod);
 println("Valor incrementar: " + incrementar);
+
+int decrementar = 5;
+println("POST DECREMENTAR: " + decrementar--);
+println(decrementar);

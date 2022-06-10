@@ -94,6 +94,7 @@
 /* Precedencia */
 %left 'MAS' 'MENOS'
 %left 'MULTIPLICADO' 'DIVIDIDO' 'POTENCIA' 'MODULO'
+%left 'INCREMENTO' 'DECREMENTO'
 %left UMENOS
 
 %start init

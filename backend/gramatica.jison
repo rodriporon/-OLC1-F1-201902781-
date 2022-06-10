@@ -116,7 +116,8 @@ instrucciones
 
 instruccion
         : PRINTLN PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instruccionesAPI.nuevoPrintln($3) }
-        | tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instruccionesAPI.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4)}        
+        | tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instruccionesAPI.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4, false)}
+        | CONST tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instruccionesAPI.nuevoDeclaracionAsignacion($2.toUpperCase(), $3, $5, true)}
         | IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA                    { $$ = instruccionesAPI.nuevoAsignacion($1, $3)}                     
         | IDENTIFICADOR INCREMENTO PUNTOCOMA                                   { $$ = instruccionesAPI.nuevoPostIncremento($1) }
         | IDENTIFICADOR DECREMENTO PUNTOCOMA                                   { $$ = instruccionesAPI.nuevoPostDecremento($1) }

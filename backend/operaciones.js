@@ -129,12 +129,13 @@ const instruccionesAPI = {
     }
   },
 
-  nuevoDeclaracionAsignacion: (tipoDato, identificador, expresionNumerica) => {
+  nuevoDeclaracionAsignacion: (tipoDato, identificador, expresionNumerica, constante) => {
     return {
       tipo: TIPO_INSTRUCCION.DECLARACION_ASIGNACION,
       identificador,
       tipoDato,
-      expresionNumerica
+      expresionNumerica,
+      constante
     }
   },
 

@@ -10,7 +10,7 @@ println(mod);
 //COMENTARIO
 /* otro comentario */
 
-int postIncrementar = 5;
+/*  int postIncrementar = 5;
 println("POST INCREMENTAR: " + "inicial: " + postIncrementar + " final: " + postIncrementar++);
 println(postIncrementar);
 
@@ -24,4 +24,4 @@ println(preIncrementar);
 
 int preDecrementar = 5;
 println("PRE DECREMENTAR: " + "inicial: " + preDecrementar + " final: " + --preDecrementar);
-println(preDecrementar);
+println(preDecrementar);  */

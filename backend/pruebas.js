@@ -340,6 +340,7 @@ const interpretarDeclaracionAsignacion = (instruccion, tablaDeSimbolos) => {
 }
 
 const interpretarAsignacion = (instruccion, tablaDeSimbolos) => {
+  console.log(instruccion)
   const valor = interpretarExpresionCadena(instruccion.expresionNumerica, tablaDeSimbolos)
   tablaDeSimbolos.update(instruccion.identificador, valor)
 }

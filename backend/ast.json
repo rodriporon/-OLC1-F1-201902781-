@@ -20,11 +20,11 @@
   {
     "tipo": "INSTR_DECLARACION",
     "identificador": "numero",
-    "tipoDato": "INT",
+    "tipoDato": "DOUBLE",
     "expresionNumerica": {
       "operandoIzq": {
-        "tipo": "VAL_INT",
-        "valor": 4
+        "tipo": "VAL_DOUBLE",
+        "valor": 4.2
       },
       "operandoDer": {
         "tipo": "VAL_INT",
@@ -55,8 +55,8 @@
     "tipoDato": "DOUBLE",
     "expresionNumerica": {
       "operandoIzq": {
-        "tipo": "VAL_DOUBLE",
-        "valor": 1.2
+        "tipo": "VAL_IDENTIFICADOR",
+        "valor": "numero"
       },
       "tipo": "OP_NEGATIVO"
     }
@@ -75,14 +75,21 @@
     "expresionCadena": {
       "operandoIzq": {
         "tipo": "VAL_CADENA",
-        "valor": "Valor incrementar: "
+        "valor": "POST INCREMENTO: "
       },
       "operandoDer": {
-        "tipo": "VAL_IDENTIFICADOR",
-        "valor": "incrementar"
+        "operandoIzq": {
+          "tipo": "VAL_IDENTIFICADOR",
+          "valor": "incrementar"
+        },
+        "tipo": "OP_POSTINCREMENTO"
       },
       "tipo": "OP_SUMA"
     }
+  },
+  {
+    "tipo": "POST_INCREMENTO",
+    "identificador": "incrementar"
   },
   {
     "tipo": "POST_INCREMENTO",

@@ -1,12 +1,14 @@
 String cadena = "Hola";
 char cadChar = ' ';
-int numero = 4 + 2;
+double numero = 4.2 + 2;
 double mod = 4 % 2;
-double num2 = -1.2;
+double num2 = -numero;
 int incrementar = 1;
-println("Valor incrementar: " + incrementar);
-incrementar++;
 
+println("POST INCREMENTO: " + incrementar++);
+
+incrementar++;
+incrementar++;
 
 println(numero + cadena);
 println(mod);

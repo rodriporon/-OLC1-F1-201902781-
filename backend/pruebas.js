@@ -54,7 +54,14 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     } else {
       return { valor: res, tipo: TIPO_DATO.NUMERO }
     }
-  } else if (expresion.tipo === TIPO_OPERACION.POSTINCREMENTO) {
+  } else if (expresion.tipo === TIPO_OPERACION.POST_INCREMENTO) {
+    const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
+    const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo
+    const res = valor + 1
+
+    tablaDeSimbolos.update(expresion.operandoIzq.valor, { valor: res, tipo: valorTipo })
+    return { valor: res - 1, tipo: valorTipo }
+  } else if (expresion.tipo === TIPO_INSTRUCCION.POST_INCREMENTO) {
     const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
     const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo
     const res = valor + 1

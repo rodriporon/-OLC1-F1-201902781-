@@ -140,6 +140,7 @@ operacionNumerica
         | operacionNumerica MULTIPLICADO operacionNumerica          { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MULTIPLICACION) }
         | operacionNumerica POTENCIA operacionNumerica               { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $4, TIPO_OPERACION.POTENCIA) }
         | operacionNumerica DIVIDIDO operacionNumerica              { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIVISION) }
+        | operacionNumerica INCREMENTO                              { $$ = instruccionesAPI.nuevoOperacionUnaria($1, TIPO_OPERACION.POST_INCREMENTO) }
         | PARENTESISABRE operacionNumerica PARENTESISCIERRA         { $$ = $2 }
         | MENOS operacionNumerica %prec UMENOS                      { $$ = instruccionesAPI.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO) }
         | ENTERO                                                    { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.INT) } 

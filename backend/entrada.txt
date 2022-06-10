@@ -1,7 +1,9 @@
 String cadena = "Hola";
 char cadChar = ' ';
-int numero = (-2) + 2;
+int numero = 4 + 2;
+double mod = 4 % 2;
 double num2 = -1.2;
 
 
 println(numero);
+println(mod);

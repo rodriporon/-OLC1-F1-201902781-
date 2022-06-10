@@ -53,7 +53,8 @@
 "-"                                 return 'MENOS';  
 "/"                                 return 'DIVIDIDO';      
 "*"                                 return 'MULTIPLICADO';
-"%"                                 return 'MODULO';
+"**"                                return 'POTENCIA';
+"%"                                 { return 'MODULO';}
 "("                                 return 'PARENTESISABRE';
 ")"                                 return 'PARENTESISCIERRA'; 
 "{"                                 return 'LLAVEABRE';     
@@ -92,7 +93,7 @@
 
 /* Precedencia */
 %left 'MAS' 'MENOS'
-%left 'MULTIPLICADO' 'DIVIDIDO'
+%left 'MULTIPLICADO' 'DIVIDIDO' 'POTENCIA' 'MODULO'
 %left UMENOS
 
 %start init
@@ -133,8 +134,9 @@ asignacionOperacion
 operacionNumerica
         : operacionNumerica MAS operacionNumerica                   { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.SUMA) }
         | operacionNumerica MENOS operacionNumerica                 { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.RESTA) }
+        | operacionNumerica MODULO operacionNumerica                 { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MODULO) }
         | operacionNumerica MULTIPLICADO operacionNumerica          { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MULTIPLICACION) }
-        | operacionNumerica MULTIPLICADO MULTIPLICADO operacionNumerica               { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $4, TIPO_OPERACION.POTENCIA) }
+        | operacionNumerica POTENCIA operacionNumerica               { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $4, TIPO_OPERACION.POTENCIA) }
         | operacionNumerica DIVIDIDO operacionNumerica              { $$ = instruccionesAPI.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIVISION) }
         | PARENTESISABRE operacionNumerica PARENTESISCIERRA         { $$ = $2 }
         | MENOS operacionNumerica %prec UMENOS                      { $$ = instruccionesAPI.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO) }

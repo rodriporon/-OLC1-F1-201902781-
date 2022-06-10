@@ -23,17 +23,30 @@
     "tipoDato": "INT",
     "expresionNumerica": {
       "operandoIzq": {
-        "operandoIzq": {
-          "tipo": "VAL_INT",
-          "valor": 2
-        },
-        "tipo": "OP_NEGATIVO"
+        "tipo": "VAL_INT",
+        "valor": 4
       },
       "operandoDer": {
         "tipo": "VAL_INT",
         "valor": 2
       },
       "tipo": "OP_SUMA"
+    }
+  },
+  {
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "mod",
+    "tipoDato": "DOUBLE",
+    "expresionNumerica": {
+      "operandoIzq": {
+        "tipo": "VAL_INT",
+        "valor": 4
+      },
+      "operandoDer": {
+        "tipo": "VAL_INT",
+        "valor": 2
+      },
+      "tipo": "OP_MODULO"
     }
   },
   {
@@ -53,6 +66,13 @@
     "expresionCadena": {
       "tipo": "VAL_IDENTIFICADOR",
       "valor": "numero"
+    }
+  },
+  {
+    "tipo": "INSTR_PRINTLN",
+    "expresionCadena": {
+      "tipo": "VAL_IDENTIFICADOR",
+      "valor": "mod"
     }
   }
 ]

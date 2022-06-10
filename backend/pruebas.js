@@ -56,7 +56,8 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
      expresion.tipo === TIPO_OPERACION.RESTA ||
       expresion.tipo === TIPO_OPERACION.MULTIPLICACION ||
        expresion.tipo === TIPO_OPERACION.DIVISION ||
-        expresion.tipo === TIPO_OPERACION.POTENCIA) {
+        expresion.tipo === TIPO_OPERACION.POTENCIA ||
+        expresion.tipo === TIPO_OPERACION.MODULO) {
     const valorIzq = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos)
     const valorDer = interpretarExpresionNumerica(expresion.operandoDer, tablaDeSimbolos)
     /*     if (valorIzq.tipo !== TIPO_DATO.NUMERO || valorDer.tipo !== TIPO_DATO.NUMERO || valorIzq.tipo !== TIPO_DATO.DOUBLE || valorDer.tipo !== TIPO_DATO.DOUBLE) {
@@ -217,7 +218,37 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
         res = valorIzq.valor ** valorDer.valor
       }
       parseFloat(res)
-      console.log('TIPO: ' + typeof (res) + 'VALOR: ' + res)
+      if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      }
+    }
+
+    if (expresion.tipo === TIPO_OPERACION.MODULO) {
+      let res
+      if (valorIzq.tipo === TIPO_DATO.CHAR) {
+        res = valorIzq.valor.charCodeAt(0) % valorDer.valor
+      } else if (valorDer.tipo === TIPO_DATO.CHAR) {
+        res = valorIzq.valor % valorDer.valor.charCodeAt(0)
+      } else {
+        res = valorIzq.valor % valorDer.valor
+      }
+      parseFloat(res)
       if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {

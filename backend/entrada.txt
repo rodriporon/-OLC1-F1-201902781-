@@ -9,6 +9,13 @@ int comparacion = 3;
 println(numero + cadena);
 println(comparacion <= 10 && 4 > 5);
 
+const int num5 = 5;
+if (num5 >= 5) {
+    println("num5 es igual a 5");
+} else {
+    println("num5 no es igual a 5");
+}
+
 int numConstante = 4;
 numConstante = 3;
 

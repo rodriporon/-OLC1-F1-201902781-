@@ -120,6 +120,48 @@
   },
   {
     "tipo": "INSTR_DECLARACION",
+    "identificador": "num5",
+    "tipoDato": "INT",
+    "expresionNumerica": {
+      "tipo": "VAL_INT",
+      "valor": 5
+    },
+    "constante": true
+  },
+  {
+    "tipo": "INSTR_ELSE",
+    "expresionLogica": {
+      "operandoIzq": {
+        "tipo": "VAL_IDENTIFICADOR",
+        "valor": "num5"
+      },
+      "operandoDer": {
+        "tipo": "VAL_INT",
+        "valor": 5
+      },
+      "tipo": "OP_MAYOR_IGUAL"
+    },
+    "instruccionesIfVerdadero": [
+      {
+        "tipo": "INSTR_PRINTLN",
+        "expresionCadena": {
+          "tipo": "VAL_CADENA",
+          "valor": "num5 es igual a 5"
+        }
+      }
+    ],
+    "instruccionesIfFalso": [
+      {
+        "tipo": "INSTR_PRINTLN",
+        "expresionCadena": {
+          "tipo": "VAL_CADENA",
+          "valor": "num5 no es igual a 5"
+        }
+      }
+    ]
+  },
+  {
+    "tipo": "INSTR_DECLARACION",
     "identificador": "numConstante",
     "tipoDato": "INT",
     "expresionNumerica": {

@@ -17,7 +17,7 @@ try {
 
 const TablaSimbolosGlobal = new TablaSimbolos([])
 
-const interpretarAst = (instruccion, tablaSimbolos) => {
+const interpretarBloque = (instruccion, tablaSimbolos) => {
   instruccion.forEach(instruccion => {
     if (instruccion.tipo === TIPO_INSTRUCCION.PRINTLN) {
       interpretarPrintln(instruccion, tablaSimbolos)
@@ -35,6 +35,10 @@ const interpretarAst = (instruccion, tablaSimbolos) => {
       interpretarPreIncremento(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.PRE_INCREMENTO) {
       interpretarPreDecremento(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.IF) {
+      interpretarIf(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.IF_ELSE) {
+      interpretarIfElse(instruccion, tablaSimbolos)
     } else {
       throw new Error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
     }
@@ -420,4 +424,25 @@ const interpretarExpresionLogica = (expresion, tablaDeSimbolos) => {
   }
   return interpretarExpresionRelacional(expresion, tablaDeSimbolos)
 }
-interpretarAst(ast, TablaSimbolosGlobal)
+
+const interpretarIf = (instruccion, tablaDeSimbolos) => {
+  const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
+
+  if (valorCondicion) {
+    const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
+    interpretarBloque(instruccion.instrucciones, tablaSimbolosIf)
+  }
+}
+
+const interpretarIfElse = (instruccion, tablaDeSimbolos) => {
+  const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
+
+  if (valorCondicion) {
+    const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
+    interpretarBloque(instruccion.instruccionesIfVerdadero, tablaSimbolosIf)
+  } else {
+    const tablaSimbolosElse = new TablaSimbolos(tablaDeSimbolos.simbolos)
+    interpretarBloque(instruccion.instruccionesIfFalso, tablaSimbolosElse)
+  }
+}
+interpretarBloque(ast, TablaSimbolosGlobal)

@@ -448,15 +448,16 @@ const interpretarIfElse = (instruccion, tablaDeSimbolos) => {
 }
 
 const interpretarIfElseIf = (instruccion, tablaDeSimbolos) => {
+  console.log(instruccion.nuevoIf.nuevoIf)
   const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
-  const valorCondicionNuevoIf = interpretarExpresionLogica(instruccion.expresionLogicaNuevoIf, tablaDeSimbolos)
+  const valorCondicionNuevoIf = interpretarExpresionLogica(instruccion.nuevoIf.expresionLogica, tablaDeSimbolos)
 
   if (valorCondicion) {
     const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.instruccionesIf, tablaSimbolosIf)
+    interpretarBloque(instruccion.instrucciones, tablaSimbolosIf)
   } else if (valorCondicionNuevoIf) {
     const tablaSimbolosNuevoIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.instruccionesNuevoIf, tablaSimbolosNuevoIf)
+    interpretarBloque(instruccion.nuevoIf.instrucciones, tablaSimbolosNuevoIf)
   }
 }
 interpretarBloque(ast, TablaSimbolosGlobal)

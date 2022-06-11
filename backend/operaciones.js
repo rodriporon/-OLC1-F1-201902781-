@@ -173,13 +173,12 @@ const instrucciones = {
     }
   },
 
-  nuevoIfElseIf: (expresionLogica, instruccionesIf, expresionLogicaNuevoIf, instruccionesNuevoIf) => {
+  nuevoIfElseIf: (expresionLogica, instrucciones, nuevoIf) => {
     return {
       tipo: TIPO_INSTRUCCION.IF_ELSE_IF,
       expresionLogica,
-      instruccionesIf,
-      expresionLogicaNuevoIf,
-      instruccionesNuevoIf
+      instrucciones,
+      nuevoIf
     }
   },
 

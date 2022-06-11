@@ -127,15 +127,19 @@ instruccion
         | PRINTLN PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintlnLogico($3) }
         | tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4, false)}
         | CONST tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($2.toUpperCase(), $3, $5, true)}
-        | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA        { $$ = instrucciones.nuevoIf($3, $6) }
-        | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoIfElse($3, $6, $10) }
-        | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoIfElseIf($3, $6, $11, $14) }
         | IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA                    { $$ = instrucciones.nuevoAsignacion($1, $3)}                     
         | IDENTIFICADOR INCREMENTO PUNTOCOMA                                   { $$ = instrucciones.nuevoPostIncremento($1) }
         | IDENTIFICADOR DECREMENTO PUNTOCOMA                                   { $$ = instrucciones.nuevoPostDecremento($1) }
         | INCREMENTO IDENTIFICADOR PUNTOCOMA                                   { $$ = instrucciones.nuevoPreIncremento($2) }
         | DECREMENTO IDENTIFICADOR PUNTOCOMA                                   { $$ = instrucciones.nuevoPreDecremento($2) }
+        | instruccionIf                                                        { $$ = $1 }
         
+;
+
+instruccionIf
+        : IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA        { $$ = instrucciones.nuevoIf($3, $6) }
+        | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoIfElse($3, $6, $10) }
+        | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE instruccionIf                             { $$ = instrucciones.nuevoIfElseIf($3, $6, $9)}
 ;
 
 tipo_dato

@@ -39,6 +39,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarIf(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.IF_ELSE) {
       interpretarIfElse(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.IF_ELSE_IF) {
+      interpretarIfElseIf(instruccion, tablaSimbolos)
     } else {
       throw new Error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
     }
@@ -427,7 +429,6 @@ const interpretarExpresionLogica = (expresion, tablaDeSimbolos) => {
 
 const interpretarIf = (instruccion, tablaDeSimbolos) => {
   const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
-
   if (valorCondicion) {
     const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
     interpretarBloque(instruccion.instrucciones, tablaSimbolosIf)
@@ -443,6 +444,19 @@ const interpretarIfElse = (instruccion, tablaDeSimbolos) => {
   } else {
     const tablaSimbolosElse = new TablaSimbolos(tablaDeSimbolos.simbolos)
     interpretarBloque(instruccion.instruccionesIfFalso, tablaSimbolosElse)
+  }
+}
+
+const interpretarIfElseIf = (instruccion, tablaDeSimbolos) => {
+  const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
+  const valorCondicionNuevoIf = interpretarExpresionLogica(instruccion.expresionLogicaNuevoIf, tablaDeSimbolos)
+
+  if (valorCondicion) {
+    const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
+    interpretarBloque(instruccion.instruccionesIf, tablaSimbolosIf)
+  } else if (valorCondicionNuevoIf) {
+    const tablaSimbolosNuevoIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
+    interpretarBloque(instruccion.instruccionesNuevoIf, tablaSimbolosNuevoIf)
   }
 }
 interpretarBloque(ast, TablaSimbolosGlobal)

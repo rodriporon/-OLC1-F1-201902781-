@@ -59,6 +59,7 @@ class TablaSimbolos {
   }
 
   getValue (id) {
+    if (!this._simbolos) throw new Error('Ninguna variable declarada')
     const simbolo = this._simbolos.filter(simbolo => simbolo.id === id)[0]
 
     if (simbolo) return simbolo

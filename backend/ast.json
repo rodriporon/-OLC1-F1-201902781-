@@ -77,48 +77,6 @@
     "constante": false
   },
   {
-    "tipo": "INSTR_PRINTLN",
-    "expresionCadena": {
-      "operandoIzq": {
-        "tipo": "VAL_IDENTIFICADOR",
-        "valor": "numero"
-      },
-      "operandoDer": {
-        "tipo": "VAL_IDENTIFICADOR",
-        "valor": "cadena"
-      },
-      "tipo": "OP_SUMA"
-    }
-  },
-  {
-    "tipo": "INSTR_PRINTLN_LOGICO",
-    "expresionLogica": {
-      "operandoIzq": {
-        "operandoIzq": {
-          "tipo": "VAL_IDENTIFICADOR",
-          "valor": "comparacion"
-        },
-        "operandoDer": {
-          "tipo": "VAL_INT",
-          "valor": 10
-        },
-        "tipo": "OP_MENOR_IGUAL"
-      },
-      "operandoDer": {
-        "operandoIzq": {
-          "tipo": "VAL_INT",
-          "valor": 4
-        },
-        "operandoDer": {
-          "tipo": "VAL_INT",
-          "valor": 5
-        },
-        "tipo": "OP_MAYOR"
-      },
-      "tipo": "OP_AND"
-    }
-  },
-  {
     "tipo": "INSTR_DECLARACION",
     "identificador": "num5",
     "tipoDato": "INT",
@@ -129,7 +87,7 @@
     "constante": true
   },
   {
-    "tipo": "INSTR_ELSE",
+    "tipo": "INSTR_IF_ELSE",
     "expresionLogica": {
       "operandoIzq": {
         "tipo": "VAL_IDENTIFICADOR",
@@ -139,7 +97,7 @@
         "tipo": "VAL_INT",
         "valor": 5
       },
-      "tipo": "OP_MAYOR_IGUAL"
+      "tipo": "OP_DOBLE_IGUAL"
     },
     "instruccionesIfVerdadero": [
       {
@@ -148,6 +106,56 @@
           "tipo": "VAL_CADENA",
           "valor": "num5 es igual a 5"
         }
+      },
+      {
+        "tipo": "INSTR_PRINTLN",
+        "expresionCadena": {
+          "tipo": "VAL_CADENA",
+          "valor": "otra linea"
+        }
+      },
+      {
+        "tipo": "INSTR_IF_ELSE_IF",
+        "expresionLogica": {
+          "operandoIzq": {
+            "tipo": "VAL_INT",
+            "valor": 5
+          },
+          "operandoDer": {
+            "tipo": "VAL_INT",
+            "valor": 5
+          },
+          "tipo": "OP_DIFERENTE"
+        },
+        "instruccionesIf": [
+          {
+            "tipo": "INSTR_PRINTLN",
+            "expresionCadena": {
+              "tipo": "VAL_CADENA",
+              "valor": "sigue siendo correcto"
+            }
+          }
+        ],
+        "expresionLogicaNuevoIf": {
+          "operandoIzq": {
+            "tipo": "VAL_INT",
+            "valor": 4
+          },
+          "operandoDer": {
+            "tipo": "VAL_INT",
+            "valor": 4
+          },
+          "tipo": "OP_DIFERENTE"
+        },
+        "instruccionesNuevoIf": [
+          {
+            "tipo": "INSTR_PRINTLN",
+            "expresionCadena": {
+              "tipo": "VAL_CADENA",
+              "valor": "4 es igual a 4"
+            }
+          }
+        ]
       }
     ],
     "instruccionesIfFalso": [
@@ -155,7 +163,7 @@
         "tipo": "INSTR_PRINTLN",
         "expresionCadena": {
           "tipo": "VAL_CADENA",
-          "valor": "num5 no es igual a 5"
+          "valor": "num5 != 5"
         }
       }
     ]

@@ -6,14 +6,20 @@ double num2 = -numero;
 
 int comparacion = 3;
 
-println(numero + cadena);
-println(comparacion <= 10 && 4 > 5);
+//println(numero + cadena);
+//println(comparacion <= 10 && 4 > 5);
 
 const int num5 = 5;
-if (num5 >= 5) {
+if (num5 == 5) {
     println("num5 es igual a 5");
+    println("otra linea");
+    if (5 != 5) {
+        println("sigue siendo correcto");
+    } else if (4 != 4) {
+        println("4 es igual a 4");
+    }
 } else {
-    println("num5 no es igual a 5");
+    println("num5 != 5");
 }
 
 int numConstante = 4;

@@ -41,7 +41,8 @@ const TIPO_INSTRUCCION = {
   DECLARACION_ASIGNACION: 'INSTR_DECLARACION',
   ASIGNACION: 'INSTR_ASIGANCION',
   IF: 'INSTR_IF',
-  IF_ELSE: 'INSTR_ELSE',
+  IF_ELSE: 'INSTR_IF_ELSE',
+  IF_ELSE_IF: 'INSTR_IF_ELSE_IF',
   FOR: 'INST_FOR',
   SWITCH: 'SWITCH',
   SWITCH_OP: 'SWITCH_OP',
@@ -169,6 +170,16 @@ const instrucciones = {
       expresionLogica,
       instruccionesIfVerdadero,
       instruccionesIfFalso
+    }
+  },
+
+  nuevoIfElseIf: (expresionLogica, instruccionesIf, expresionLogicaNuevoIf, instruccionesNuevoIf) => {
+    return {
+      tipo: TIPO_INSTRUCCION.IF_ELSE_IF,
+      expresionLogica,
+      instruccionesIf,
+      expresionLogicaNuevoIf,
+      instruccionesNuevoIf
     }
   },
 

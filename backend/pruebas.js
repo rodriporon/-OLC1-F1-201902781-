@@ -328,6 +328,8 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     return { valor: expresion.valor, tipo: TIPO_DATO.DOUBLE }
   } else if (expresion.tipo === TIPO_VALOR.INT) {
     return { valor: expresion.valor, tipo: TIPO_DATO.INT }
+  } else if (expresion.tipo === TIPO_VALOR.BOOLEAN) {
+    return { valor: expresion.valor, tipo: TIPO_DATO.BOOLEAN }
   } else if (expresion.tipo === TIPO_VALOR.IDENTIFICADOR) {
     const sym = tablaDeSimbolos.getValue(expresion.valor)
     return { valor: sym.valor, tipo: sym.tipo }
@@ -429,7 +431,7 @@ const interpretarExpresionLogica = (expresion, tablaDeSimbolos) => {
     return !valor
   }
   if (expresion.tipo === TIPO_OPERACION.BOOLEAN) {
-    console.log(expresion.valor, typeof(expresion.valor))
+    console.log(expresion.valor, typeof (expresion.valor))
   }
   return interpretarExpresionRelacional(expresion, tablaDeSimbolos)
 }
@@ -437,8 +439,8 @@ const interpretarExpresionLogica = (expresion, tablaDeSimbolos) => {
 const interpretarIf = (instruccion, tablaDeSimbolos) => {
   const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
   if (valorCondicion) {
-    const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.instrucciones, tablaSimbolosIf)
+    // const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
+    interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
   }
 }
 
@@ -446,31 +448,31 @@ const interpretarIfElse = (instruccion, tablaDeSimbolos) => {
   const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
 
   if (valorCondicion) {
-    const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.instruccionesIfVerdadero, tablaSimbolosIf)
+    // const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
+    interpretarBloque(instruccion.instruccionesIfVerdadero, tablaDeSimbolos)
   } else {
-    const tablaSimbolosElse = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.instruccionesIfFalso, tablaSimbolosElse)
+    // const tablaSimbolosElse = new TablaSimbolos(tablaDeSimbolos.simbolos)
+    interpretarBloque(instruccion.instruccionesIfFalso, tablaDeSimbolos)
   }
 }
 
 const interpretarIfElseIf = (instruccion, tablaDeSimbolos) => {
-  //console.log(instruccion.nuevoIf.nuevoIf)
+  // console.log(instruccion.nuevoIf.nuevoIf)
   const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
   const valorCondicionNuevoIf = interpretarExpresionLogica(instruccion.nuevoIf.expresionLogica, tablaDeSimbolos)
 
   if (valorCondicion) {
-    const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.instrucciones, tablaSimbolosIf)
+    // const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
+    interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
   } else if (valorCondicionNuevoIf) {
-    const tablaSimbolosNuevoIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.nuevoIf.instrucciones, tablaSimbolosNuevoIf)
+    // const tablaSimbolosNuevoIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
+    interpretarBloque(instruccion.nuevoIf.instrucciones, tablaDeSimbolos)
   }
 }
 
 const interpretarWhile = (instruccion, tablaDeSimbolos) => {
-  while(interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)) {
-    const tablaSimbolosWhile = new TablaSimbolos(tablaDeSimbolos.simbolos)
+  while (interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)) {
+    // const tablaSimbolosWhile = new TablaSimbolos(tablaDeSimbolos.simbolos)
     interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
   }
 }
@@ -478,9 +480,8 @@ const interpretarWhile = (instruccion, tablaDeSimbolos) => {
 const interpretarFor = (instruccion, tablaDeSimbolos) => {
   const valor = interpretarExpresionCadena(instruccion.valorVariable, tablaDeSimbolos)
   tablaDeSimbolos.update(instruccion.variable, valor)
-  for (var i = tablaDeSimbolos.getValue(instruccion.variable); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.valor, {valor: tablaDeSimbolos.getValue(instruccion.variable).valor + 1, tipo: tablaDeSimbolos.getValue(instruccion.variable).tipo})) {
-    const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
+  for (tablaDeSimbolos.getValue(instruccion.variable); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable, { valor: tablaDeSimbolos.getValue(instruccion.variable).valor + 1, tipo: tablaDeSimbolos.getValue(instruccion.variable).tipo })) {
+    interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
   }
 }
 interpretarBloque(ast, TablaSimbolosGlobal)

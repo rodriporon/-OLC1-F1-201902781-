@@ -125,6 +125,8 @@ instrucciones
 instruccion
         : PRINTLN PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintln($3) }
         | PRINTLN PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintlnLogico($3) }
+        | WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile($3, $6)}
+        | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR MAS MAS PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoFor($3, $5, $7, $9, $14) }
         | tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4, false)}
         | CONST tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($2.toUpperCase(), $3, $5, true)}
         | IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA                    { $$ = instrucciones.nuevoAsignacion($1, $3)}                     
@@ -172,6 +174,8 @@ operacionNumerica
         | ENTERO                                                    { $$ = instrucciones.nuevoValor(Number($1), TIPO_VALOR.INT) } 
         | DECIMAL                                                   { $$ = instrucciones.nuevoValor(parseFloat($1), TIPO_VALOR.DOUBLE)}
         | CHAR                                                      { $$ = instrucciones.nuevoValor($1.charAt(0), TIPO_VALOR.CHAR)}
+        | TRUE                                                      { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.BOOLEAN)}
+        | FALSE                                                      { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.BOOLEAN)}
         | IDENTIFICADOR                                             { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.IDENTIFICADOR)}
         | CADENA                                                    { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.CADENA)}
 ;
@@ -180,7 +184,7 @@ expresionLogica
         : expresionRelacional AND expresionRelacional               { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.AND)}
         | expresionRelacional OR expresionRelacional                { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.OR)}
         | NOT expresionRelacional                                   { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.NOT)}
-        | expresionRelacional                                       { $$ = $1 }
+        | expresionRelacional                                       { $$ = $1 } 
 ;
 
 expresionRelacional

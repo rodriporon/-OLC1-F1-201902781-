@@ -162,7 +162,7 @@
       }
     ],
     "nuevoIf": {
-      "tipo": "INSTR_IF_ELSE_IF",
+      "tipo": "INSTR_IF",
       "expresionLogica": {
         "operandoIzq": {
           "tipo": "VAL_INT",
@@ -172,7 +172,7 @@
           "tipo": "VAL_INT",
           "valor": 1
         },
-        "tipo": "OP_DIFERENTE"
+        "tipo": "OP_DOBLE_IGUAL"
       },
       "instrucciones": [
         {
@@ -182,63 +182,45 @@
             "valor": "1 == 1"
           }
         }
-      ],
-      "nuevoIf": {
-        "tipo": "INSTR_IF_ELSE_IF",
-        "expresionLogica": {
-          "operandoIzq": {
-            "tipo": "VAL_INT",
-            "valor": 2
-          },
-          "operandoDer": {
-            "tipo": "VAL_INT",
-            "valor": 2
-          },
-          "tipo": "OP_DOBLE_IGUAL"
-        },
-        "instrucciones": [
-          {
-            "tipo": "INSTR_PRINTLN",
-            "expresionCadena": {
-              "tipo": "VAL_CADENA",
-              "valor": "2 == 2"
-            }
-          }
-        ],
-        "nuevoIf": {
-          "tipo": "INSTR_IF_ELSE",
-          "expresionLogica": {
-            "operandoIzq": {
-              "tipo": "VAL_INT",
-              "valor": 1
-            },
-            "operandoDer": {
-              "tipo": "VAL_INT",
-              "valor": 1
-            },
-            "tipo": "OP_DOBLE_IGUAL"
-          },
-          "instruccionesIfVerdadero": [
-            {
-              "tipo": "INSTR_PRINTLN",
-              "expresionCadena": {
-                "tipo": "VAL_CADENA",
-                "valor": "1 == 1"
-              }
-            }
-          ],
-          "instruccionesIfFalso": [
-            {
-              "tipo": "INSTR_PRINTLN",
-              "expresionCadena": {
-                "tipo": "VAL_CADENA",
-                "valor": "0 == 0"
-              }
-            }
-          ]
+      ]
+    }
+  },
+  {
+    "tipo": "INSTR_DECLARACION",
+    "identificador": "contador",
+    "tipoDato": "INT",
+    "expresionNumerica": {
+      "tipo": "VAL_INT",
+      "valor": 100
+    },
+    "constante": false
+  },
+  {
+    "tipo": "INSTR_WHILE",
+    "expresionLogica": {
+      "operandoIzq": {
+        "tipo": "VAL_INT",
+        "valor": 5
+      },
+      "operandoDer": {
+        "tipo": "VAL_INT",
+        "valor": 5
+      },
+      "tipo": "OP_DOBLE_IGUAL"
+    },
+    "instrucciones": [
+      {
+        "tipo": "POST_INCREMENTO",
+        "identificador": "contador"
+      },
+      {
+        "tipo": "INSTR_PRINTLN",
+        "expresionCadena": {
+          "tipo": "VAL_IDENTIFICADOR",
+          "valor": "contador"
         }
       }
-    }
+    ]
   },
   {
     "tipo": "INSTR_DECLARACION",

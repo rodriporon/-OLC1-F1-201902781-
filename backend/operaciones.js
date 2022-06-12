@@ -31,7 +31,9 @@ const TIPO_OPERACION = {
 
   AND: 'OP_AND',
   OR: 'OP_OR',
-  NOT: 'OP_NOT'
+  NOT: 'OP_NOT',
+
+  BOOLEAN: 'OP_BOOLEAN'
 }
 
 const TIPO_INSTRUCCION = {

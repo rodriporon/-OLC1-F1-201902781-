@@ -95,6 +95,9 @@ for (int i = 120; i>=10; i--) {
 */
 
 
+while(false) {
+    println("hola");
+}
 
 
 //COMENTARIO

@@ -442,8 +442,9 @@ const interpretarExpresionLogica = (expresion, tablaDeSimbolos) => {
     const valor = interpretarExpresionRelacional(expresion.operandoIzq, tablaDeSimbolos)
     return !valor
   }
-  if (expresion.tipo === TIPO_OPERACION.BOOLEAN) {
-    // console.log(expresion.valor, typeof (expresion.valor))
+  if (expresion.tipo === TIPO_VALOR.BOOLEAN) {
+    if (expresion.valor === 'true') return true
+    if (expresion.valor === 'false') return false
   }
   return interpretarExpresionRelacional(expresion, tablaDeSimbolos)
 }

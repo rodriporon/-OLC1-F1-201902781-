@@ -128,6 +128,9 @@ instruccion
         | WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile($3, $6)}
         | WHILE PARENTESISABRE TRUE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN), $6)}
         | WHILE PARENTESISABRE FALSE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN), $6)}
+        | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, $7)}
+        | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE TRUE PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, instrucciones.nuevoValor($7, TIPO_VALOR.BOOLEAN))}
+        | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE FALSE PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, instrucciones.nuevoValor($7, TIPO_VALOR.BOOLEAN))}
         | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR INCREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionSimbolosMas($3, $5, $7, $9, $13) }
         | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR DECREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionSimbolosMenos($3, $5, $7, $9, $13) }
         | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR IGUAL operacionNumerica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionOperacion($3, $5, $7, $9, $11, $14) }

@@ -43,6 +43,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarIfElseIf(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.WHILE) {
       interpretarWhile(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.DO_WHILE) {
+      interpretarDoWhile(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR_ASIGNACION_SIMBOLOS_MAS) {
       interpretarForAsignacionSimbolosMas(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR_ASIGNACION_SIMBOLOS_MENOS) {
@@ -486,8 +488,24 @@ const interpretarIfElseIf = (instruccion, tablaDeSimbolos) => {
 const interpretarWhile = (instruccion, tablaDeSimbolos) => {
   while (interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)) {
     // const tablaSimbolosWhile = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+    if (tablaDeSimbolos.getValue('_$_break').valor) {
+      break
+    } else {
+      interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+    }
   }
+  tablaDeSimbolos.update('_$_break', { valor: false, tipo: 'BOOLEAN' })
+}
+
+const interpretarDoWhile = (instruccion, tablaDeSimbolos) => {
+  do {
+    if (tablaDeSimbolos.getValue('_$_break').valor) {
+      break
+    } else {
+      interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+    }
+  } while (interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos))
+  tablaDeSimbolos.update('_$_break', { valor: false, tipo: 'BOOLEAN' })
 }
 
 const interpretarForAsignacionSimbolosMas = (instruccion, tablaDeSimbolos) => {

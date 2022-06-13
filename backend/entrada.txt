@@ -94,10 +94,24 @@ for (int i = 120; i>=10; i--) {
 }
 */
 
-
-while(false) {
-    println("hola");
+/*
+while(true) {
+    println("hola mundo");
+    break;
 }
+*/
+
+/*
+int num6 = 6;
+int contador = 0;
+do {
+    contador++;
+    println(contador);
+    if (contador == 150) {
+        break;
+    }
+} while(5 == 5 && num6 == 6);
+*/
 
 
 //COMENTARIO

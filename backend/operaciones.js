@@ -41,6 +41,7 @@ const TIPO_INSTRUCCION = {
   PRINTLN: 'INSTR_PRINTLN',
   PRINTLN_LOGICO: 'INSTR_PRINTLN_LOGICO',
   WHILE: 'INSTR_WHILE',
+  DO_WHILE: 'INSTR_DO_WHILE',
   DECLARACION_ASIGNACION: 'INSTR_DECLARACION',
   ASIGNACION: 'INSTR_ASIGANCION',
   IF: 'INSTR_IF',
@@ -136,6 +137,14 @@ const instrucciones = {
       tipo: TIPO_INSTRUCCION.WHILE,
       expresionLogica,
       instrucciones
+    }
+  },
+
+  nuevoDoWhile: (instrucciones, expresionLogica) => {
+    return {
+      tipo: TIPO_INSTRUCCION.DO_WHILE,
+      instrucciones,
+      expresionLogica
     }
   },
 

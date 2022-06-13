@@ -46,7 +46,14 @@ const TIPO_INSTRUCCION = {
   IF: 'INSTR_IF',
   IF_ELSE: 'INSTR_IF_ELSE',
   IF_ELSE_IF: 'INSTR_IF_ELSE_IF',
-  FOR: 'INST_FOR',
+  FOR_ASIGNACION_SIMBOLOS_MAS: 'INSTR_FOR_ASIGNACION_INCREMENTO_MAS',
+  FOR_ASIGNACION_SIMBOLOS_MENOS: 'INSTR_FOR_ASIGNACION_INCREMENTO_MENOS',
+  FOR_DECLARACION_OPERACION_MAS: 'INSTR_FOR_DECLARACION_OPERACION_MAS',
+  FOR_DECLARACION_OPERACION_MENOS: 'INSTR_FOR_DECLARACION_OPERACION_MENOS',
+  FOR_ASIGNACION_OPERACION_MENOS: 'INSTR_FOR_ASIGNACION_OPERACION_MENOS',
+  FOR_ASIGNACION_OPERACION_MAS: 'INSTR_FOR_ASIGNACION_OPERACION_MAS',
+  FOR_DECLARACION_SIMBOLOS_MAS: 'INSTR_FOR_DECLARACION_SIMBOLOS_MAS',
+  FOR_DECLARACION_SIMBOLOS_MENOS: 'INSTR_FOR_DECLARACION_SIMBOLOS_MENOS',
   SWITCH: 'SWITCH',
   SWITCH_OP: 'SWITCH_OP',
   SWITCH_DEF: 'SWITCH_DEF',
@@ -130,9 +137,20 @@ const instrucciones = {
     }
   },
 
-  nuevoFor: (variable, valorVariable, expresionLogica, aumento, instrucciones) => {
+  nuevoForAsignacionSimbolosMas: (variable, valorVariable, expresionLogica, aumento, instrucciones) => {
     return {
-      tipo: TIPO_INSTRUCCION.FOR,
+      tipo: TIPO_INSTRUCCION.FOR_ASIGNACION_SIMBOLOS_MAS,
+      expresionLogica,
+      instrucciones,
+      aumento,
+      variable,
+      valorVariable
+    }
+  },
+
+  nuevoForAsignacionSimbolosMenos: (variable, valorVariable, expresionLogica, aumento, instrucciones) => {
+    return {
+      tipo: TIPO_INSTRUCCION.FOR_ASIGNACION_SIMBOLOS_MENOS,
       expresionLogica,
       instrucciones,
       aumento,

@@ -1,0 +1,121 @@
+//A continuacion un archivo de entrada para el curso de "olc1"
+//Este es un comentario de una linea :)
+//INICIANDO--------------------------------------------
+
+
+/*******
+        
+    ****Universidad San Carlos de Guatemala
+        Facultad de Ingenieria /n
+        Escuela de ciencias y sistem
+        Escuela de vacasiones Junio 2022
+        LFScript
+
+****/
+
+
+
+//AREA DE DECLARACIONES DE VARIABLES GLOBALES
+int numero = 12;
+int a,b,c,d = 2022;
+inT numero_dos = 23.32; //error semantico porque tiene decimales
+Int _numero_tres = 12; //error semantico porque empieza con guion bajo
+int numero_tres_ = numero;
+int numero_tres_ = numero_tmp; //error semantico proque no existe esta variable
+
+doublE decimal_uno = -0.235;
+doublE decimal_uno = -0.154; //error ya existe esta variable
+doubLe decimal_dos = -40; //error semantico porque necesita un decimal
+doubLe decimal_dos_dos = -40.; //error semantico porque necesitaba numero despues del decimal
+Double decimal_tres= "hola": //error semantico por la cadena
+doublE decimal_cuatro = decimal_dos_dos; //variable no existe
+double e,f,g,h,i= 20.22+12;
+double ee,ff,gg,hh,ii= 20.22+12+e;
+double ee,ff,gg,hh,ii,jj= 20.5; // error, variables ya existen y no se ejecuta la instruccion completa 
+double jj= 100.01; 
+
+
+char caracter_uno = 'A' ;
+char caracter_uno_uno = '1' ;
+char caracter_uno_dos = 'a' ;
+char caracter_especial_uno = '\n' ;
+char caracter_especial_dos = '\\' ;
+char caracter_especial_tres = '\t' ;
+char caracter_a, caracter_b, caracter__c = '8';
+char caracter_dos = "b"; //error semantico porque tiene doble comillas
+char caracter_tres = true; //eror semantico no acepta bools
+char caracter_tres = ''; //eror esperaba un caracter y encontro epsilon
+
+
+boolean banderita_uno = True;
+booleaN banderita_dos = False;
+booleaN banderita_dos = False; //error, ya existe esta variable
+booleaN banderita_tres = "False"; //error, no acepta la cadena
+
+
+string encabezado = "\"Universidad San Carlos de Guatemala\"\nEscuela de Ciencias y Sistmas";
+string copia_encabezado = encabezado;
+string nombre = "compiladores";
+string nombre_dos = "organizacion";
+string nombre_tres = "-45";
+string nombre_tres = "-45"; //error, ya existe esta variable
+string nombre_cuatro = "%%%#\n\""; 
+string nombre_cinco = ""; 
+
+
+
+
+
+{
+
+    //ASIGNACIONES------
+    encabezado= 45; //error de asignacion int con string
+    banderita_uno= truE;
+    nombre_tres="ganare compiladores \"1\"";
+    nombre_y_apellido= "<insertar nombre aqui>" ; //error, no existte esta variable
+    int numero = 13;
+    char caracter_uno = '>' ;
+
+    numero++;
+    banderita_dos++; //error no se puede aumentar 
+    int numero=1; //error, variable ya existe;
+
+    numero++;
+    numero++;
+    numero++;
+    ++caracter_uno_uno; // error, no es posible ingrementar
+
+    {
+        int nivel_intermedio= ' '+2; //resutlado 34
+        int nivel_intermedio_dos= ' '+'>'; 
+        int nivel_intermedio_tres= ' '+'_a';  //error, no se acepta el caracter de mas en char
+        
+        {
+            //espacio en blanco
+        }
+
+    }
+
+    {
+
+    }
+
+    {
+        caracter_uno_dos = '}' ;
+    }
+
+
+
+
+
+    
+
+
+
+
+    
+
+}
+
+
+//FIN DE COMENTARIO

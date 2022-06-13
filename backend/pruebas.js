@@ -43,8 +43,10 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarIfElseIf(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.WHILE) {
       interpretarWhile(instruccion, tablaSimbolos)
-    } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR) {
-      interpretarFor(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR_ASIGNACION_SIMBOLOS_MAS) {
+      interpretarForAsignacionSimbolosMas(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR_ASIGNACION_SIMBOLOS_MENOS) {
+      interpretarForAsignacionSimbolosMenos(instruccion, tablaSimbolos)
     } else {
       throw new Error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
     }
@@ -431,7 +433,7 @@ const interpretarExpresionLogica = (expresion, tablaDeSimbolos) => {
     return !valor
   }
   if (expresion.tipo === TIPO_OPERACION.BOOLEAN) {
-    console.log(expresion.valor, typeof (expresion.valor))
+    // console.log(expresion.valor, typeof (expresion.valor))
   }
   return interpretarExpresionRelacional(expresion, tablaDeSimbolos)
 }
@@ -477,10 +479,18 @@ const interpretarWhile = (instruccion, tablaDeSimbolos) => {
   }
 }
 
-const interpretarFor = (instruccion, tablaDeSimbolos) => {
+const interpretarForAsignacionSimbolosMas = (instruccion, tablaDeSimbolos) => {
   const valor = interpretarExpresionCadena(instruccion.valorVariable, tablaDeSimbolos)
   tablaDeSimbolos.update(instruccion.variable, valor)
   for (tablaDeSimbolos.getValue(instruccion.variable); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable, { valor: tablaDeSimbolos.getValue(instruccion.variable).valor + 1, tipo: tablaDeSimbolos.getValue(instruccion.variable).tipo })) {
+    interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+  }
+}
+
+const interpretarForAsignacionSimbolosMenos = (instruccion, tablaDeSimbolos) => {
+  const valor = interpretarExpresionCadena(instruccion.valorVariable, tablaDeSimbolos)
+  tablaDeSimbolos.update(instruccion.variable, valor)
+  for (tablaDeSimbolos.getValue(instruccion.variable); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable, { valor: tablaDeSimbolos.getValue(instruccion.variable).valor - 1, tipo: tablaDeSimbolos.getValue(instruccion.variable).tipo })) {
     interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
   }
 }

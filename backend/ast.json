@@ -87,20 +87,6 @@
     "constante": false
   },
   {
-    "tipo": "INSTR_PRINTLN",
-    "expresionCadena": {
-      "operandoIzq": {
-        "tipo": "VAL_IDENTIFICADOR",
-        "valor": "cadena"
-      },
-      "operandoDer": {
-        "tipo": "VAL_IDENTIFICADOR",
-        "valor": "esTrue"
-      },
-      "tipo": "OP_SUMA"
-    }
-  },
-  {
     "tipo": "INSTR_DECLARACION",
     "identificador": "num5",
     "tipoDato": "INT",
@@ -211,77 +197,6 @@
   },
   {
     "tipo": "INSTR_DECLARACION",
-    "identificador": "num6",
-    "tipoDato": "INT",
-    "expresionNumerica": {
-      "tipo": "VAL_INT",
-      "valor": 6
-    },
-    "constante": false
-  },
-  {
-    "tipo": "INSTR_DECLARACION",
-    "identificador": "contador",
-    "tipoDato": "INT",
-    "expresionNumerica": {
-      "tipo": "VAL_INT",
-      "valor": 100
-    },
-    "constante": false
-  },
-  {
-    "tipo": "INSTR_WHILE",
-    "expresionLogica": {
-      "operandoIzq": {
-        "tipo": "VAL_IDENTIFICADOR",
-        "valor": "num6"
-      },
-      "operandoDer": {
-        "tipo": "VAL_INT",
-        "valor": 6
-      },
-      "tipo": "OP_DOBLE_IGUAL"
-    },
-    "instrucciones": [
-      {
-        "tipo": "POST_INCREMENTO",
-        "identificador": "contador"
-      },
-      {
-        "tipo": "INSTR_PRINTLN",
-        "expresionCadena": {
-          "tipo": "VAL_IDENTIFICADOR",
-          "valor": "contador"
-        }
-      },
-      {
-        "tipo": "INSTR_IF",
-        "expresionLogica": {
-          "operandoIzq": {
-            "tipo": "VAL_IDENTIFICADOR",
-            "valor": "contador"
-          },
-          "operandoDer": {
-            "tipo": "VAL_INT",
-            "valor": 1000
-          },
-          "tipo": "OP_DOBLE_IGUAL"
-        },
-        "instrucciones": [
-          {
-            "tipo": "INSTR_ASIGANCION",
-            "identificador": "num6",
-            "expresionNumerica": {
-              "tipo": "VAL_INT",
-              "valor": 0
-            }
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "tipo": "INSTR_DECLARACION",
     "identificador": "numConstante",
     "tipoDato": "INT",
     "expresionNumerica": {
@@ -309,15 +224,7 @@
     "constante": false
   },
   {
-    "tipo": "INSTR_ASIGANCION",
-    "identificador": "contador",
-    "expresionNumerica": {
-      "tipo": "VAL_INT",
-      "valor": 0
-    }
-  },
-  {
-    "tipo": "INST_FOR",
+    "tipo": "INSTR_FOR_ASIGNACION_INCREMENTO_MENOS",
     "expresionLogica": {
       "operandoIzq": {
         "tipo": "VAL_IDENTIFICADOR",
@@ -325,20 +232,16 @@
       },
       "operandoDer": {
         "tipo": "VAL_INT",
-        "valor": 10
+        "valor": 0
       },
-      "tipo": "OP_MENOR"
+      "tipo": "OP_MAYOR"
     },
     "instrucciones": [
-      {
-        "tipo": "POST_INCREMENTO",
-        "identificador": "contador"
-      },
       {
         "tipo": "INSTR_PRINTLN",
         "expresionCadena": {
           "tipo": "VAL_IDENTIFICADOR",
-          "valor": "contador"
+          "valor": "i"
         }
       }
     ],
@@ -346,7 +249,7 @@
     "variable": "i",
     "valorVariable": {
       "tipo": "VAL_INT",
-      "valor": 0
+      "valor": 1000
     }
   }
 ]

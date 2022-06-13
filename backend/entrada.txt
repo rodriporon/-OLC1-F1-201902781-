@@ -52,6 +52,9 @@ for (i=0; i<10; i++) {
 int i = 10;
 for (i=1000; i>0; i--) {
     println(i);
+    if (i == 120) {
+        println("LLEGO A :" + i);
+    }
 }
 */
 
@@ -59,24 +62,38 @@ for (i=1000; i>0; i--) {
 int i = 10;
 for (i = 1000; i>=0; i=i-10) {
     println(i);
+    if (i == 500) {
+        println("LLEGO A :" + i);
+    }
 }
 */
 
 /*
 for (int i = 0; i<=100; i = i + 7) {
     println(i);
+    if (i == 63) {
+        println("LLEGO A :" + i);
+    }
 }
 */
 
 /*
 for (int i = 0; i<=100; i++) {
     println(i);
+    if (i == 60) {
+        println("LLEGO A :" + i);
+    }
 }
-*/
+
 
 for (int i = 120; i>=10; i--) {
     println(i);
+    if(i == 15) {
+        println("LLEGO A :" + i);
+    }
 }
+*/
+
 
 
 

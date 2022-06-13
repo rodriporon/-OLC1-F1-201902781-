@@ -58,7 +58,9 @@ const TIPO_INSTRUCCION = {
   SWITCH_OP: 'SWITCH_OP',
   SWITCH_DEF: 'SWITCH_DEF',
   ASIGNACION_SIMPLIFICADA: 'ASIGNACION_SIMPLIFICADA',
-  POST_INCREMENTO: 'POST_INCREMENTO'
+  POST_INCREMENTO: 'POST_INCREMENTO',
+
+  BREAK: 'INSTR_BREAK'
 }
 
 const TIPO_OPCION_SWITCH = {
@@ -291,6 +293,12 @@ const instrucciones = {
       operador,
       expresionNumerica,
       identificador
+    }
+  },
+
+  nuevoBreak: () => {
+    return {
+      tipo: TIPO_INSTRUCCION.BREAK
     }
   }
 }

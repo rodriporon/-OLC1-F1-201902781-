@@ -224,7 +224,7 @@
     "constante": false
   },
   {
-    "tipo": "INSTR_FOR_ASIGNACION_INCREMENTO_MENOS",
+    "tipo": "INSTR_FOR_ASIGNACION_OPERACION",
     "expresionLogica": {
       "operandoIzq": {
         "tipo": "VAL_IDENTIFICADOR",
@@ -234,7 +234,7 @@
         "tipo": "VAL_INT",
         "valor": 0
       },
-      "tipo": "OP_MAYOR"
+      "tipo": "OP_MAYOR_IGUAL"
     },
     "instrucciones": [
       {
@@ -245,7 +245,18 @@
         }
       }
     ],
-    "aumento": "i",
+    "mismaVariable": "i",
+    "nuevoValor": {
+      "operandoIzq": {
+        "tipo": "VAL_IDENTIFICADOR",
+        "valor": "i"
+      },
+      "operandoDer": {
+        "tipo": "VAL_INT",
+        "valor": 10
+      },
+      "tipo": "OP_RESTA"
+    },
     "variable": "i",
     "valorVariable": {
       "tipo": "VAL_INT",

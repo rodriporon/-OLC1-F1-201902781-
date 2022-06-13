@@ -48,8 +48,15 @@ for (i=0; i<10; i++) {
 }
 */
 
+/*
 int i = 10;
 for (i=1000; i>0; i--) {
+    println(i);
+}
+*/
+
+int i = 10;
+for (i = 1000; i>=0; i=i-10;) {
     println(i);
 }
 

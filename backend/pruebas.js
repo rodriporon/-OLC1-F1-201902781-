@@ -47,6 +47,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarForAsignacionSimbolosMas(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR_ASIGNACION_SIMBOLOS_MENOS) {
       interpretarForAsignacionSimbolosMenos(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR_ASIGNACION_OPERACION) {
+      interpretarForAsignacionOperacion(instruccion, tablaSimbolos)
     } else {
       throw new Error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
     }
@@ -491,6 +493,14 @@ const interpretarForAsignacionSimbolosMenos = (instruccion, tablaDeSimbolos) => 
   const valor = interpretarExpresionCadena(instruccion.valorVariable, tablaDeSimbolos)
   tablaDeSimbolos.update(instruccion.variable, valor)
   for (tablaDeSimbolos.getValue(instruccion.variable); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable, { valor: tablaDeSimbolos.getValue(instruccion.variable).valor - 1, tipo: tablaDeSimbolos.getValue(instruccion.variable).tipo })) {
+    interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+  }
+}
+
+const interpretarForAsignacionOperacion = (instruccion, tablaDeSimbolos) => {
+  const valor = interpretarExpresionCadena(instruccion.valorVariable, tablaDeSimbolos)
+  tablaDeSimbolos.update(instruccion.variable, valor)
+  for (tablaDeSimbolos.getValue(instruccion.variable); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.mismaVariable, interpretarExpresionCadena(instruccion.nuevoValor, tablaDeSimbolos))) {
     interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
   }
 }

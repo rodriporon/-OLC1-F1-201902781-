@@ -214,12 +214,12 @@
     }
   },
   {
-    "tipo": "INSTR_FOR_DECLARACION_OPERACION",
+    "tipo": "INSTR_FOR_DECLARACION_SIMBOLOS_MENOS",
     "tipoDato": "INT",
     "variable1": "i",
     "valorVariable1": {
       "tipo": "VAL_INT",
-      "valor": 0
+      "valor": 120
     },
     "expresionLogica": {
       "operandoIzq": {
@@ -228,22 +228,11 @@
       },
       "operandoDer": {
         "tipo": "VAL_INT",
-        "valor": 100
+        "valor": 10
       },
-      "tipo": "OP_MENOR_IGUAL"
+      "tipo": "OP_MAYOR_IGUAL"
     },
     "variable2": "i",
-    "valorVariable2": {
-      "operandoIzq": {
-        "tipo": "VAL_IDENTIFICADOR",
-        "valor": "i"
-      },
-      "operandoDer": {
-        "tipo": "VAL_INT",
-        "valor": 7
-      },
-      "tipo": "OP_SUMA"
-    },
     "instrucciones": [
       {
         "tipo": "INSTR_PRINTLN",

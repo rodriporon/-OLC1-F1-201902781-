@@ -51,6 +51,10 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarForAsignacionOperacion(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR_DECLARACION_OPERACION) {
       interpretarForDeclaracionOperacion(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR_DECLARACION_SIMBOLOS_MAS) {
+      interpretarForDeclaracionSimbolosMas(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR_DECLARACION_SIMBOLOS_MENOS) {
+      interpretarForDeclaracionSimbolosMenos(instruccion, tablaSimbolos)
     } else {
       throw new Error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
     }
@@ -522,4 +526,31 @@ const interpretarForDeclaracionOperacion = (instruccion, tablaDeSimbolos) => {
     interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
   }
 }
+
+const interpretarForDeclaracionSimbolosMas = (instruccion, tablaDeSimbolos) => {
+  if (instruccion.variable1 !== instruccion.variable2) throw new Error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable1 + ' ' + instruccion.variable2)
+  interpretarDeclaracionAsignacion({
+    identificador: instruccion.variable1,
+    tipoDato: instruccion.tipoDato,
+    constante: false,
+    expresionNumerica: instruccion.valorVariable1
+  }, tablaDeSimbolos)
+  for (tablaDeSimbolos.getValue(instruccion.variable1); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable1, { valor: tablaDeSimbolos.getValue(instruccion.variable1).valor + 1, tipo: tablaDeSimbolos.getValue(instruccion.variable1).tipo })) {
+    interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+  }
+}
+
+const interpretarForDeclaracionSimbolosMenos = (instruccion, tablaDeSimbolos) => {
+  if (instruccion.variable1 !== instruccion.variable2) throw new Error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable1 + ' ' + instruccion.variable2)
+  interpretarDeclaracionAsignacion({
+    identificador: instruccion.variable1,
+    tipoDato: instruccion.tipoDato,
+    constante: false,
+    expresionNumerica: instruccion.valorVariable1
+  }, tablaDeSimbolos)
+  for (tablaDeSimbolos.getValue(instruccion.variable1); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable1, { valor: tablaDeSimbolos.getValue(instruccion.variable1).valor - 1, tipo: tablaDeSimbolos.getValue(instruccion.variable1).tipo })) {
+    interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+  }
+}
+
 interpretarBloque(ast, TablaSimbolosGlobal)

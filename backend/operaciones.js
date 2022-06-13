@@ -184,6 +184,30 @@ const instrucciones = {
     }
   },
 
+  nuevoForDeclaracionSimbolosMas: (tipoDato, variable1, valorVariable1, expresionLogica, variable2, instrucciones) => {
+    return {
+      tipo: TIPO_INSTRUCCION.FOR_DECLARACION_SIMBOLOS_MAS,
+      tipoDato,
+      variable1,
+      valorVariable1,
+      expresionLogica,
+      variable2,
+      instrucciones
+    }
+  },
+
+  nuevoForDeclaracionSimbolosMenos: (tipoDato, variable1, valorVariable1, expresionLogica, variable2, instrucciones) => {
+    return {
+      tipo: TIPO_INSTRUCCION.FOR_DECLARACION_SIMBOLOS_MENOS,
+      tipoDato,
+      variable1,
+      valorVariable1,
+      expresionLogica,
+      variable2,
+      instrucciones
+    }
+  },
+
   nuevoDeclaracionAsignacion: (tipoDato, identificador, expresionNumerica, constante) => {
     return {
       tipo: TIPO_INSTRUCCION.DECLARACION_ASIGNACION,

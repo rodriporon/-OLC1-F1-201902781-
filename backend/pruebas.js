@@ -49,6 +49,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarForAsignacionSimbolosMenos(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR_ASIGNACION_OPERACION) {
       interpretarForAsignacionOperacion(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR_DECLARACION_OPERACION) {
+      interpretarForDeclaracionOperacion(instruccion, tablaSimbolos)
     } else {
       throw new Error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
     }
@@ -482,6 +484,7 @@ const interpretarWhile = (instruccion, tablaDeSimbolos) => {
 }
 
 const interpretarForAsignacionSimbolosMas = (instruccion, tablaDeSimbolos) => {
+  if (instruccion.variable !== instruccion.aumento) throw new Error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable + ' ' + instruccion.aumento)
   const valor = interpretarExpresionCadena(instruccion.valorVariable, tablaDeSimbolos)
   tablaDeSimbolos.update(instruccion.variable, valor)
   for (tablaDeSimbolos.getValue(instruccion.variable); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable, { valor: tablaDeSimbolos.getValue(instruccion.variable).valor + 1, tipo: tablaDeSimbolos.getValue(instruccion.variable).tipo })) {
@@ -490,6 +493,7 @@ const interpretarForAsignacionSimbolosMas = (instruccion, tablaDeSimbolos) => {
 }
 
 const interpretarForAsignacionSimbolosMenos = (instruccion, tablaDeSimbolos) => {
+  if (instruccion.variable !== instruccion.decremento) throw new Error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable + ' ' + instruccion.decremento)
   const valor = interpretarExpresionCadena(instruccion.valorVariable, tablaDeSimbolos)
   tablaDeSimbolos.update(instruccion.variable, valor)
   for (tablaDeSimbolos.getValue(instruccion.variable); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable, { valor: tablaDeSimbolos.getValue(instruccion.variable).valor - 1, tipo: tablaDeSimbolos.getValue(instruccion.variable).tipo })) {
@@ -498,9 +502,23 @@ const interpretarForAsignacionSimbolosMenos = (instruccion, tablaDeSimbolos) => 
 }
 
 const interpretarForAsignacionOperacion = (instruccion, tablaDeSimbolos) => {
+  if (instruccion.variable !== instruccion.mismaVariable) throw new Error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable + ' ' + instruccion.mismaVariable)
   const valor = interpretarExpresionCadena(instruccion.valorVariable, tablaDeSimbolos)
   tablaDeSimbolos.update(instruccion.variable, valor)
   for (tablaDeSimbolos.getValue(instruccion.variable); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.mismaVariable, interpretarExpresionCadena(instruccion.nuevoValor, tablaDeSimbolos))) {
+    interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+  }
+}
+
+const interpretarForDeclaracionOperacion = (instruccion, tablaDeSimbolos) => {
+  if (instruccion.variable1 !== instruccion.variable2) throw new Error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable1 + ' ' + instruccion.variable2)
+  interpretarDeclaracionAsignacion({
+    identificador: instruccion.variable1,
+    tipoDato: instruccion.tipoDato,
+    constante: false,
+    expresionNumerica: instruccion.valorVariable1
+  }, tablaDeSimbolos)
+  for (tablaDeSimbolos.getValue(instruccion.variable1); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable1, interpretarExpresionCadena(instruccion.valorVariable2, tablaDeSimbolos))) {
     interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
   }
 }

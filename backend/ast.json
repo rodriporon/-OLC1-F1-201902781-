@@ -214,17 +214,13 @@
     }
   },
   {
-    "tipo": "INSTR_DECLARACION",
-    "identificador": "i",
+    "tipo": "INSTR_FOR_DECLARACION_OPERACION",
     "tipoDato": "INT",
-    "expresionNumerica": {
+    "variable1": "i",
+    "valorVariable1": {
       "tipo": "VAL_INT",
-      "valor": 10
+      "valor": 0
     },
-    "constante": false
-  },
-  {
-    "tipo": "INSTR_FOR_ASIGNACION_OPERACION",
     "expresionLogica": {
       "operandoIzq": {
         "tipo": "VAL_IDENTIFICADOR",
@@ -232,9 +228,21 @@
       },
       "operandoDer": {
         "tipo": "VAL_INT",
-        "valor": 0
+        "valor": 100
       },
-      "tipo": "OP_MAYOR_IGUAL"
+      "tipo": "OP_MENOR_IGUAL"
+    },
+    "variable2": "i",
+    "valorVariable2": {
+      "operandoIzq": {
+        "tipo": "VAL_IDENTIFICADOR",
+        "valor": "i"
+      },
+      "operandoDer": {
+        "tipo": "VAL_INT",
+        "valor": 7
+      },
+      "tipo": "OP_SUMA"
     },
     "instrucciones": [
       {
@@ -244,23 +252,6 @@
           "valor": "i"
         }
       }
-    ],
-    "mismaVariable": "i",
-    "nuevoValor": {
-      "operandoIzq": {
-        "tipo": "VAL_IDENTIFICADOR",
-        "valor": "i"
-      },
-      "operandoDer": {
-        "tipo": "VAL_INT",
-        "valor": 10
-      },
-      "tipo": "OP_RESTA"
-    },
-    "variable": "i",
-    "valorVariable": {
-      "tipo": "VAL_INT",
-      "valor": 1000
-    }
+    ]
   }
 ]

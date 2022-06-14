@@ -6,6 +6,7 @@ import { saveAs } from 'file-saver'
 export default function Pestaña ({ isHidden }) {
   const [isOpen, setIsOpen] = useState(false)
   const [fileValue, setFileValue] = useState('')
+  const [consolaValue, setConsolaValue] = useState('')
 
   const handlerGuardar = () => {
     const blob = new window.Blob([fileValue], { type: 'text/plain;charset=utf-8' })
@@ -19,6 +20,10 @@ export default function Pestaña ({ isHidden }) {
     setFileValue(e.target.value)
   }
 
+  const handlerOnChangeConsola = e => {
+    setConsolaValue(e.targe.value)
+  }
+
   const handlerBotonEjecutar = e => {
     e.preventDefault()
     fetch('http://localhost:3001/compilar', {
@@ -29,7 +34,7 @@ export default function Pestaña ({ isHidden }) {
       }
     }).then(res => res.json())
       .catch(err => console.error('ERROR', err))
-      .then(res => console.log('Success:', res))
+      .then(res => setConsolaValue(res.salidaConsola))
   }
 
   const closeModal = (e) => {
@@ -198,7 +203,7 @@ export default function Pestaña ({ isHidden }) {
           </div>
           <div className='relative'>
             <h4 className='font-medium underline dark:decoration-pink-400 decoration-pink-500 py-4'>Consola</h4>
-            <textarea spellCheck={false} className='shadow-xl bg-gray-200 dark:bg-zinc-700 resize-none rounded-md relative h-96 w-full max-w-full' />
+            <textarea value={consolaValue} spellCheck={false} className='shadow-xl bg-gray-200 dark:bg-zinc-700 resize-none rounded-md relative h-96 w-full max-w-full' onChange={handlerOnChangeConsola} />
           </div>
 
         </div>

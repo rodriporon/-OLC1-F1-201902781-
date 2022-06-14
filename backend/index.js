@@ -12,18 +12,20 @@ app.use(bodyParser.json())
 
 let ast
 let entradaEditor
-// let salidaConsola
+let salidaConsola = ''
 
 app.get('/', (req, res) => {
   res.send('<h1>Server running</>')
 })
 
 app.post('/compilar', (req, res) => {
+  salidaConsola = ''
   const entradaJson = req.body
   entradaEditor = entradaJson.fileValue.toString()
   ast = parser.parse(entradaEditor)
   interpretarBloque(ast, TablaSimbolosGlobal)
-  res.json({ ok: 200 })
+  console.log(salidaConsola)
+  res.json({ salidaConsola })
 })
 
 const PORT = 3001
@@ -394,11 +396,15 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
 
 const interpretarPrintln = (instruccion, tablaDeSimbolos) => {
   const cadena = interpretarExpresionCadena(instruccion.expresionCadena, tablaDeSimbolos).valor
+  salidaConsola += cadena
+  salidaConsola += '\n'
   console.log('>> ' + cadena)
 }
 
 const interpretarPrintlnLogico = (expresion, tablaDeSimbolos) => {
   const cadena = interpretarExpresionLogica(expresion.expresionLogica, tablaDeSimbolos)
+  salidaConsola += cadena
+  salidaConsola += '\n'
   console.log('>> ' + cadena)
 }
 

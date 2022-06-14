@@ -35,6 +35,7 @@ export default function Pestaña ({ isHidden }) {
     }).then(res => res.json())
       .catch(err => console.error('ERROR', err))
       .then(res => setConsolaValue(res.salidaConsola))
+      .catch(err => console.error(err))
   }
 
   const closeModal = (e) => {

@@ -19,6 +19,19 @@ export default function Pestaña ({ isHidden }) {
     setFileValue(e.target.value)
   }
 
+  const handlerBotonEjecutar = e => {
+    e.preventDefault()
+    fetch('http://localhost:3001/compilar', {
+      method: 'POST',
+      body: JSON.stringify({ fileValue }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+      .catch(err => console.error('ERROR', err))
+      .then(res => console.log('Success:', res))
+  }
+
   const closeModal = (e) => {
     const file = e.target.files[0]
     if (!file) return
@@ -188,6 +201,13 @@ export default function Pestaña ({ isHidden }) {
             <textarea spellCheck={false} className='shadow-xl bg-gray-200 dark:bg-zinc-700 resize-none rounded-md relative h-96 w-full max-w-full' />
           </div>
 
+        </div>
+        <div className='flex justify-center py-4'>
+          <button
+            className='rounded w-28 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white'
+            onClick={handlerBotonEjecutar}
+          >Ejecutar
+          </button>
         </div>
       </div>
     </div>

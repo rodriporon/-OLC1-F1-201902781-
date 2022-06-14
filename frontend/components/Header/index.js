@@ -13,8 +13,7 @@ export default function Header () {
   const router = useRouter()
 
   const navigation = [
-    { name: 'Reportes', href: '#' },
-    { name: 'Ejecutor', href: '#' }
+    { name: 'Reportes', href: '#' }
   ]
 
   const toggleDarkMode = () => {

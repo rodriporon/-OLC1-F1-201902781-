@@ -1,6 +1,6 @@
 const fs = require('fs')
 const parser = require('./gramatica')
-const { TIPO_INSTRUCCION, TIPO_OPERACION, TIPO_VALOR } = require('./operaciones')
+const { TIPO_INSTRUCCION, TIPO_OPERACION, TIPO_VALOR, TIPO_OPCION_SWITCH } = require('./operaciones')
 const { TablaSimbolos, TIPO_DATO } = require('./tablaSimbolos')
 
 let ast
@@ -59,6 +59,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarForDeclaracionSimbolosMenos(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.BREAK) {
       interpretarBreak(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.SWITCH) {
+      interpretarSwitch(instruccion, tablaSimbolos)
     } else {
       throw new Error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
     }
@@ -606,6 +608,24 @@ const interpretarForDeclaracionSimbolosMenos = (instruccion, tablaDeSimbolos) =>
 
 const interpretarBreak = (instruccion, tablaDeSimbolos) => {
   tablaDeSimbolos.update('_$_break', { valor: true, tipo: 'BOOLEAN' })
+}
+
+const interpretarSwitch = (instruccion, tablaDeSimbolos) => {
+  let evaluar = true
+  const valorExpresion = interpretarExpresionNumerica(instruccion.expresionNumerica, tablaDeSimbolos)
+
+  instruccion.casos.forEach(caso => {
+    if (caso.tipo === TIPO_OPCION_SWITCH.CASO) {
+      const valorExpresionCase = interpretarExpresionNumerica(caso.expresionNumerica, tablaDeSimbolos)
+      if (valorExpresionCase.valor === valorExpresion.valor && valorExpresionCase.tipo === valorExpresion.tipo) {
+        interpretarBloque(caso.instrucciones, tablaDeSimbolos)
+        evaluar = false
+      }
+    } else {
+      if (evaluar) interpretarBloque(caso.instrucciones, tablaDeSimbolos)
+    }
+  })
+  tablaDeSimbolos.update('_$_break', { valor: false, tipo: 'BOOLEAN' })
 }
 
 interpretarBloque(ast, TablaSimbolosGlobal)

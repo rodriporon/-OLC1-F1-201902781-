@@ -20,7 +20,9 @@ const crearSimbolo = (id, tipo, valor, constante) => {
 class TablaSimbolos {
   constructor (simbolos) {
     this._simbolos = simbolos
-    this._simbolos.push(crearSimbolo('_$_break', 'BOOLEAN', false, false))
+    if (!this._simbolos.filter(simbolo => simbolo.id === '_$_break')[0]) {
+      this._simbolos.push(crearSimbolo('_$_break', 'BOOLEAN', false, false))
+    }
   }
 
   add (id, tipo, constante) {

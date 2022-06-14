@@ -271,13 +271,13 @@ const instrucciones = {
     }
   },
 
-  nuevoListaCasos: (caso) => {
+  nuevoListaCases: (caso) => {
     const casos = []
     casos.push(caso)
     return casos
   },
 
-  nuevoCaso: (expresionNumerica, instrucciones) => {
+  nuevoCase: (expresionNumerica, instrucciones) => {
     return {
       tipo: TIPO_OPCION_SWITCH.CASO,
       expresionNumerica,
@@ -285,7 +285,7 @@ const instrucciones = {
     }
   },
 
-  nuevoCasoDef: (instrucciones) => {
+  nuevoCaseDefault: (instrucciones) => {
     return {
       tipo: TIPO_OPCION_SWITCH.DEFECTO,
       instrucciones

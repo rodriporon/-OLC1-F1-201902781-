@@ -125,18 +125,29 @@ instrucciones
 instruccion
         : PRINTLN PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintln($3) }
         | PRINTLN PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintlnLogico($3) }
+
+
         | WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile($3, $6)}
         | WHILE PARENTESISABRE TRUE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN), $6)}
         | WHILE PARENTESISABRE FALSE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN), $6)}
+
+
+        | SWITCH PARENTESISABRE operacionNumerica PARENTESISCIERRA LLAVEABRE cases LLAVECIERRA  { $$ = instrucciones.nuevoSwitch($3, $6) }
+
+
         | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, $7)}
         | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE TRUE PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, instrucciones.nuevoValor($7, TIPO_VALOR.BOOLEAN))}
         | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE FALSE PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, instrucciones.nuevoValor($7, TIPO_VALOR.BOOLEAN))}
+
+
         | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR INCREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionSimbolosMas($3, $5, $7, $9, $13) }
         | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR DECREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionSimbolosMenos($3, $5, $7, $9, $13) }
         | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR IGUAL operacionNumerica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionOperacion($3, $5, $7, $9, $11, $14) }
         | FOR PARENTESISABRE tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR IGUAL operacionNumerica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForDeclaracionOperacion($3.toUpperCase(), $4, $6, $8, $10, $12, $15) }
         | FOR PARENTESISABRE tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR INCREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForDeclaracionSimbolosMas($3.toUpperCase(), $4, $6, $8, $10, $14) }
         | FOR PARENTESISABRE tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR DECREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForDeclaracionSimbolosMenos($3.toUpperCase(), $4, $6, $8, $10, $14) }
+
+
         | tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4, false)}
         | CONST tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($2.toUpperCase(), $3, $5, true)}
         | IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA                    { $$ = instrucciones.nuevoAsignacion($1, $3)}                     
@@ -205,4 +216,13 @@ expresionRelacional
         | operacionNumerica MENORIGUAL operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MENOR_IGUAL) }
         | operacionNumerica DOBLEIGUAL operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DOBLE_IGUAL) }
         | operacionNumerica DIFERENTE operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIFERENTE) }
+;
+
+cases 
+        : cases case                                            { $1.push($2); $$ = $1; }
+        | case                                                  { $$ = instrucciones.nuevoListaCases($1)}
+;
+
+case    : CASE operacionNumerica DOSPUNTOS instrucciones BREAK PUNTOCOMA       { $$ = instrucciones.nuevoCase($2, $4) }
+        | DEFAULT DOSPUNTOS instrucciones                BREAK PUNTOCOMA       { $$ = instrucciones.nuevoCaseDefault($3)}
 ;

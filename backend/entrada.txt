@@ -114,6 +114,31 @@ do {
 */
 
 
+/*
+int numCase = 1;
+
+switch(numCase) {
+    case 1:
+        println("Case 1");
+        int contadorSwitch = 0;
+        int numSwitch = 2;
+        while(numSwitch == 2) {
+            println(contadorSwitch);
+            contadorSwitch++;
+            if (contadorSwitch == 100) {
+                break;
+            }
+        }
+        break;
+    case 2:
+        println("Case 2");
+        break;
+    default:
+        println("case default");
+        break;
+}
+*/
+
 //COMENTARIO
 /* otro comentario */
 

@@ -3,7 +3,7 @@ import { Fragment, useState } from 'react'
 import { Menu, Transition, Dialog } from '@headlessui/react'
 import { saveAs } from 'file-saver'
 
-export default function Pestaña ({ hidden }) {
+export default function Pestaña ({ isHidden }) {
   const [isOpen, setIsOpen] = useState(false)
   const [fileValue, setFileValue] = useState('')
 
@@ -21,6 +21,7 @@ export default function Pestaña ({ hidden }) {
 
   const closeModal = (e) => {
     const file = e.target.files[0]
+    if (!file) return
     const fileReader = new window.FileReader()
 
     fileReader.readAsText(file, 'UTF-8')
@@ -41,7 +42,8 @@ export default function Pestaña ({ hidden }) {
   }
 
   return (
-    <>
+    <div className='dark:bg-gray-800'>
+
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as='div' className='relative z-10' onClose={closeModal}>
           <Transition.Child
@@ -93,7 +95,7 @@ export default function Pestaña ({ hidden }) {
           </div>
         </Dialog>
       </Transition>
-      <div className={hidden ? 'hidden' : ''}>
+      <div className={isHidden ? 'hidden' : ''}>
         {/* -- dropdown menu archivo -- */}
         <div className='flex justify-end items-right'>
           <Menu as='div' className='relative inline-block text-left z-10'>
@@ -188,6 +190,6 @@ export default function Pestaña ({ hidden }) {
 
         </div>
       </div>
-    </>
+    </div>
   )
 }

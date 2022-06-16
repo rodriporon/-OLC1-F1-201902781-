@@ -5,7 +5,9 @@ const bodyParser = require('body-parser')
 // const fs = require('fs')
 const parser = require('./gramatica')
 const { TIPO_INSTRUCCION, TIPO_OPERACION, TIPO_VALOR, TIPO_OPCION_SWITCH } = require('./operaciones')
-const { TablaSimbolos, TIPO_DATO } = require('./tablaSimbolos')
+const { TablaSimbolos, TIPO_DATO, tablaErroresSimbolos } = require('./tablaSimbolos')
+const { TIPO_ERROR, TablaErrores } = require('./tablaErrores')
+const { tablaErroresLexSin } = require('./gramatica')
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -13,18 +15,31 @@ app.use(bodyParser.json())
 let ast
 let entradaEditor
 let salidaConsola = ''
+let _break = false
+
+let tablaErroresIndex = new TablaErrores([])
 
 app.get('/', (req, res) => {
   res.send('<h1>Server running</>')
 })
 
+let TablaSimbolosGlobal = new TablaSimbolos([])
+
 app.post('/compilar', (req, res) => {
+  tablaErroresIndex = new TablaErrores([])
+  TablaSimbolosGlobal = new TablaSimbolos([])
   salidaConsola = ''
   const entradaJson = req.body
   entradaEditor = entradaJson.fileValue.toString()
   ast = parser.parse(entradaEditor)
   interpretarBloque(ast, TablaSimbolosGlobal)
-  console.log(salidaConsola)
+  console.log('Lexicos-sintacticos: ', tablaErroresLexSin)
+  console.log('Semanticos-index:', tablaErroresIndex)
+  console.log('Erorres simbolos:', tablaErroresSimbolos)
+  console.log(TablaSimbolosGlobal)
+  tablaErroresLexSin.clear()
+  tablaErroresSimbolos.clear()
+  // console.log(salidaConsola)
   res.json({ salidaConsola })
 })
 
@@ -42,8 +57,6 @@ app.listen(PORT, () => {
 } catch (error) {
   console.error(error)
 } */
-
-const TablaSimbolosGlobal = new TablaSimbolos([])
 
 const interpretarBloque = (instruccion, tablaSimbolos) => {
   instruccion.forEach(instruccion => {
@@ -90,7 +103,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
     } else if (instruccion.tipo === TIPO_INSTRUCCION.SWITCH) {
       interpretarSwitch(instruccion, tablaSimbolos)
     } else {
-      throw new Error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
+      tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
+      console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
     }
   })
 }
@@ -158,7 +172,7 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     const valorIzq = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos)
     const valorDer = interpretarExpresionNumerica(expresion.operandoDer, tablaDeSimbolos)
     /*     if (valorIzq.tipo !== TIPO_DATO.NUMERO || valorDer.tipo !== TIPO_DATO.NUMERO || valorIzq.tipo !== TIPO_DATO.DOUBLE || valorDer.tipo !== TIPO_DATO.DOUBLE) {
-      throw new Error('ERROR: se esperaban <NUMERO/DOUBLE> para operar: ' + expresion.tipo)
+      console.error('ERROR: se esperaban <NUMERO/DOUBLE> para operar: ' + expresion.tipo)
     } else {
       valorIzq = valorIzq.valor
       valorDer = valorIzq.valor
@@ -273,7 +287,9 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     }
     if (expresion.tipo === TIPO_OPERACION.DIVISION) {
       if (valorDer.valor === 0) {
-        throw new Error('ERROR: no se puede dividir entre cero')
+        console.error('ERROR: no se puede dividir entre cero')
+        tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, 0, valorDer.fila, valorDer.columna, 'NO SE PUEDE DIVIDIR ENTRE CERO')
+        return { valor: undefined, tipo: TIPO_DATO.INT }
       } else {
         let res
         if (valorIzq.tipo === TIPO_DATO.CHAR) {
@@ -390,18 +406,27 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
   } else if (expresion.tipo === TIPO_OPERACION.MENOR_IGUAL) {
     return { valor: expresion.valor, tipo: expresion.tipo }
   } else {
-    throw new Error('ERROR: expresión numerica no válida: ' + expresion.tipo)
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, expresion.tipo, expresion.linea, expresion.columna, 'EXPRESION NUMERICA NO VALIDA')
+    console.error('ERROR: expresión numerica no válida: ' + expresion.tipo)
   }
 }
 
 const interpretarPrintln = (instruccion, tablaDeSimbolos) => {
-  const cadena = interpretarExpresionCadena(instruccion.expresionCadena, tablaDeSimbolos).valor
+  const cadenaAux = interpretarExpresionCadena(instruccion.expresionCadena, tablaDeSimbolos)
+  if (cadenaAux === undefined) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, undefined, 0, 0, 'NO SE PUEDE ACCEDER A UNA VARIABLE QUE NO HA SIDO DEFINIDA')
+    return console.log('ERROR: no se puede acceder a una variable que no ha sido definida')
+  }
+  const cadena = cadenaAux.valor
   salidaConsola += cadena
   salidaConsola += '\n'
   console.log('>> ' + cadena)
 }
 
 const interpretarPrintlnLogico = (expresion, tablaDeSimbolos) => {
+  if (tablaDeSimbolos.getValue(expresion.identificador) === undefined) {
+    return
+  }
   const cadena = interpretarExpresionLogica(expresion.expresionLogica, tablaDeSimbolos)
   salidaConsola += cadena
   salidaConsola += '\n'
@@ -409,6 +434,10 @@ const interpretarPrintlnLogico = (expresion, tablaDeSimbolos) => {
 }
 
 const interpretarDeclaracionAsignacion = (instruccion, tablaDeSimbolos) => {
+  if (tablaDeSimbolos.exists(instruccion.identificador)) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE YA FUE DECLARADA')
+    return
+  }
   tablaDeSimbolos.add(instruccion.identificador, instruccion.tipoDato, instruccion.constante)
   const valor = interpretarExpresionCadena(instruccion.expresionNumerica, tablaDeSimbolos)
   tablaDeSimbolos.update(instruccion.identificador, valor)
@@ -416,12 +445,14 @@ const interpretarDeclaracionAsignacion = (instruccion, tablaDeSimbolos) => {
 
 const interpretarAsignacion = (instruccion, tablaDeSimbolos) => {
   const identificador = tablaDeSimbolos.getValue(instruccion.identificador)
-  if (!identificador.constante) {
-    const valor = interpretarExpresionCadena(instruccion.expresionNumerica, tablaDeSimbolos)
-    tablaDeSimbolos.update(instruccion.identificador, valor)
-  } else {
-    throw new Error('ERROR: variable: ' + identificador.id + ' es de tipo constante')
+  console.log(identificador)
+  if (identificador.constante === true) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, identificador.id, 0, 0, 'VARIABLE ES DE TIPO CONSTANTE')
+    console.error('ERROR: variable: ' + identificador.id + ' es de tipo constante')
+    return
   }
+  const valor = interpretarExpresionCadena(instruccion.expresionNumerica, tablaDeSimbolos)
+  tablaDeSimbolos.update(instruccion.identificador, valor)
 }
 
 const interpretarPostIncremento = (instruccion, tablaDeSimbolos) => {
@@ -488,8 +519,8 @@ const interpretarExpresionLogica = (expresion, tablaDeSimbolos) => {
 const interpretarIf = (instruccion, tablaDeSimbolos) => {
   const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
   if (valorCondicion) {
-    // const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+    const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos._simbolos)
+    interpretarBloque(instruccion.instrucciones, tablaSimbolosIf)
   }
 }
 
@@ -497,11 +528,11 @@ const interpretarIfElse = (instruccion, tablaDeSimbolos) => {
   const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
 
   if (valorCondicion) {
-    // const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.instruccionesIfVerdadero, tablaDeSimbolos)
+    const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos._simbolos)
+    interpretarBloque(instruccion.instruccionesIfVerdadero, tablaSimbolosIf)
   } else {
-    // const tablaSimbolosElse = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.instruccionesIfFalso, tablaDeSimbolos)
+    const tablaSimbolosElse = new TablaSimbolos(tablaDeSimbolos._simbolos)
+    interpretarBloque(instruccion.instruccionesIfFalso, tablaSimbolosElse)
   }
 }
 
@@ -511,81 +542,103 @@ const interpretarIfElseIf = (instruccion, tablaDeSimbolos) => {
   const valorCondicionNuevoIf = interpretarExpresionLogica(instruccion.nuevoIf.expresionLogica, tablaDeSimbolos)
 
   if (valorCondicion) {
-    // const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+    const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos._simbolos)
+    interpretarBloque(instruccion.instrucciones, tablaSimbolosIf)
   } else if (valorCondicionNuevoIf) {
-    // const tablaSimbolosNuevoIf = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    interpretarBloque(instruccion.nuevoIf.instrucciones, tablaDeSimbolos)
+    const tablaSimbolosNuevoIf = new TablaSimbolos(tablaDeSimbolos._simbolos)
+    interpretarBloque(instruccion.nuevoIf.instrucciones, tablaSimbolosNuevoIf)
   }
 }
 
 const interpretarWhile = (instruccion, tablaDeSimbolos) => {
   while (interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)) {
-    // const tablaSimbolosWhile = new TablaSimbolos(tablaDeSimbolos.simbolos)
-    if (tablaDeSimbolos.getValue('_$_break').valor) {
+    if (_break) {
       break
     } else {
-      interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+      const tablaSimbolosWhile = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      interpretarBloque(instruccion.instrucciones, tablaSimbolosWhile)
     }
   }
-  tablaDeSimbolos.update('_$_break', { valor: false, tipo: 'BOOLEAN' })
+  _break = false
 }
 
 const interpretarDoWhile = (instruccion, tablaDeSimbolos) => {
   do {
-    if (tablaDeSimbolos.getValue('_$_break').valor) {
+    if (_break) {
       break
     } else {
-      interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+      const tablaSimbolosDoWhile = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      interpretarBloque(instruccion.instrucciones, tablaSimbolosDoWhile)
     }
   } while (interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos))
-  tablaDeSimbolos.update('_$_break', { valor: false, tipo: 'BOOLEAN' })
+  _break = false
 }
 
 const interpretarForAsignacionSimbolosMas = (instruccion, tablaDeSimbolos) => {
-  if (instruccion.variable !== instruccion.aumento) throw new Error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable + ' ' + instruccion.aumento)
+  if (instruccion.variable !== instruccion.aumento) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.variable, instruccion.linea, instruccion.columna, 'ERROR FOR: diferente variable asignada a la declaracion')
+    console.error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable + ' ' + instruccion.aumento)
+  }
   const valor = interpretarExpresionCadena(instruccion.valorVariable, tablaDeSimbolos)
   tablaDeSimbolos.update(instruccion.variable, valor)
   for (tablaDeSimbolos.getValue(instruccion.variable); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable, { valor: tablaDeSimbolos.getValue(instruccion.variable).valor + 1, tipo: tablaDeSimbolos.getValue(instruccion.variable).tipo })) {
-    if (tablaDeSimbolos.getValue('_$_break').valor) {
-      throw new Error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
+    if (_break) {
+      tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, 'break', instruccion.linea, instruccion.columna, 'sentencia BREAK no puede ser accesible en ciclos for')
+      console.error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
+      break
     } else {
-      interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+      const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
     }
   }
-  tablaDeSimbolos.update('_$_break', { valor: false, tipo: 'BOOLEAN' })
+  _break = false
 }
 
 const interpretarForAsignacionSimbolosMenos = (instruccion, tablaDeSimbolos) => {
-  if (instruccion.variable !== instruccion.decremento) throw new Error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable + ' ' + instruccion.decremento)
+  if (instruccion.variable !== instruccion.decremento) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.variable, instruccion.linea, instruccion.columna, 'ERROR FOR: diferente variable asignada a la declaracion')
+    console.error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable + ' ' + instruccion.decremento)
+  }
   const valor = interpretarExpresionCadena(instruccion.valorVariable, tablaDeSimbolos)
   tablaDeSimbolos.update(instruccion.variable, valor)
   for (tablaDeSimbolos.getValue(instruccion.variable); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable, { valor: tablaDeSimbolos.getValue(instruccion.variable).valor - 1, tipo: tablaDeSimbolos.getValue(instruccion.variable).tipo })) {
-    if (tablaDeSimbolos.getValue('_$_break').valor) {
-      throw new Error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
+    if (_break) {
+      tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, 'break', instruccion.linea, instruccion.columna, 'sentencia BREAK no puede ser accesible en ciclos for')
+      console.error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
+      break
     } else {
-      interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+      const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
     }
   }
-  tablaDeSimbolos.update('_$_break', { valor: false, tipo: 'BOOLEAN' })
+  _break = false
 }
 
 const interpretarForAsignacionOperacion = (instruccion, tablaDeSimbolos) => {
-  if (instruccion.variable !== instruccion.mismaVariable) throw new Error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable + ' ' + instruccion.mismaVariable)
+  if (instruccion.variable !== instruccion.mismaVariable) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.variable, instruccion.linea, instruccion.columna, 'ERROR FOR: diferente variable asignada a la declaracion')
+    console.error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable + ' ' + instruccion.mismaVariable)
+  }
   const valor = interpretarExpresionCadena(instruccion.valorVariable, tablaDeSimbolos)
   tablaDeSimbolos.update(instruccion.variable, valor)
   for (tablaDeSimbolos.getValue(instruccion.variable); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.mismaVariable, interpretarExpresionCadena(instruccion.nuevoValor, tablaDeSimbolos))) {
-    if (tablaDeSimbolos.getValue('_$_break').valor) {
-      throw new Error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
+    if (_break) {
+      tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, 'break', instruccion.linea, instruccion.columna, 'sentencia BREAK no puede ser accesible en ciclos for')
+      console.error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
+      break
     } else {
-      interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+      const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
     }
   }
-  tablaDeSimbolos.update('_$_break', { valor: false, tipo: 'BOOLEAN' })
+  _break = false
 }
 
 const interpretarForDeclaracionOperacion = (instruccion, tablaDeSimbolos) => {
-  if (instruccion.variable1 !== instruccion.variable2) throw new Error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable1 + ' ' + instruccion.variable2)
+  if (instruccion.variable1 !== instruccion.variable2) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.variable1, instruccion.linea, instruccion.columna, 'ERROR FOR: diferente variable asignada a la declaracion')
+    console.error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable1 + ' ' + instruccion.variable2)
+  }
   interpretarDeclaracionAsignacion({
     identificador: instruccion.variable1,
     tipoDato: instruccion.tipoDato,
@@ -593,17 +646,23 @@ const interpretarForDeclaracionOperacion = (instruccion, tablaDeSimbolos) => {
     expresionNumerica: instruccion.valorVariable1
   }, tablaDeSimbolos)
   for (tablaDeSimbolos.getValue(instruccion.variable1); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable1, interpretarExpresionCadena(instruccion.valorVariable2, tablaDeSimbolos))) {
-    if (tablaDeSimbolos.getValue('_$_break').valor) {
-      throw new Error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
+    if (_break) {
+      tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, 'break', instruccion.linea, instruccion.columna, 'sentencia BREAK no puede ser accesible en ciclos for')
+      console.error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
+      break
     } else {
-      interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+      const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
     }
   }
-  tablaDeSimbolos.update('_$_break', { valor: false, tipo: 'BOOLEAN' })
+  _break = false
 }
 
 const interpretarForDeclaracionSimbolosMas = (instruccion, tablaDeSimbolos) => {
-  if (instruccion.variable1 !== instruccion.variable2) throw new Error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable1 + ' ' + instruccion.variable2)
+  if (instruccion.variable1 !== instruccion.variable2) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.variable1, instruccion.linea, instruccion.columna, 'ERROR FOR: diferente variable asignada a la declaracion')
+    console.error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable1 + ' ' + instruccion.variable2)
+  }
   interpretarDeclaracionAsignacion({
     identificador: instruccion.variable1,
     tipoDato: instruccion.tipoDato,
@@ -611,17 +670,23 @@ const interpretarForDeclaracionSimbolosMas = (instruccion, tablaDeSimbolos) => {
     expresionNumerica: instruccion.valorVariable1
   }, tablaDeSimbolos)
   for (tablaDeSimbolos.getValue(instruccion.variable1); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable1, { valor: tablaDeSimbolos.getValue(instruccion.variable1).valor + 1, tipo: tablaDeSimbolos.getValue(instruccion.variable1).tipo })) {
-    if (tablaDeSimbolos.getValue('_$_break').valor) {
-      throw new Error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
+    if (_break) {
+      tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, 'break', instruccion.linea, instruccion.columna, 'sentencia BREAK no puede ser accesible en ciclos for')
+      console.error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
+      break
     } else {
-      interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+      const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
     }
   }
-  tablaDeSimbolos.update('_$_break', { valor: false, tipo: 'BOOLEAN' })
+  _break = false
 }
 
 const interpretarForDeclaracionSimbolosMenos = (instruccion, tablaDeSimbolos) => {
-  if (instruccion.variable1 !== instruccion.variable2) throw new Error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable1 + ' ' + instruccion.variable2)
+  if (instruccion.variable1 !== instruccion.variable2) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.variable1, instruccion.linea, instruccion.columna, 'ERROR FOR: diferente variable asignada a la declaracion')
+    console.error('ERROR FOR: diferente variable asignada a la declaracion: ' + instruccion.variable1 + ' ' + instruccion.variable2)
+  }
   interpretarDeclaracionAsignacion({
     identificador: instruccion.variable1,
     tipoDato: instruccion.tipoDato,
@@ -629,33 +694,36 @@ const interpretarForDeclaracionSimbolosMenos = (instruccion, tablaDeSimbolos) =>
     expresionNumerica: instruccion.valorVariable1
   }, tablaDeSimbolos)
   for (tablaDeSimbolos.getValue(instruccion.variable1); interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos); tablaDeSimbolos.update(instruccion.variable1, { valor: tablaDeSimbolos.getValue(instruccion.variable1).valor - 1, tipo: tablaDeSimbolos.getValue(instruccion.variable1).tipo })) {
-    if (tablaDeSimbolos.getValue('_$_break').valor) {
-      throw new Error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
+    if (_break) {
+      tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, 'break', instruccion.linea, instruccion.columna, 'sentencia BREAK no puede ser accesible en ciclos for')
+      console.error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
+      break
     } else {
-      interpretarBloque(instruccion.instrucciones, tablaDeSimbolos)
+      const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
     }
   }
-  tablaDeSimbolos.update('_$_break', { valor: false, tipo: 'BOOLEAN' })
+  _break = false
 }
 
 const interpretarBreak = (instruccion, tablaDeSimbolos) => {
-  tablaDeSimbolos.update('_$_break', { valor: true, tipo: 'BOOLEAN' })
+  _break = true
 }
 
 const interpretarSwitch = (instruccion, tablaDeSimbolos) => {
   let evaluar = true
   const valorExpresion = interpretarExpresionNumerica(instruccion.expresionNumerica, tablaDeSimbolos)
-
+  const tablaSimbolosSwitch = new TablaSimbolos(tablaDeSimbolos._simbolos)
   instruccion.casos.forEach(caso => {
     if (caso.tipo === TIPO_OPCION_SWITCH.CASO) {
-      const valorExpresionCase = interpretarExpresionNumerica(caso.expresionNumerica, tablaDeSimbolos)
+      const valorExpresionCase = interpretarExpresionNumerica(caso.expresionNumerica, tablaSimbolosSwitch)
       if (valorExpresionCase.valor === valorExpresion.valor && valorExpresionCase.tipo === valorExpresion.tipo) {
-        interpretarBloque(caso.instrucciones, tablaDeSimbolos)
+        interpretarBloque(caso.instrucciones, tablaSimbolosSwitch)
         evaluar = false
       }
     } else {
-      if (evaluar) interpretarBloque(caso.instrucciones, tablaDeSimbolos)
+      if (evaluar) interpretarBloque(caso.instrucciones, tablaSimbolosSwitch)
     }
   })
-  tablaDeSimbolos.update('_$_break', { valor: false, tipo: 'BOOLEAN' })
+  _break = false
 }

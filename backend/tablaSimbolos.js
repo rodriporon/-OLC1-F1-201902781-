@@ -1,3 +1,7 @@
+const { TIPO_ERROR, TablaErrores } = require('./tablaErrores')
+
+const tablaErroresSimbolos = new TablaErrores([])
+
 const TIPO_DATO = {
   INT: 'INT',
   DOUBLE: 'DOUBLE',
@@ -5,7 +9,8 @@ const TIPO_DATO = {
   BOOLEAN: 'BOOLEAN',
   STRING: 'STRING',
   CONST: 'CONST',
-  NUMERO: 'NUMERO'
+  NUMERO: 'NUMERO',
+  UNDEFINED: 'undefined'
 }
 
 const crearSimbolo = (id, tipo, valor, constante) => {
@@ -20,9 +25,6 @@ const crearSimbolo = (id, tipo, valor, constante) => {
 class TablaSimbolos {
   constructor (simbolos) {
     this._simbolos = simbolos
-    if (!this._simbolos.filter(simbolo => simbolo.id === '_$_break')[0]) {
-      this._simbolos.push(crearSimbolo('_$_break', 'BOOLEAN', false, false))
-    }
   }
 
   add (id, tipo, constante) {
@@ -54,19 +56,36 @@ class TablaSimbolos {
           }
         }
       } else {
+        tablaErroresSimbolos.add(TIPO_ERROR.SEMANTICO, id, valor.linea, valor.columna, 'ERROR DE ASIGNACION, LOS TIPOS NO COINCIDEN')
         console.error('ERROR DE TIPOS -> variable: ' + id + ' tiene tipo: ' + simbolo.tipo + ' y el valor a asignar es de tipo: ' + valor.tipo)
       }
     } else {
-      throw new Error('ERROR: variable: ' + id + ' no ha sido definida')
+      tablaErroresSimbolos.add(TIPO_ERROR.SEMANTICO, id, 0, 0, 'VARIABLE NO HA SIDO DEFINIDA')
+      console.error('ERROR: variable: ' + id + ' no ha sido definida')
     }
   }
 
+  exists (id) {
+    if (this._simbolos.filter(simbolo => simbolo.id === id)[0]) {
+      return true
+    }
+    return false
+  }
+
   getValue (id) {
-    if (!this._simbolos) throw new Error('Ninguna variable declarada')
+    if (!this._simbolos) {
+      tablaErroresSimbolos.add(TIPO_ERROR.SEMANTICO, id, 0, 0, 'NINGUNA VARIABLE DECLARADA')
+      console.error('Ninguna variable declarada')
+    }
     const simbolo = this._simbolos.filter(simbolo => simbolo.id === id)[0]
 
-    if (simbolo) return simbolo
-    else throw new Error('ERROR: variable: ' + id + ' no ha sido definida')
+    if (simbolo) {
+      return simbolo
+    } else {
+      tablaErroresSimbolos.add(TIPO_ERROR.SEMANTICO, id, 0, 0, 'VARIABLE NO HA SIDO DEFINIDA')
+      console.error('ERROR: variable: ' + id + ' no ha sido definida')
+      return crearSimbolo(id, TIPO_DATO.UNDEFINED, TIPO_DATO.UNDEFINED, false)
+    }
   }
 
   getSymbols () {
@@ -76,3 +95,4 @@ class TablaSimbolos {
 
 module.exports.TIPO_DATO = TIPO_DATO
 module.exports.TablaSimbolos = TablaSimbolos
+module.exports.tablaErroresSimbolos = tablaErroresSimbolos

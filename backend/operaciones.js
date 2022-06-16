@@ -69,108 +69,132 @@ const TIPO_OPCION_SWITCH = {
   DEFECTO: 'DEFECTO'
 }
 
-const nuevaOperacion = (operandoIzq, operandoDer, tipo) => {
+const nuevaOperacion = (operandoIzq, operandoDer, tipo, linea, columna) => {
   return {
     operandoIzq,
     operandoDer,
-    tipo
+    tipo,
+    linea,
+    columna
   }
 }
 
 const instrucciones = {
 
-  nuevoOperacionBinaria: (operandoIzq, operandoDer, tipo) => nuevaOperacion(operandoIzq, operandoDer, tipo),
+  nuevoOperacionBinaria: (operandoIzq, operandoDer, tipo, linea, columna) => nuevaOperacion(operandoIzq, operandoDer, tipo, linea, columna),
 
-  nuevoOperacionUnaria: (operando, tipo) => nuevaOperacion(operando, undefined, tipo),
+  nuevoOperacionUnaria: (operando, tipo, linea, columna) => nuevaOperacion(operando, undefined, tipo, linea, columna),
 
-  nuevoValor: (valor, tipo) => {
+  nuevoValor: (valor, tipo, linea, columna) => {
     return {
       tipo,
-      valor
+      valor,
+      linea,
+      columna
     }
   },
 
-  nuevoPostIncremento: (identificador) => {
+  nuevoPostIncremento: (identificador, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.POST_INCREMENTO,
-      identificador
+      identificador,
+      linea,
+      columna
     }
   },
 
-  nuevoPostDecremento: (identificador) => {
+  nuevoPostDecremento: (identificador, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.POST_DECREMENTO,
-      identificador
+      identificador,
+      linea,
+      columna
     }
   },
 
-  nuevoPreIncremento: (identificador) => {
+  nuevoPreIncremento: (identificador, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.PRE_INCREMENTO,
-      identificador
+      identificador,
+      linea,
+      columna
     }
   },
 
-  nuevoPreDecremento: (identificador) => {
+  nuevoPreDecremento: (identificador, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.PRE_DECREMENTO,
-      identificador
+      identificador,
+      linea,
+      columna
     }
   },
 
-  nuevoPrintln: (expresionCadena) => {
+  nuevoPrintln: (expresionCadena, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.PRINTLN,
-      expresionCadena
+      expresionCadena,
+      linea,
+      columna
     }
   },
 
-  nuevoPrintlnLogico: (expresionLogica) => {
+  nuevoPrintlnLogico: (expresionLogica, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.PRINTLN_LOGICO,
-      expresionLogica
+      expresionLogica,
+      linea,
+      columna
     }
   },
 
-  nuevoWhile: (expresionLogica, instrucciones) => {
+  nuevoWhile: (expresionLogica, instrucciones, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.WHILE,
       expresionLogica,
-      instrucciones
+      instrucciones,
+      linea,
+      columna
     }
   },
 
-  nuevoDoWhile: (instrucciones, expresionLogica) => {
+  nuevoDoWhile: (instrucciones, expresionLogica, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.DO_WHILE,
       instrucciones,
-      expresionLogica
+      expresionLogica,
+      linea,
+      columna
     }
   },
 
-  nuevoForAsignacionSimbolosMas: (variable, valorVariable, expresionLogica, aumento, instrucciones) => {
+  nuevoForAsignacionSimbolosMas: (variable, valorVariable, expresionLogica, aumento, instrucciones, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.FOR_ASIGNACION_SIMBOLOS_MAS,
       expresionLogica,
       instrucciones,
       aumento,
       variable,
-      valorVariable
+      valorVariable,
+      linea,
+      columna
     }
   },
 
-  nuevoForAsignacionSimbolosMenos: (variable, valorVariable, expresionLogica, decremento, instrucciones) => {
+  nuevoForAsignacionSimbolosMenos: (variable, valorVariable, expresionLogica, decremento, instrucciones, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.FOR_ASIGNACION_SIMBOLOS_MENOS,
       expresionLogica,
       instrucciones,
       decremento,
       variable,
-      valorVariable
+      valorVariable,
+      linea,
+      columna
     }
   },
 
-  nuevoForAsignacionOperacion: (variable, valorVariable, expresionLogica, mismaVariable, nuevoValor, instrucciones) => {
+  nuevoForAsignacionOperacion: (variable, valorVariable, expresionLogica, mismaVariable, nuevoValor, instrucciones, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.FOR_ASIGNACION_OPERACION,
       expresionLogica,
@@ -178,11 +202,13 @@ const instrucciones = {
       mismaVariable,
       nuevoValor,
       variable,
-      valorVariable
+      valorVariable,
+      linea,
+      columna
     }
   },
 
-  nuevoForDeclaracionOperacion: (tipoDato, variable1, valorVariable1, expresionLogica, variable2, valorVariable2, instrucciones) => {
+  nuevoForDeclaracionOperacion: (tipoDato, variable1, valorVariable1, expresionLogica, variable2, valorVariable2, instrucciones, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.FOR_DECLARACION_OPERACION,
       tipoDato,
@@ -191,11 +217,13 @@ const instrucciones = {
       expresionLogica,
       variable2,
       valorVariable2,
-      instrucciones
+      instrucciones,
+      linea,
+      columna
     }
   },
 
-  nuevoForDeclaracionSimbolosMas: (tipoDato, variable1, valorVariable1, expresionLogica, variable2, instrucciones) => {
+  nuevoForDeclaracionSimbolosMas: (tipoDato, variable1, valorVariable1, expresionLogica, variable2, instrucciones, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.FOR_DECLARACION_SIMBOLOS_MAS,
       tipoDato,
@@ -203,11 +231,13 @@ const instrucciones = {
       valorVariable1,
       expresionLogica,
       variable2,
-      instrucciones
+      instrucciones,
+      linea,
+      columna
     }
   },
 
-  nuevoForDeclaracionSimbolosMenos: (tipoDato, variable1, valorVariable1, expresionLogica, variable2, instrucciones) => {
+  nuevoForDeclaracionSimbolosMenos: (tipoDato, variable1, valorVariable1, expresionLogica, variable2, instrucciones, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.FOR_DECLARACION_SIMBOLOS_MENOS,
       tipoDato,
@@ -215,59 +245,73 @@ const instrucciones = {
       valorVariable1,
       expresionLogica,
       variable2,
-      instrucciones
+      instrucciones,
+      linea,
+      columna
     }
   },
 
-  nuevoDeclaracionAsignacion: (tipoDato, identificador, expresionNumerica, constante) => {
+  nuevoDeclaracionAsignacion: (tipoDato, identificador, expresionNumerica, constante, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.DECLARACION_ASIGNACION,
       identificador,
       tipoDato,
       expresionNumerica,
-      constante
+      constante,
+      linea,
+      columna
     }
   },
 
-  nuevoAsignacion: (identificador, expresionNumerica) => {
+  nuevoAsignacion: (identificador, expresionNumerica, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.ASIGNACION,
       identificador,
-      expresionNumerica
+      expresionNumerica,
+      linea,
+      columna
     }
   },
 
-  nuevoIf: (expresionLogica, instrucciones) => {
+  nuevoIf: (expresionLogica, instrucciones, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.IF,
       expresionLogica,
-      instrucciones
+      instrucciones,
+      linea,
+      columna
     }
   },
 
-  nuevoIfElse: (expresionLogica, instruccionesIfVerdadero, instruccionesIfFalso) => {
+  nuevoIfElse: (expresionLogica, instruccionesIfVerdadero, instruccionesIfFalso, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.IF_ELSE,
       expresionLogica,
       instruccionesIfVerdadero,
-      instruccionesIfFalso
+      instruccionesIfFalso,
+      linea,
+      columna
     }
   },
 
-  nuevoIfElseIf: (expresionLogica, instrucciones, nuevoIf) => {
+  nuevoIfElseIf: (expresionLogica, instrucciones, nuevoIf, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.IF_ELSE_IF,
       expresionLogica,
       instrucciones,
-      nuevoIf
+      nuevoIf,
+      linea,
+      columna
     }
   },
 
-  nuevoSwitch: (expresionNumerica, casos) => {
+  nuevoSwitch: (expresionNumerica, casos, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.SWITCH,
       expresionNumerica,
-      casos
+      casos,
+      linea,
+      columna
     }
   },
 
@@ -277,37 +321,41 @@ const instrucciones = {
     return casos
   },
 
-  nuevoCase: (expresionNumerica, instrucciones) => {
+  nuevoCase: (expresionNumerica, instrucciones, linea, columna) => {
     return {
       tipo: TIPO_OPCION_SWITCH.CASO,
       expresionNumerica,
-      instrucciones
+      instrucciones,
+      linea,
+      columna
     }
   },
 
-  nuevoCaseDefault: (instrucciones) => {
+  nuevoCaseDefault: (instrucciones, linea, columna) => {
     return {
       tipo: TIPO_OPCION_SWITCH.DEFECTO,
-      instrucciones
+      instrucciones,
+      linea,
+      columna
     }
   },
 
-  nuevoOperador: (operador) => {
-    return operador
-  },
-
-  nuevoAsignacionSimplificada: (identificador, operador, expresionNumerica) => {
+  nuevoAsignacionSimplificada: (identificador, operador, expresionNumerica, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.ASIGNACION_SIMPLIFICADA,
       operador,
       expresionNumerica,
-      identificador
+      identificador,
+      linea,
+      columna
     }
   },
 
-  nuevoBreak: () => {
+  nuevoBreak: (linea, columna) => {
     return {
-      tipo: TIPO_INSTRUCCION.BREAK
+      tipo: TIPO_INSTRUCCION.BREAK,
+      linea,
+      columna
     }
   }
 }

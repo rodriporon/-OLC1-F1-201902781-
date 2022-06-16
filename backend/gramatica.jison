@@ -1,10 +1,26 @@
+%{  
+        const TIPO_OPERACION = require('./operaciones').TIPO_OPERACION
+        const TIPO_VALOR = require('./operaciones').TIPO_VALOR
+        const TIPO_DATO = require('./tablaSimbolos').TIPO_DATO
+        const instrucciones = require('./operaciones').instrucciones
+        const {TIPO_ERROR, TablaErrores} = require('./tablaErrores')
+        const tablaErroresLexSin = new TablaErrores([])
+        module.exports.tablaErroresLexSin = tablaErroresLexSin
+%}
+
 /* Analizador léxico */
 %lex
 
 %options case-insensitive
 
+%s caracter
+%s cadena
+
 %%
 
+
+
+\s+                   /* skip whitespace */
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] // Multicomentario
 "//".*                              // Comentario
 
@@ -77,9 +93,14 @@
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*            { return 'IDENTIFICADOR'; }
 (\'(\\(["'\\bfnrt]|u[0-9A-Fa-f]{4})|[^\\'])\') { yytext = yytext.substr(1, yyleng-2); return 'CHAR'}
 
+
+
 <<EOF>>                             return 'EOF';
+
 .   { 
-        console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);     
+        tablaErroresLexSin.add(TIPO_ERROR.LEXICO, yytext, yylloc.first_line, yylloc.first_column, 'ERROR LEXICO')
+        console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+
     }
 
 
@@ -87,12 +108,7 @@
 
 /* ------------------ Analizador sintáctico --------------------- */
 
-%{
-        const TIPO_OPERACION = require('./operaciones').TIPO_OPERACION
-        const TIPO_VALOR = require('./operaciones').TIPO_VALOR
-        const TIPO_DATO = require('./tablaSimbolos').TIPO_DATO
-        const instrucciones = require('./operaciones').instrucciones
-%}
+
 
 /* Precedencia */
 %left 'OR'
@@ -123,47 +139,49 @@ instrucciones
 ;
 
 instruccion
-        : PRINTLN PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintln($3) }
-        | PRINTLN PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintlnLogico($3) }
+        : PRINTLN PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintln($3, @1.first_line, @1.first_column) }
+        | PRINTLN PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintlnLogico($3, @1.first_line, @1.first_column) }
 
 
-        | WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile($3, $6)}
-        | WHILE PARENTESISABRE TRUE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN), $6)}
-        | WHILE PARENTESISABRE FALSE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN), $6)}
+        | WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile($3, $6, @1.first_line, @1.first_column)}
+        | WHILE PARENTESISABRE TRUE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6, @1.first_line, @1.first_column)}
+        | WHILE PARENTESISABRE FALSE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6, @1.first_line, @1.first_column)}
 
 
-        | SWITCH PARENTESISABRE operacionNumerica PARENTESISCIERRA LLAVEABRE cases LLAVECIERRA  { $$ = instrucciones.nuevoSwitch($3, $6) }
+        | SWITCH PARENTESISABRE operacionNumerica PARENTESISCIERRA LLAVEABRE cases LLAVECIERRA  { $$ = instrucciones.nuevoSwitch($3, $6, @1.first_line, @1.first_column) }
 
 
-        | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, $7)}
-        | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE TRUE PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, instrucciones.nuevoValor($7, TIPO_VALOR.BOOLEAN))}
-        | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE FALSE PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, instrucciones.nuevoValor($7, TIPO_VALOR.BOOLEAN))}
+        | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, $7, @1.first_line, @1.first_column)}
+        | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE TRUE PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, instrucciones.nuevoValor($7, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), @1.first_line, @1.first_column)}
+        | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE FALSE PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, instrucciones.nuevoValor($7, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), @1.first_line, @1.first_column)}
 
 
-        | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR INCREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionSimbolosMas($3, $5, $7, $9, $13) }
-        | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR DECREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionSimbolosMenos($3, $5, $7, $9, $13) }
-        | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR IGUAL operacionNumerica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionOperacion($3, $5, $7, $9, $11, $14) }
-        | FOR PARENTESISABRE tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR IGUAL operacionNumerica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForDeclaracionOperacion($3.toUpperCase(), $4, $6, $8, $10, $12, $15) }
-        | FOR PARENTESISABRE tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR INCREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForDeclaracionSimbolosMas($3.toUpperCase(), $4, $6, $8, $10, $14) }
-        | FOR PARENTESISABRE tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR DECREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForDeclaracionSimbolosMenos($3.toUpperCase(), $4, $6, $8, $10, $14) }
+        | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR INCREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionSimbolosMas($3, $5, $7, $9, $13, @1.first_line, @1.first_column) }
+        | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR DECREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionSimbolosMenos($3, $5, $7, $9, $13, @1.first_line, @1.first_column) }
+        | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR IGUAL operacionNumerica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionOperacion($3, $5, $7, $9, $11, $14, @1.first_line, @1.first_column) }
+        | FOR PARENTESISABRE tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR IGUAL operacionNumerica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForDeclaracionOperacion($3.toUpperCase(), $4, $6, $8, $10, $12, $15, @1.first_line, @1.first_column) }
+        | FOR PARENTESISABRE tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR INCREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForDeclaracionSimbolosMas($3.toUpperCase(), $4, $6, $8, $10, $14, @1.first_line, @1.first_column) }
+        | FOR PARENTESISABRE tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR DECREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForDeclaracionSimbolosMenos($3.toUpperCase(), $4, $6, $8, $10, $14, @1.first_line, @1.first_column) }
 
 
-        | tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4, false)}
-        | CONST tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($2.toUpperCase(), $3, $5, true)}
-        | IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA                    { $$ = instrucciones.nuevoAsignacion($1, $3)}                     
-        | IDENTIFICADOR INCREMENTO PUNTOCOMA                                   { $$ = instrucciones.nuevoPostIncremento($1) }
-        | IDENTIFICADOR DECREMENTO PUNTOCOMA                                   { $$ = instrucciones.nuevoPostDecremento($1) }
-        | INCREMENTO IDENTIFICADOR PUNTOCOMA                                   { $$ = instrucciones.nuevoPreIncremento($2) }
-        | DECREMENTO IDENTIFICADOR PUNTOCOMA                                   { $$ = instrucciones.nuevoPreDecremento($2) }
-        | BREAK PUNTOCOMA                                                      { $$ = instrucciones.nuevoBreak() }
+        | tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4, false, @1.first_line, @1.first_column)}
+        | CONST tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($2.toUpperCase(), $3, $5, true, @1.first_line, @1.first_column)}
+        | IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA                    { $$ = instrucciones.nuevoAsignacion($1, $3, @1.first_line, @1.first_column)}                     
+        | IDENTIFICADOR INCREMENTO PUNTOCOMA                                   { $$ = instrucciones.nuevoPostIncremento($1, @1.first_line, @1.first_column) }
+        | IDENTIFICADOR DECREMENTO PUNTOCOMA                                   { $$ = instrucciones.nuevoPostDecremento($1, @1.first_line, @1.first_column) }
+        | INCREMENTO IDENTIFICADOR PUNTOCOMA                                   { $$ = instrucciones.nuevoPreIncremento($2, @1.first_line, @1.first_column) }
+        | DECREMENTO IDENTIFICADOR PUNTOCOMA                                   { $$ = instrucciones.nuevoPreDecremento($2, @1.first_line, @1.first_column) }
+        | BREAK PUNTOCOMA                                                      { $$ = instrucciones.nuevoBreak(@1.first_line, @1.first_column) }
         | instruccionIf                                                        { $$ = $1 }
+        | error PUNTOCOMA                                                      { console.log("ERROR SINTACTICO EN LINEA: " + (yylineno+1)); tablaErroresLexSin.add(TIPO_ERROR.SINTACTICO, $1, @1.first_line+1, @1.first_column+1, 'ERROR SINTACTICO')}
+        
         
 ;
 
 instruccionIf
         : IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA        { $$ = instrucciones.nuevoIf($3, $6) }
-        | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoIfElse($3, $6, $10) }
-        | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE instruccionIf                             { $$ = instrucciones.nuevoIfElseIf($3, $6, $9)}
+        | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoIfElse($3, $6, $10, @1.first_line, @1.first_column) }
+        | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE instruccionIf                             { $$ = instrucciones.nuevoIfElseIf($3, $6, $9, @1.first_line, @1.first_column)}
 ;
 
 tipo_dato
@@ -175,47 +193,47 @@ tipo_dato
 ;
 
 asignacionOperacion
-        : CADENA                                                    { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.CADENA) }
+        : CADENA                                                    { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.CADENA, @1.first_line, @1.first_column) }
         | operacionNumerica                                         { $$ = $1; }
 ;
 
 operacionNumerica
-        : operacionNumerica MAS operacionNumerica                   { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.SUMA) }
-        | operacionNumerica MENOS operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.RESTA) }
-        | operacionNumerica MODULO operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MODULO) }
-        | operacionNumerica MULTIPLICADO operacionNumerica          { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MULTIPLICACION) }
-        | operacionNumerica POTENCIA operacionNumerica               { $$ = instrucciones.nuevoOperacionBinaria($1, $4, TIPO_OPERACION.POTENCIA) }
-        | operacionNumerica DIVIDIDO operacionNumerica              { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIVISION) }
-        | operacionNumerica INCREMENTO                              { $$ = instrucciones.nuevoOperacionUnaria($1, TIPO_OPERACION.POST_INCREMENTO) }
-        | operacionNumerica DECREMENTO                              { $$ = instrucciones.nuevoOperacionUnaria($1, TIPO_OPERACION.POST_DECREMENTO) }
-        | INCREMENTO operacionNumerica                              { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.PRE_INCREMENTO) }
-        | DECREMENTO operacionNumerica                              { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.PRE_DECREMENTO) }
+        : operacionNumerica MAS operacionNumerica                   { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.SUMA, @1.first_line, @1.first_column) }
+        | operacionNumerica MENOS operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.RESTA, @1.first_line, @1.first_column) }
+        | operacionNumerica MODULO operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MODULO, @1.first_line, @1.first_column) }
+        | operacionNumerica MULTIPLICADO operacionNumerica          { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MULTIPLICACION, @1.first_line, @1.first_column) }
+        | operacionNumerica POTENCIA operacionNumerica               { $$ = instrucciones.nuevoOperacionBinaria($1, $4, TIPO_OPERACION.POTENCIA, @1.first_line, @1.first_column) }
+        | operacionNumerica DIVIDIDO operacionNumerica              { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIVISION, @1.first_line, @1.first_column) }
+        | operacionNumerica INCREMENTO                              { $$ = instrucciones.nuevoOperacionUnaria($1, TIPO_OPERACION.POST_INCREMENTO, @1.first_line, @1.first_column) }
+        | operacionNumerica DECREMENTO                              { $$ = instrucciones.nuevoOperacionUnaria($1, TIPO_OPERACION.POST_DECREMENTO, @1.first_line, @1.first_column) }
+        | INCREMENTO operacionNumerica                              { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.PRE_INCREMENTO, @1.first_line, @1.first_column) }
+        | DECREMENTO operacionNumerica                              { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.PRE_DECREMENTO, @1.first_line, @1.first_column) }
         | PARENTESISABRE operacionNumerica PARENTESISCIERRA         { $$ = $2 }
         
-        | MENOS operacionNumerica %prec UMENOS                      { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO) }
-        | ENTERO                                                    { $$ = instrucciones.nuevoValor(Number($1), TIPO_VALOR.INT) } 
-        | DECIMAL                                                   { $$ = instrucciones.nuevoValor(parseFloat($1), TIPO_VALOR.DOUBLE)}
-        | CHAR                                                      { $$ = instrucciones.nuevoValor($1.charAt(0), TIPO_VALOR.CHAR)}
-        | TRUE                                                      { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.BOOLEAN)}
-        | FALSE                                                      { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.BOOLEAN)}
-        | IDENTIFICADOR                                             { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.IDENTIFICADOR)}
-        | CADENA                                                    { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.CADENA)}
+        | MENOS operacionNumerica %prec UMENOS                      { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO, @1.first_line, @1.first_column) }
+        | ENTERO                                                    { $$ = instrucciones.nuevoValor(Number($1), TIPO_VALOR.INT, @1.first_line, @1.first_column) } 
+        | DECIMAL                                                   { $$ = instrucciones.nuevoValor(parseFloat($1), TIPO_VALOR.DOUBLE, @1.first_line, @1.first_column)}
+        | CHAR                                                      { $$ = instrucciones.nuevoValor($1.charAt(0), TIPO_VALOR.CHAR, @1.first_line, @1.first_column)}
+        | TRUE                                                      { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column)}
+        | FALSE                                                      { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column)}
+        | IDENTIFICADOR                                             { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.IDENTIFICADOR, @1.first_line, @1.first_column)}
+        | CADENA                                                    { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.CADENA, @1.first_line, @1.first_column)}
 ;
 
 expresionLogica
-        : expresionRelacional AND expresionRelacional               { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.AND)}
-        | expresionRelacional OR expresionRelacional                { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.OR)}
-        | NOT expresionRelacional                                   { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.NOT)}
+        : expresionRelacional AND expresionRelacional               { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.AND, @1.first_line, @1.first_column)}
+        | expresionRelacional OR expresionRelacional                { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.OR, @1.first_line, @1.first_column)}
+        | NOT expresionRelacional                                   { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.NOT, @1.first_line, @1.first_column)}
         | expresionRelacional                                       { $$ = $1 } 
 ;
 
 expresionRelacional
-        : operacionNumerica MAYOR operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MAYOR) }
-        | operacionNumerica MENOR operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MENOR) }
-        | operacionNumerica MAYORIGUAL operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MAYOR_IGUAL) }
-        | operacionNumerica MENORIGUAL operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MENOR_IGUAL) }
-        | operacionNumerica DOBLEIGUAL operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DOBLE_IGUAL) }
-        | operacionNumerica DIFERENTE operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIFERENTE) }
+        : operacionNumerica MAYOR operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MAYOR, @1.first_line, @1.first_column) }
+        | operacionNumerica MENOR operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MENOR, @1.first_line, @1.first_column) }
+        | operacionNumerica MAYORIGUAL operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MAYOR_IGUAL, @1.first_line, @1.first_column) }
+        | operacionNumerica MENORIGUAL operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MENOR_IGUAL, @1.first_line, @1.first_column) }
+        | operacionNumerica DOBLEIGUAL operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DOBLE_IGUAL, @1.first_line, @1.first_column) }
+        | operacionNumerica DIFERENTE operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIFERENTE, @1.first_line, @1.first_column) }
 ;
 
 cases 
@@ -223,6 +241,7 @@ cases
         | case                                                  { $$ = instrucciones.nuevoListaCases($1)}
 ;
 
-case    : CASE operacionNumerica DOSPUNTOS instrucciones BREAK PUNTOCOMA       { $$ = instrucciones.nuevoCase($2, $4) }
-        | DEFAULT DOSPUNTOS instrucciones                BREAK PUNTOCOMA       { $$ = instrucciones.nuevoCaseDefault($3)}
+case    : CASE operacionNumerica DOSPUNTOS instrucciones BREAK PUNTOCOMA       { $$ = instrucciones.nuevoCase($2, $4, @1.first_line, @1.first_column) }
+        | DEFAULT DOSPUNTOS instrucciones                BREAK PUNTOCOMA       { $$ = instrucciones.nuevoCaseDefault($3, @1.first_line, @1.first_column)}
 ;
+

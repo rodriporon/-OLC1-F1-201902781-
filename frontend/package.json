@@ -11,6 +11,7 @@
   "dependencies": {
     "@headlessui/react": "^1.6.4",
     "@heroicons/react": "^1.0.6",
+    "@uiw/react-codemirror": "^4.8.1",
     "file-saver": "^2.0.5",
     "next": "12.1.6",
     "next-themes": "^0.2.0",

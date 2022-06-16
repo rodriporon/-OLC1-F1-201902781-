@@ -2,6 +2,8 @@ import { ChevronDownIcon } from '@heroicons/react/solid'
 import { Fragment, useState } from 'react'
 import { Menu, Transition, Dialog } from '@headlessui/react'
 import { saveAs } from 'file-saver'
+import CodeMirror from '@uiw/react-codemirror'
+import { oneDark } from '@codemirror/theme-one-dark'
 
 export default function Pestaña ({ isHidden }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -15,13 +17,6 @@ export default function Pestaña ({ isHidden }) {
   const handlerGuardarComo = () => {
     const blob = new window.Blob([fileValue], { type: 'text/plain;charset=utf-8' })
     saveAs(blob, 'archivo.lf')
-  }
-  const handlerOnChangeTextArea = e => {
-    setFileValue(e.target.value)
-  }
-
-  const handlerOnChangeConsola = e => {
-    setConsolaValue(e.targe.value)
   }
 
   const handlerBotonEjecutar = e => {
@@ -200,11 +195,27 @@ export default function Pestaña ({ isHidden }) {
         <div className='relative items-center px-8 grid lg:grid-cols-2 gap-10'>
           <div className='relative'>
             <h4 className='font-medium underline dark:decoration-sky-400 decoration-sky-500 py-4'>Editor</h4>
-            <textarea value={fileValue} spellCheck={false} className='no-underline shadow-xl bg-gray-200 dark:bg-zinc-700 resize-none rounded-md relative h-96 w-full max-w-full' onChange={handlerOnChangeTextArea} />
+            <CodeMirror
+              value={fileValue}
+              height='400px'
+              onChange={(value, viewUpdate) => {
+                setFileValue(value)
+              }}
+              theme={oneDark}
+            />
+
           </div>
           <div className='relative'>
             <h4 className='font-medium underline dark:decoration-pink-400 decoration-pink-500 py-4'>Consola</h4>
-            <textarea value={consolaValue} spellCheck={false} className='shadow-xl bg-gray-200 dark:bg-zinc-700 resize-none rounded-md relative h-96 w-full max-w-full' onChange={handlerOnChangeConsola} />
+            <CodeMirror
+              value={consolaValue}
+              height='400px'
+              onChange={(value, viewUpdate) => {
+                setConsolaValue(value)
+              }}
+              theme={oneDark}
+            />
+
           </div>
 
         </div>

@@ -23,6 +23,10 @@ class TablaErrores {
     this.errores = []
   }
 
+  addObject (objeto) {
+    this.errores.push(objeto)
+  }
+
   add (tipo, token, fila, columna, descripcion) {
     const nuevoError = crearError(tipo, token, fila, columna, descripcion)
     this.errores.push(nuevoError)

@@ -17,7 +17,8 @@ let entradaEditor
 let salidaConsola = ''
 let _break = false
 
-let tablaErroresIndex = new TablaErrores([])
+const tablaErroresIndex = new TablaErrores([])
+const tablaErroresGlobal = new TablaErrores([])
 
 app.get('/', (req, res) => {
   res.send('<h1>Server running</>')
@@ -26,21 +27,43 @@ app.get('/', (req, res) => {
 let TablaSimbolosGlobal = new TablaSimbolos([])
 
 app.post('/compilar', (req, res) => {
-  tablaErroresIndex = new TablaErrores([])
+  tablaErroresGlobal.clear()
   TablaSimbolosGlobal = new TablaSimbolos([])
   salidaConsola = ''
   const entradaJson = req.body
   entradaEditor = entradaJson.fileValue.toString()
   ast = parser.parse(entradaEditor)
   interpretarBloque(ast, TablaSimbolosGlobal)
+
   console.log('Lexicos-sintacticos: ', tablaErroresLexSin)
   console.log('Semanticos-index:', tablaErroresIndex)
   console.log('Erorres simbolos:', tablaErroresSimbolos)
+  console.log('Errores Globales', tablaErroresGlobal.getErrores())
   console.log(TablaSimbolosGlobal)
+
+  tablaErroresIndex.errores.forEach((error) => {
+    tablaErroresGlobal.addObject(error)
+  })
+
+  tablaErroresLexSin.errores.forEach((error) => {
+    tablaErroresGlobal.addObject(error)
+  })
+
+  tablaErroresSimbolos.errores.forEach((error) => {
+    tablaErroresGlobal.addObject(error)
+  })
+
   tablaErroresLexSin.clear()
   tablaErroresSimbolos.clear()
+  tablaErroresIndex.clear()
+
   // console.log(salidaConsola)
   res.json({ salidaConsola })
+})
+
+// creando get para enviar los datos de tablaErroresGlobal
+app.get('/reporte-errores', (req, res) => {
+  res.json(tablaErroresGlobal.getErrores())
 })
 
 const PORT = 3001

@@ -1,16 +1,29 @@
+import { useEffect, useState } from 'react'
 import Header from '../../components/Header'
-
-const data = [
-  { key: 1, tipo: 'SEMANTICO', token: 'num', linea: 1, columna: 0, descripcion: 'variable no definida' },
-  { key: 2, tipo: 'SEMANTICO', token: 'num', linea: 1, columna: 0, descripcion: 'variable no definida' },
-  { key: 3, tipo: 'SEMANTICO', token: 'num', linea: 1, columna: 0, descripcion: 'variable no definida' }
-]
-
-const contadorKey = 0
+import Head from 'next/head'
 
 export default function ReporteErrores () {
+  const [errores, setErrores] = useState([])
+
+  const loadErrors = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/reporte-errores')
+      const items = await response.json()
+      setErrores(items)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    loadErrors()
+  }, [])
+
   return (
     <div className='dark:bg-gray-800 relative h-screen max-h-full'>
+      <Head>
+        <title>Reporte Errores</title>
+      </Head>
       <Header />
       <div className='overflow-x-auto sm:mx-6 lg:mx-8'>
         <div className='relative overflow-x-auto shadow-md sm:rounded-lg'>
@@ -35,8 +48,8 @@ export default function ReporteErrores () {
               </tr>
             </thead>
             <tbody>
-              {data.map((error) => (
-                <tr className='bg-white border-b dark:bg-gray-800 dark:border-gray-700' key={contadorKey}>
+              {errores.map((error, index) => (
+                <tr className='bg-white border-b dark:bg-gray-800 dark:border-gray-700' key={index}>
                   <th scope='row' className='px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap'>
                     {error.tipo}
                   </th>
@@ -44,7 +57,7 @@ export default function ReporteErrores () {
                     {error.token}
                   </td>
                   <td className='px-6 py-4'>
-                    {error.linea}
+                    {error.fila}
                   </td>
                   <td className='px-6 py-4'>
                     {error.columna}
@@ -58,59 +71,6 @@ export default function ReporteErrores () {
           </table>
         </div>
       </div>
-
-      {/* <div className='flex flex-col'>
-        <div className='overflow-x-auto sm:mx-6 lg:mx-8'>
-          <div className='py-2 inline-block min-w-full sm:px-6 lg:px-8'>
-            <div className='overflow-hidden'>
-              <table className='border-collapse border border-slate-500 min-w-full'>
-                <thead>
-                  <tr>
-                    <th scope='col' className='border border-slate-600'>
-                      Tipo
-                    </th>
-                    <th scope='col' className='border border-slate-600'>
-                      Token
-                    </th>
-                    <th scope='col' className='border border-slate-600'>
-                      Linea
-                    </th>
-                    <th scope='col' className='border border-slate-600'>
-                      Columna
-                    </th>
-                    <th scope='col' className='border border-slate-600'>
-                      Descripcion
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                        data.map(error => (
-                          <tr className='border-b' key={error.tipo}>
-                            <th class='font-normal py-4 text-gray-900 dark:text-white'>
-                              {error.tipo}
-                            </th>
-                            <th class='font-normal py-4 whitespace-nowrap'>
-                              {error.token}
-                            </th>
-                            <th>
-                              {error.linea}
-                            </th>
-                            <th>
-                              {error.columna}
-                            </th>
-                            <th>
-                              {error.descripcion}
-                            </th>
-                          </tr>
-                        ))
-                    }
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div> */}
     </div>
   )
 }

@@ -111,19 +111,19 @@ export default function Header () {
                             )}
                           </Menu.Item>
                         </Link>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <button
-                              className={`${
+                        <Link href='/tabla-simbolos'>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={`${
                           active ? 'bg-rose-400 text-white' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-
-                            >
-                              Reporte TS
-                            </button>
-                          )}
-                        </Menu.Item>
-
+                              >
+                                Reporte TS
+                              </button>
+                            )}
+                          </Menu.Item>
+                        </Link>
                       </div>
                     </Menu.Items>
                   </Transition>

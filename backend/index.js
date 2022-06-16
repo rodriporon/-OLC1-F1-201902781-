@@ -66,6 +66,11 @@ app.get('/reporte-errores', (req, res) => {
   res.json(tablaErroresGlobal.getErrores())
 })
 
+// getting for tabla simbolos
+app.get('/tabla-simbolos', (req, res) => {
+  res.json(TablaSimbolosGlobal.getSymbols())
+})
+
 const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)

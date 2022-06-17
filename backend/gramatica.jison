@@ -91,7 +91,9 @@
 [0-9]+"."([0-9]+)?\b                {return 'DECIMAL'; }
 [0-9]+\b                            { return 'ENTERO'; }
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*            { return 'IDENTIFICADOR'; }
-(\'(\\(["'\\bfnrt]|u[0-9A-Fa-f]{4})|[^\\'])\') { yytext = yytext.substr(1, yyleng-2); return 'CHAR'}
+
+// regex for character
+'\\'[^\\']                          { yytext = yytext.substr(1, yyleng-2); return 'CHAR'}
 
 
 
@@ -139,7 +141,8 @@ instrucciones
 ;
 
 instruccion
-        : PRINTLN PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintln($3, @1.first_line, @1.first_column) }
+        : LLAVEABRE instrucciones LLAVECIERRA                                { $$ = instrucciones.nuevoBloque($2, @1.first_line, @1.first_column) }
+        | PRINTLN PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintln($3, @1.first_line, @1.first_column) }
         | PRINTLN PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintlnLogico($3, @1.first_line, @1.first_column) }
 
 
@@ -172,7 +175,9 @@ instruccion
         | INCREMENTO IDENTIFICADOR PUNTOCOMA                                   { $$ = instrucciones.nuevoPreIncremento($2, @1.first_line, @1.first_column) }
         | DECREMENTO IDENTIFICADOR PUNTOCOMA                                   { $$ = instrucciones.nuevoPreDecremento($2, @1.first_line, @1.first_column) }
         | BREAK PUNTOCOMA                                                      { $$ = instrucciones.nuevoBreak(@1.first_line, @1.first_column) }
+        | CONTINUE PUNTOCOMA                                                   { $$ = instrucciones.nuevoContinue(@1.first_line, @1.first_column) }         
         | instruccionIf                                                        { $$ = $1 }
+        | LLAVEABRE LLAVECIERRA                                                { }
         | error PUNTOCOMA                                                      { console.log("ERROR SINTACTICO EN LINEA: " + (yylineno+1)); tablaErroresLexSin.add(TIPO_ERROR.SINTACTICO, $1, @1.first_line+1, @1.first_column+1, 'ERROR SINTACTICO')}
         
         

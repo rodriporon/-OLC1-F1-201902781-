@@ -61,7 +61,9 @@ const TIPO_INSTRUCCION = {
   ASIGNACION_SIMPLIFICADA: 'ASIGNACION_SIMPLIFICADA',
   POST_INCREMENTO: 'POST_INCREMENTO',
 
-  BREAK: 'INSTR_BREAK'
+  BREAK: 'INSTR_BREAK',
+  CONTINUE: 'INSTR_CONTINUE',
+  BLOQUE: 'INSTR_BLOQUE'
 }
 
 const TIPO_OPCION_SWITCH = {
@@ -283,6 +285,15 @@ const instrucciones = {
     }
   },
 
+  nuevoBloque: (instrucciones, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.BLOQUE,
+      instrucciones,
+      linea,
+      columna
+    }
+  },
+
   nuevoIfElse: (expresionLogica, instruccionesIfVerdadero, instruccionesIfFalso, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.IF_ELSE,
@@ -354,6 +365,14 @@ const instrucciones = {
   nuevoBreak: (linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.BREAK,
+      linea,
+      columna
+    }
+  },
+
+  nuevoContinue: (linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.CONTINUE,
       linea,
       columna
     }

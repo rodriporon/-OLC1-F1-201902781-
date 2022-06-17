@@ -16,6 +16,7 @@ let ast
 let entradaEditor
 let salidaConsola = ''
 let _break = false
+let _continue = false
 
 const tablaErroresIndex = new TablaErrores([])
 const tablaErroresGlobal = new TablaErrores([])
@@ -88,6 +89,7 @@ app.listen(PORT, () => {
 
 const interpretarBloque = (instruccion, tablaSimbolos) => {
   instruccion.forEach(instruccion => {
+    console.log(instruccion)
     if (instruccion.tipo === TIPO_INSTRUCCION.PRINTLN) {
       interpretarPrintln(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.PRINTLN_LOGICO) {
@@ -130,6 +132,10 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarBreak(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.SWITCH) {
       interpretarSwitch(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.BLOQUE) {
+      interpretarNuevoBloque(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.CONTINUE) {
+      interpretarContinue(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -154,7 +160,7 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     if (valorTipo === TIPO_DATO.INT) {
       return { valor: res, tipo: TIPO_DATO.INT }
     } else if (valorTipo === TIPO_DATO.DOUBLE) {
-      return { valor: res, tipo: TIPO_DATO.DOUBLE }
+      return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
     } else {
       return { valor: res, tipo: TIPO_DATO.NUMERO }
     }
@@ -221,23 +227,23 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.STRING) {
         return { valor: res, tipo: TIPO_DATO.STRING }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.STRING) {
         return { valor: res, tipo: TIPO_DATO.STRING }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.STRING) {
@@ -267,19 +273,19 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
         return { valor: res, tipo: TIPO_DATO.INT }
       }
@@ -296,19 +302,19 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
         return { valor: res, tipo: TIPO_DATO.INT }
       }
@@ -331,19 +337,19 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
         if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
           return { valor: res, tipo: TIPO_DATO.INT }
         } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
-          return { valor: res, tipo: TIPO_DATO.DOUBLE }
+          return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
         } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
           return { valor: res, tipo: TIPO_DATO.INT }
         } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
-          return { valor: res, tipo: TIPO_DATO.DOUBLE }
+          return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
         } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
-          return { valor: res, tipo: TIPO_DATO.DOUBLE }
+          return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
         } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
-          return { valor: res, tipo: TIPO_DATO.DOUBLE }
+          return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
         } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
           return { valor: res, tipo: TIPO_DATO.INT }
         } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
-          return { valor: res, tipo: TIPO_DATO.DOUBLE }
+          return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
         } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
           return { valor: res, tipo: TIPO_DATO.INT }
         }
@@ -360,23 +366,23 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       }
       parseFloat(res)
       if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       }
     }
 
@@ -391,29 +397,29 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       }
       parseFloat(res)
       if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res, tipo: TIPO_DATO.DOUBLE }
+        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
       }
     }
   } else if (expresion.tipo === TIPO_VALOR.NUMERO) {
     return { valor: expresion.valor, tipo: TIPO_DATO.NUMERO }
   } else if (expresion.tipo === TIPO_VALOR.DOUBLE) {
-    return { valor: expresion.valor, tipo: TIPO_DATO.DOUBLE }
+    return { valor: expresion.valor.toFixed(2), tipo: TIPO_DATO.DOUBLE }
   } else if (expresion.tipo === TIPO_VALOR.INT) {
     return { valor: expresion.valor, tipo: TIPO_DATO.INT }
   } else if (expresion.tipo === TIPO_VALOR.BOOLEAN) {
@@ -738,6 +744,11 @@ const interpretarBreak = (instruccion, tablaDeSimbolos) => {
   _break = true
 }
 
+const interpretarContinue = (instruccion, tablaDeSimbolos) => {
+  _continue = true
+  console.log(_continue)
+}
+
 const interpretarSwitch = (instruccion, tablaDeSimbolos) => {
   let evaluar = true
   const valorExpresion = interpretarExpresionNumerica(instruccion.expresionNumerica, tablaDeSimbolos)
@@ -754,4 +765,11 @@ const interpretarSwitch = (instruccion, tablaDeSimbolos) => {
     }
   })
   _break = false
+}
+
+const interpretarNuevoBloque = (instruccion, tablaDeSimbolos) => {
+  console.log(tablaDeSimbolos)
+  const tablaSimbolosNuevoBloque = new TablaSimbolos(tablaDeSimbolos._simbolos)
+  interpretarBloque(instruccion.instrucciones, tablaSimbolosNuevoBloque)
+  console.log('tablaNuevoBloque', tablaSimbolosNuevoBloque)
 }

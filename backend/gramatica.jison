@@ -214,7 +214,8 @@ operacionNumerica
         | INCREMENTO operacionNumerica                              { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.PRE_INCREMENTO, @1.first_line, @1.first_column) }
         | DECREMENTO operacionNumerica                              { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.PRE_DECREMENTO, @1.first_line, @1.first_column) }
         | PARENTESISABRE operacionNumerica PARENTESISCIERRA         { $$ = $2 }
-        
+        | TYPEOF PARENTESISABRE operacionNumerica PARENTESISCIERRA  { $$ = instrucciones.nuevoOperacionUnaria($3, TIPO_OPERACION.TYPEOF, @1.first_line, @1.first_column) }
+
         | MENOS operacionNumerica %prec UMENOS                      { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO, @1.first_line, @1.first_column) }
         | ENTERO                                                    { $$ = instrucciones.nuevoValor(Number($1), TIPO_VALOR.INT, @1.first_line, @1.first_column) } 
         | DECIMAL                                                   { $$ = instrucciones.nuevoValor(parseFloat($1), TIPO_VALOR.DOUBLE, @1.first_line, @1.first_column)}

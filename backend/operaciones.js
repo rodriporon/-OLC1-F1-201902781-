@@ -34,6 +34,8 @@ const TIPO_OPERACION = {
   OR: 'OP_OR',
   NOT: 'OP_NOT',
 
+  TYPEOF: 'OP_TYPEOF',
+
   BOOLEAN: 'OP_BOOLEAN'
 }
 

@@ -164,6 +164,9 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     } else {
       return { valor: res, tipo: TIPO_DATO.NUMERO }
     }
+  } else if (expresion.tipo === TIPO_OPERACION.TYPEOF) {
+    const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo
+    return { valor: valorTipo, tipo: TIPO_DATO.STRING }
   } else if (expresion.tipo === TIPO_OPERACION.POST_INCREMENTO) {
     const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
     const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo

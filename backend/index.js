@@ -89,7 +89,6 @@ app.listen(PORT, () => {
 
 const interpretarBloque = (instruccion, tablaSimbolos) => {
   instruccion.forEach(instruccion => {
-    console.log(instruccion)
     if (instruccion.tipo === TIPO_INSTRUCCION.PRINTLN) {
       interpretarPrintln(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.PRINTLN_LOGICO) {
@@ -465,9 +464,6 @@ const interpretarPrintln = (instruccion, tablaDeSimbolos) => {
 }
 
 const interpretarPrintlnLogico = (expresion, tablaDeSimbolos) => {
-  if (tablaDeSimbolos.getValue(expresion.identificador) === undefined) {
-    return
-  }
   const cadena = interpretarExpresionLogica(expresion.expresionLogica, tablaDeSimbolos)
   salidaConsola += cadena
   salidaConsola += '\n'
@@ -486,9 +482,6 @@ const interpretarPrint = (instruccion, tablaDeSimbolos) => {
 }
 
 const interpretarPrintLogico = (expresion, tablaDeSimbolos) => {
-  if (tablaDeSimbolos.getValue(expresion.identificador) === undefined) {
-    return
-  }
   const cadena = interpretarExpresionLogica(expresion.expresionLogica, tablaDeSimbolos)
   salidaConsola += cadena
   console.log('>> ' + cadena)
@@ -506,7 +499,6 @@ const interpretarDeclaracionAsignacion = (instruccion, tablaDeSimbolos) => {
 
 const interpretarAsignacion = (instruccion, tablaDeSimbolos) => {
   const identificador = tablaDeSimbolos.getValue(instruccion.identificador)
-  console.log(identificador)
   if (identificador.constante === true) {
     tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, identificador.id, 0, 0, 'VARIABLE ES DE TIPO CONSTANTE')
     console.error('ERROR: variable: ' + identificador.id + ' es de tipo constante')
@@ -565,6 +557,21 @@ const interpretarExpresionLogica = (expresion, tablaDeSimbolos) => {
     const valorIzq = interpretarExpresionRelacional(expresion.operandoIzq, tablaDeSimbolos)
     const valorDer = interpretarExpresionRelacional(expresion.operandoDer, tablaDeSimbolos)
     return valorIzq || valorDer
+  }
+  if (expresion.tipo === TIPO_OPERACION.XOR) {
+    const valorIzq = interpretarExpresionRelacional(expresion.operandoIzq, tablaDeSimbolos)
+    const valorDer = interpretarExpresionRelacional(expresion.operandoDer, tablaDeSimbolos)
+    let result
+    if (valorIzq === true && valorDer === true) {
+      result = false
+    } else if (valorIzq === true && valorDer === false) {
+      result = true
+    } else if (valorIzq === false && valorDer === true) {
+      result = true
+    } else if (valorIzq === false && valorDer === false) {
+      result = false
+    }
+    return result
   }
   if (expresion.tipo === TIPO_OPERACION.NOT) {
     const valor = interpretarExpresionRelacional(expresion.operandoIzq, tablaDeSimbolos)

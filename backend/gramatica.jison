@@ -233,6 +233,7 @@ operacionNumerica
 expresionLogica
         : expresionRelacional AND expresionRelacional               { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.AND, @1.first_line, @1.first_column)}
         | expresionRelacional OR expresionRelacional                { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.OR, @1.first_line, @1.first_column)}
+        | expresionRelacional XOR expresionRelacional                { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.XOR, @1.first_line, @1.first_column)}
         | NOT expresionRelacional                                   { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.NOT, @1.first_line, @1.first_column)}
         | expresionRelacional                                       { $$ = $1 } 
 ;

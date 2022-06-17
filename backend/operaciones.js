@@ -33,6 +33,7 @@ const TIPO_OPERACION = {
   AND: 'OP_AND',
   OR: 'OP_OR',
   NOT: 'OP_NOT',
+  XOR: 'OP_XOR',
 
   TYPEOF: 'OP_TYPEOF',
 

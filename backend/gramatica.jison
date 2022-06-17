@@ -44,6 +44,7 @@
 "call"                              return 'CALL';
 "return"                            return 'RETURN';
 "println"                           return 'PRINTLN';
+"print"                             return 'PRINT';
 "typeof"                            return 'TYPEOF';
 "true"                              return 'TRUE';
 "false"                             return 'FALSE';
@@ -144,6 +145,9 @@ instruccion
         : LLAVEABRE instrucciones LLAVECIERRA                                { $$ = instrucciones.nuevoBloque($2, @1.first_line, @1.first_column) }
         | PRINTLN PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintln($3, @1.first_line, @1.first_column) }
         | PRINTLN PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintlnLogico($3, @1.first_line, @1.first_column) }
+
+        | PRINT PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrint($3, @1.first_line, @1.first_column) }
+        | PRINT PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintLogico($3, @1.first_line, @1.first_column) }
 
 
         | WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile($3, $6, @1.first_line, @1.first_column)}

@@ -136,6 +136,10 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarNuevoBloque(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.CONTINUE) {
       interpretarContinue(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.PRINT) {
+      interpretarPrint(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.PRINT_LOGICO) {
+      interpretarPrintLogico(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -467,6 +471,26 @@ const interpretarPrintlnLogico = (expresion, tablaDeSimbolos) => {
   const cadena = interpretarExpresionLogica(expresion.expresionLogica, tablaDeSimbolos)
   salidaConsola += cadena
   salidaConsola += '\n'
+  console.log('>> ' + cadena)
+}
+
+const interpretarPrint = (instruccion, tablaDeSimbolos) => {
+  const cadenaAux = interpretarExpresionCadena(instruccion.expresionCadena, tablaDeSimbolos)
+  if (cadenaAux === undefined) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, undefined, 0, 0, 'NO SE PUEDE ACCEDER A UNA VARIABLE QUE NO HA SIDO DEFINIDA')
+    return console.log('ERROR: no se puede acceder a una variable que no ha sido definida')
+  }
+  const cadena = cadenaAux.valor
+  salidaConsola += cadena
+  console.log('>> ' + cadena)
+}
+
+const interpretarPrintLogico = (expresion, tablaDeSimbolos) => {
+  if (tablaDeSimbolos.getValue(expresion.identificador) === undefined) {
+    return
+  }
+  const cadena = interpretarExpresionLogica(expresion.expresionLogica, tablaDeSimbolos)
+  salidaConsola += cadena
   console.log('>> ' + cadena)
 }
 

@@ -42,6 +42,10 @@ const TIPO_OPERACION = {
 const TIPO_INSTRUCCION = {
   PRINTLN: 'INSTR_PRINTLN',
   PRINTLN_LOGICO: 'INSTR_PRINTLN_LOGICO',
+
+  PRINT: 'INSTR_PRINT',
+  PRINT_LOGICO: 'INSTR_PRINT_LOGICO',
+
   WHILE: 'INSTR_WHILE',
   DO_WHILE: 'INSTR_DO_WHILE',
   DECLARACION_ASIGNACION: 'INSTR_DECLARACION',
@@ -146,6 +150,24 @@ const instrucciones = {
   nuevoPrintlnLogico: (expresionLogica, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.PRINTLN_LOGICO,
+      expresionLogica,
+      linea,
+      columna
+    }
+  },
+
+  nuevoPrint: (expresionCadena, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.PRINT,
+      expresionCadena,
+      linea,
+      columna
+    }
+  },
+
+  nuevoPrintLogico: (expresionLogica, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.PRINT_LOGICO,
       expresionLogica,
       linea,
       columna

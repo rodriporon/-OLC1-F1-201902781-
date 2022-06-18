@@ -13,10 +13,6 @@ export default function Header () {
   const { theme, setTheme } = useTheme()
   const router = useRouter()
 
-  const navigation = [
-    { name: 'Reportes', href: '#' }
-  ]
-
   const toggleDarkMode = () => {
     setTheme(theme === 'light' ? 'dark' : 'light')
   }
@@ -81,19 +77,20 @@ export default function Header () {
                   >
                     <Menu.Items className='absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
                       <div className='px-1 py-1 '>
-
                         <Menu.Item>
 
                           {({ active }) => (
-                            <button
+
+                            <a
+                              href='http://localhost:3001/reporte-ast'
                               className={`${
                           active ? 'bg-rose-400 text-white' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                               type='file'
-
                             >
                               Reporte AST
-                            </button>
+                            </a>
+
                           )}
                         </Menu.Item>
                         <Link href='/reporte-errores'>
@@ -183,15 +180,73 @@ export default function Header () {
               <div className='px-2 pt-2 pb-3 space-y-1'>
                 {router.pathname === '/'
                   ? ''
-                  : navigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className='block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-white hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800'
+                  : <Menu as='div' className='relative inline-block text-left z-10'>
+                    <div>
+                      <Menu.Button className='inline-flex w-full justify-center rounded-md dark:bg-gray-900 bg-gray-300  px-4 py-2 text-sm font-medium dark:text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75'>
+                        Reportes
+                        <ChevronDownIcon
+                          className='ml-2 -mr-1 h-5 w-5 dark:text-violet-200 dark:hover:text-indigo-100'
+                          aria-hidden='true'
+                        />
+                      </Menu.Button>
+                    </div>
+                    <Transition
+                      as={Fragment}
+                      enter='transition ease-out duration-100'
+                      enterFrom='transform opacity-0 scale-95'
+                      enterTo='transform opacity-100 scale-100'
+                      leave='transition ease-in duration-75'
+                      leaveFrom='transform opacity-100 scale-100'
+                      leaveTo='transform opacity-0 scale-95'
                     >
-                      {item.name}
-                    </a>
-                  ))}
+                      <Menu.Items className='absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+                        <div className='px-1 py-1 '>
+
+                          <Menu.Item>
+
+                            {({ active }) => (
+                              <button
+                                className={`${
+                          active ? 'bg-rose-400 text-white' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                type='file'
+                              >
+                                Reporte AST
+                              </button>
+                            )}
+                          </Menu.Item>
+                          <Link href='/reporte-errores'>
+                            <Menu.Item>
+                              {({ active }) => (
+
+                                <button
+                                  className={`${
+                          active ? 'bg-rose-400 text-white' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                >
+                                  Reporte de Errores
+                                </button>
+
+                              )}
+                            </Menu.Item>
+                          </Link>
+                          <Link href='/tabla-simbolos'>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  className={`${
+                          active ? 'bg-rose-400 text-white' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                >
+                                  Reporte TS
+                                </button>
+                              )}
+                            </Menu.Item>
+                          </Link>
+                        </div>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>}
               </div>
               <Switch.Group>
                 <Switch.Label className='text-lg'>

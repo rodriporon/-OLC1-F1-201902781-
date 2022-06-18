@@ -8,6 +8,7 @@ const { TIPO_INSTRUCCION, TIPO_OPERACION, TIPO_VALOR, TIPO_OPCION_SWITCH } = req
 const { TablaSimbolos, TIPO_DATO, tablaErroresSimbolos } = require('./tablaSimbolos')
 const { TIPO_ERROR, TablaErrores } = require('./tablaErrores')
 const { tablaErroresLexSin } = require('./gramatica')
+const graficarAST = require('./graficaAST')
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -70,6 +71,12 @@ app.get('/reporte-errores', (req, res) => {
 // getting for tabla simbolos
 app.get('/tabla-simbolos', (req, res) => {
   res.json(TablaSimbolosGlobal.getSymbols())
+})
+
+// graficar AST
+app.get('/reporte-ast', (req, res) => {
+  // graficarAST(ast)
+  res.json(ast)
 })
 
 const PORT = 3001
@@ -163,7 +170,7 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     if (valorTipo === TIPO_DATO.INT) {
       return { valor: res, tipo: TIPO_DATO.INT }
     } else if (valorTipo === TIPO_DATO.DOUBLE) {
-      return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+      return { valor: res, tipo: TIPO_DATO.DOUBLE }
     } else {
       return { valor: res, tipo: TIPO_DATO.NUMERO }
     }
@@ -233,23 +240,23 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.STRING) {
         return { valor: res, tipo: TIPO_DATO.STRING }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.STRING) {
         return { valor: res, tipo: TIPO_DATO.STRING }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.STRING) {
@@ -279,19 +286,19 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
         return { valor: res, tipo: TIPO_DATO.INT }
       }
@@ -308,19 +315,19 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
         return { valor: res, tipo: TIPO_DATO.INT }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
         return { valor: res, tipo: TIPO_DATO.INT }
       }
@@ -343,19 +350,19 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
         if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
           return { valor: res, tipo: TIPO_DATO.INT }
         } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
-          return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+          return { valor: res, tipo: TIPO_DATO.DOUBLE }
         } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
           return { valor: res, tipo: TIPO_DATO.INT }
         } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
-          return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+          return { valor: res, tipo: TIPO_DATO.DOUBLE }
         } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
-          return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+          return { valor: res, tipo: TIPO_DATO.DOUBLE }
         } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
-          return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+          return { valor: res, tipo: TIPO_DATO.DOUBLE }
         } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
           return { valor: res, tipo: TIPO_DATO.INT }
         } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
-          return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+          return { valor: res, tipo: TIPO_DATO.DOUBLE }
         } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
           return { valor: res, tipo: TIPO_DATO.INT }
         }
@@ -372,23 +379,23 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       }
       parseFloat(res)
       if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       }
     }
 
@@ -403,29 +410,29 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
       }
       parseFloat(res)
       if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.INT && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.DOUBLE && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.INT) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.DOUBLE) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       } else if (valorIzq.tipo === TIPO_DATO.CHAR && valorDer.tipo === TIPO_DATO.CHAR) {
-        return { valor: res.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+        return { valor: res, tipo: TIPO_DATO.DOUBLE }
       }
     }
   } else if (expresion.tipo === TIPO_VALOR.NUMERO) {
     return { valor: expresion.valor, tipo: TIPO_DATO.NUMERO }
   } else if (expresion.tipo === TIPO_VALOR.DOUBLE) {
-    return { valor: expresion.valor.toFixed(2), tipo: TIPO_DATO.DOUBLE }
+    return { valor: expresion.valor, tipo: TIPO_DATO.DOUBLE }
   } else if (expresion.tipo === TIPO_VALOR.INT) {
     return { valor: expresion.valor, tipo: TIPO_DATO.INT }
   } else if (expresion.tipo === TIPO_VALOR.BOOLEAN) {

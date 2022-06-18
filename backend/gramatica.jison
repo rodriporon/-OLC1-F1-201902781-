@@ -194,7 +194,17 @@ instruccionIf
         : IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA        { $$ = instrucciones.nuevoIf($3, $6) }
         | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoIfElse($3, $6, $10, @1.first_line, @1.first_column) }
         | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE instruccionIf                             { $$ = instrucciones.nuevoIfElseIf($3, $6, $9, @1.first_line, @1.first_column)}
+
+
+        | IF PARENTESISABRE TRUE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA        { $$ = instrucciones.nuevoIf(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6) }
+        | IF PARENTESISABRE TRUE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoIfElse(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6, $10, @1.first_line, @1.first_column) }
+        | IF PARENTESISABRE TRUE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE instruccionIf                             { $$ = instrucciones.nuevoIfElseIf(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6, $9, @1.first_line, @1.first_column)}
+
+        | IF PARENTESISABRE FALSE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA        { $$ = instrucciones.nuevoIf(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6) }
+        | IF PARENTESISABRE FALSE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoIfElse(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6, $10, @1.first_line, @1.first_column) }
+        | IF PARENTESISABRE FALSE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE instruccionIf                             { $$ = instrucciones.nuevoIfElseIf(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6, $9, @1.first_line, @1.first_column)}
 ;
+
 
 tipo_dato
         : INT           {$$ = $1}

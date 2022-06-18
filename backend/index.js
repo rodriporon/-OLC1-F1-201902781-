@@ -8,7 +8,6 @@ const { TIPO_INSTRUCCION, TIPO_OPERACION, TIPO_VALOR, TIPO_OPCION_SWITCH } = req
 const { TablaSimbolos, TIPO_DATO, tablaErroresSimbolos } = require('./tablaSimbolos')
 const { TIPO_ERROR, TablaErrores } = require('./tablaErrores')
 const { tablaErroresLexSin } = require('./gramatica')
-const graficarAST = require('./graficaAST')
 
 app.use(cors())
 app.use(bodyParser.json())

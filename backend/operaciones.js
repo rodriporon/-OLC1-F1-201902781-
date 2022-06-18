@@ -68,6 +68,11 @@ const TIPO_INSTRUCCION = {
   ASIGNACION_SIMPLIFICADA: 'ASIGNACION_SIMPLIFICADA',
   POST_INCREMENTO: 'POST_INCREMENTO',
 
+  METODO_SIN_PARAMETROS: 'INSTR_METODO_SIN_PARAMETROS',
+  METODO_CON_PARAMETROS: 'INSTR_METODO_CON_PARAMETROS',
+
+  CALL_METODO_SIN_PARAMETROS: 'INSTR_CALL_METODO_SIN_PARAMETROS',
+
   BREAK: 'INSTR_BREAK',
   CONTINUE: 'INSTR_CONTINUE',
   BLOQUE: 'INSTR_BLOQUE'
@@ -371,6 +376,25 @@ const instrucciones = {
     return {
       tipo: TIPO_OPCION_SWITCH.DEFECTO,
       instrucciones,
+      linea,
+      columna
+    }
+  },
+
+  nuevoMetodoSinParametros: (identificador, instrucciones, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.METODO_SIN_PARAMETROS,
+      identificador,
+      instrucciones,
+      linea,
+      columna
+    }
+  },
+
+  nuevoCallMetodoSinParametros: (identificador, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.CALL_METODO_SIN_PARAMETROS,
+      identificador,
       linea,
       columna
     }

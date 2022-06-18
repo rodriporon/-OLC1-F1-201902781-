@@ -10,6 +10,7 @@ const TIPO_DATO = {
   STRING: 'STRING',
   CONST: 'CONST',
   NUMERO: 'NUMERO',
+  METODO_SIN_PARAMETROS: 'METODO_SIN_PARAMETROS',
   UNDEFINED: 'undefined'
 }
 
@@ -29,6 +30,11 @@ class TablaSimbolos {
 
   add (id, tipo, constante) {
     const nuevoSimbolo = crearSimbolo(id, tipo, undefined, constante)
+    this._simbolos.push(nuevoSimbolo)
+  }
+
+  addMetodo (id, tipo, parametros) {
+    const nuevoSimbolo = crearSimbolo(id, tipo, parametros, false)
     this._simbolos.push(nuevoSimbolo)
   }
 

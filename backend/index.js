@@ -95,6 +95,7 @@ app.listen(PORT, () => {
 
 const interpretarBloque = (instruccion, tablaSimbolos) => {
   instruccion.forEach(instruccion => {
+    console.log(instruccion)
     if (instruccion.tipo === TIPO_INSTRUCCION.PRINTLN) {
       interpretarPrintln(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.PRINTLN_LOGICO) {
@@ -145,6 +146,10 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarPrint(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.PRINT_LOGICO) {
       interpretarPrintLogico(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.METODO_SIN_PARAMETROS) {
+      interpretarMetodoSinParametros(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.CALL_METODO_SIN_PARAMETROS) {
+      interpretarCallMetodoSinParametros(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -811,5 +816,18 @@ const interpretarNuevoBloque = (instruccion, tablaDeSimbolos) => {
   console.log(tablaDeSimbolos)
   const tablaSimbolosNuevoBloque = new TablaSimbolos(tablaDeSimbolos._simbolos)
   interpretarBloque(instruccion.instrucciones, tablaSimbolosNuevoBloque)
-  console.log('tablaNuevoBloque', tablaSimbolosNuevoBloque)
+}
+
+const interpretarMetodoSinParametros = (instruccion, tablaDeSimbolos) => {
+  tablaDeSimbolos.addMetodo(instruccion.identificador, TIPO_DATO.METODO_SIN_PARAMETROS, instruccion.instrucciones)
+}
+
+const interpretarCallMetodoSinParametros = (instrucciones, tablaDeSimbolos) => {
+  const metodo = tablaDeSimbolos.getValue(instrucciones.identificador)
+  if (metodo.tipo !== TIPO_DATO.METODO_SIN_PARAMETROS) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instrucciones.identificador, instrucciones.linea, instrucciones.columna, 'El identificador indicado no es un metodo')
+  } else {
+    const tablaSimbolosNuevoBloque = new TablaSimbolos(tablaDeSimbolos._simbolos)
+    interpretarBloque(metodo.valor, tablaSimbolosNuevoBloque)
+  }
 }

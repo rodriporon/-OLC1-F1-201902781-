@@ -95,7 +95,7 @@ app.listen(PORT, () => {
 
 const interpretarBloque = (instruccion, tablaSimbolos) => {
   instruccion.forEach(instruccion => {
-    console.log(instruccion)
+    console.log({ instruccion })
     if (instruccion.tipo === TIPO_INSTRUCCION.PRINTLN) {
       interpretarPrintln(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.PRINTLN_LOGICO) {
@@ -560,7 +560,7 @@ const interpretarExpresionRelacional = (expresion, tablaDeSimbolos) => {
   let valorIzq
   let valorDer
   if (expresion.operandoDer === undefined) {
-    console.log('ENTRO A IF UNDEFINDED')
+
     valorIzq = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos)
     valorIzq = valorIzq.valor
     if (valorIzq === 'true') {

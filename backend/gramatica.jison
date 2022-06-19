@@ -210,7 +210,7 @@ operacionNumerica
         | operacionNumerica MENOS operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.RESTA, @1.first_line, @1.first_column) }
         | operacionNumerica MODULO operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MODULO, @1.first_line, @1.first_column) }
         | operacionNumerica MULTIPLICADO operacionNumerica          { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MULTIPLICACION, @1.first_line, @1.first_column) }
-        | operacionNumerica POTENCIA operacionNumerica               { $$ = instrucciones.nuevoOperacionBinaria($1, $4, TIPO_OPERACION.POTENCIA, @1.first_line, @1.first_column) }
+        | operacionNumerica MULTIPLICADO MULTIPLICADO operacionNumerica               { $$ = instrucciones.nuevoOperacionBinaria($1, $4, TIPO_OPERACION.POTENCIA, @1.first_line, @1.first_column) }
         | operacionNumerica DIVIDIDO operacionNumerica              { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIVISION, @1.first_line, @1.first_column) }
         | operacionNumerica INCREMENTO                              { $$ = instrucciones.nuevoOperacionUnaria($1, TIPO_OPERACION.POST_INCREMENTO, @1.first_line, @1.first_column) }
         | operacionNumerica DECREMENTO                              { $$ = instrucciones.nuevoOperacionUnaria($1, TIPO_OPERACION.POST_DECREMENTO, @1.first_line, @1.first_column) }

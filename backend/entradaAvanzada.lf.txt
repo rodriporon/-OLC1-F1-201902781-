@@ -1,0 +1,315 @@
+//A continuacion un archivo de entrada para el curso de "olc1"
+//Este es un comentario de una linea :)
+//INICIANDO--------------------------------------------
+/*******        
+    ****Universidad San Carlos de Guatemala
+        Facultad de Ingenieria /n
+        Escuela de vacasiones Junio 2022
+        LFScript
+****/
+println("SENTENCIA DECLARACION :--------------------------");
+double calificacion=0.0;
+
+//AREA DE DECLARACIONES DE VARIABLES GLOBALES
+int numero = 12;
+//ISSUE int a,b,c,d = 2022;
+int numero_tres_ = numero;
+
+doublE decimal_uno = -0.235;
+//ISSUE double e,f,g,h,i= 20.22+12;
+// ISSUE double ee,ff,gg,hh,ii= 20.22+12+e;
+double jj= 100.01; 
+
+char caracter_uno = 'A' ;
+char caracter_uno_uno = '1' ;
+char caracter_uno_dos = 'a' ;
+//char caracter_especial_uno = '\n' ;
+//char caracter_especial_dos = '\\' ;
+//char caracter_especial_tres = '\t' ;
+//ISSUE char caracter_a, caracter_b, caracter__c = '8';
+
+boolean banderita_uno = true;
+booleaN banderita_dos = false;
+
+string encabezado = "\"Universidad San Carlos de Guatemala\"\nEscuela de Ciencias y Sistmas";
+string copia_encabezado = encabezado;
+string nombre = "compiladores";
+string nombre_dos = "organizacion";
+string nombre_tres = "-45";
+string nombre_cuatro = "%%%#\n\""; 
+string nombre_cinco = ""; 
+
+println("Sentencia declaracion 1/1 status: si!...");
+calificacion= calificacion+5.0;
+println("Calificacion = "+calificacion);
+{
+    //ASIGNACIONES------
+    banderita_uno= true;
+    nombre_tres="ganare compiladores \"1\"";
+    int numero = 13;
+    char caracter_uno = '>' ;
+    numero++;
+    numero++;
+    numero++;
+    numero++;
+    println("SENTENCIA ASIGNACION :--------------------------");
+    println("Sentencia asignacion 1/1 status: si!...");
+    calificacion= calificacion+3.0;
+    println("Calificacion= "+calificacion); 
+
+    {
+        int nivel_intermedio= ' '+2; //resutlado 34
+        int nivel_intermedio_dos= ' '+'>'; 
+        {
+            //espacio en blanco
+        }
+    }
+    {
+        caracter_uno_dos = '}' ;
+    } 
+}
+
+ 
+calificacion= calificacion+sentencia_switch("bcd");
+println("Calificacion= "+calificacion);
+
+//call sentencia_while_dowhile("compi",2022,1,15);
+
+/*
+if("ganare compi c: 1semestre"==sentencia_for("compi",1,true)){
+    calificacion= calificacion+3+5;
+    println("Calificacion= "+calificacion);
+}
+*/
+
+//si llegaste a este punto si mover funciones o metodos
+println("SENTENCIA \n\tBLOQUE, METODO, FUNCIONES , LLAMADA, RETURN:--------------------------");
+calificacion= calificacion+5+6+8+4;
+println("Calificacion= "+calificacion);
+println("SENTENCIA TYPEOF:--------------------------");
+println(typeof(calificacion));
+println(typeof(15/12.0));
+calificacion= calificacion+2;
+println("Calificacion= "+calificacion);
+calificacion= calificacion+1;  // manejo DE println
+println("Calificacion= "+calificacion);
+
+
+void sentencia_if() {
+      //este es una funcion para ver el correcto funcionamiento del metodo
+    println("SENTENCIA IF :--------------------------");
+    int anio= 2022;
+    int pasos= 6;
+    double tmp=0.0;
+
+      if(true){
+        println("Sentencia if 1/"+pasos+" status: si!...");
+        tmp= tmp+0.5;
+    }
+
+    if(false){
+        println("Sentencia if 1/"+pasos+" status: no!...");
+        tmp= tmp-0.5;
+    }
+
+    if(anio-22==2000){
+        println("Sentencia if 2/"+pasos+" status: si!...");
+        anio=1945; //aqui cambia valor
+        tmp= tmp+0.5;
+    }
+    if(anio==1985 - 40){
+        println("Sentencia if 3/"+pasos+" status: si!...");
+        tmp = tmp + 1.0;
+    }else if(anio+1== 2000){
+        println("Sentencia if 3/"+pasos+" status: nooo!...");
+    }else {
+        println("Sentencia if 3/"+pasos+" status: si!...");
+        tmp= tmp+1.0;
+    }
+
+
+    if(anio==20+228*8){
+        println("Sentencia if 4/"+pasos+" status: nooo!...");
+    }else if(anio== 1945){
+        println("Sentencia if 4/"+pasos+" status: si!...");
+        tmp= tmp+0.5;
+        anio= 2022;
+    }
+
+  
+    if(anio==20+228*8){
+        println("Sentencia if 4/"+pasos+" status: nooo!...");
+    }else if(anio== 1945){
+        println("Sentencia if 4/"+pasos+" status: si!...");
+        tmp= tmp+0.5;
+        anio= 2022;
+    }else{
+        println("Sentencia if 4/"+pasos+" status: nooo!...");
+    }
+
+        /*
+    if(anio==145/8*9)    println("Sentencia if 5/"+pasos+" status: nooo!...");
+    else if(anio== 2022) println("Sentencia if 5/"+pasos+" status: si!...");
+    else                 println("Sentencia if 5/"+pasos+" status: nooo!...");
+
+    if (anio==2022) tmp= tmp+0.5;
+    */
+    anio= 2023;
+
+    /*
+    if(anio==145/8*9)    println("Sentencia if 6/"+pasos+" status: nooo!...");
+    else if(anio== 2023) println("Sentencia if 6/"+pasos+" status: si!...");
+    else                 println("Sentencia if 6/"+pasos+" status: nooo!...");
+
+    if (anio==2022+1) tmp= tmp+1.0;
+
+    */
+    calificacion= calificacion+tmp;
+    println("Calificacion= "+calificacion);
+}
+
+call sentencia_if();
+
+void sentencia_incre_decre(){
+    println("SENTENCIA INCRE DECRE :--------------------------");
+    int tmp=0;
+    int num=10;
+    int num_num=10;
+    num++;
+    ++num;
+    --num_num;
+    if(num==12){
+        println("Sentencia if 1/2 status: si!...");
+        tmp= tmp+1.0;
+    }
+    if(num_num==9){
+        println("Sentencia if 2/2 status: si!...");
+        tmp= tmp+1.0;
+    }
+    calificacion= calificacion+tmp;
+    println("Calificacion= "+calificacion);
+}
+call sentencia_incre_decre();  
+
+void sentencia_switch(){
+    println("SENTENCIA SWITCH :--------------------------");
+    int tmp=0;
+    string valor = "bcd";
+    switch(valor){
+        case "abc":
+            println("Sentencia switchs 1/3 status: no!...");
+            break;
+        case "bcd":
+            println("Sentencia switchs 1/3 status: si!...");
+            tmp= tmp+1;
+            break;
+        case "cde":
+            println("Sentencia switchs 1/3 status: no!...");
+            break;
+    }
+   valor = "olc";
+  switch(valor){
+        case "edd":
+            println("Sentencia switchs 2/3 status: no!...");
+            break;
+        case "orga":
+            println("Sentencia switchs 2/3 status: no!...");
+            break;
+        default:
+            println("Sentencia switchs 2/3 status: si!...");
+            tmp= tmp+2;
+            break;
+    }
+
+    int numero_test=1945;
+    switch(numero_test){
+        case 1944:
+            println("Sentencia switchs 3/3 status: no!...");
+            break;
+        case 1945:
+            println("Sentencia switchs 3/3 status: si!...");
+            tmp++;
+            break;
+        case 1945:
+            int test=30;
+        default:
+            println("Sentencia switchs 3/3 status: no!...");
+            break;
+    }
+}
+
+call sentencia_switch();
+
+void sentencia_while_dowhile(){
+    println("SENTENCIA WHILE Y DOWHILE :--------------------------");
+    int tmp=0;
+
+    int numeroWhile=0;
+    while(numeroWhile<100){
+
+        int contador=0;
+        string cadena="";
+
+        do {
+            cadena= cadena+"* ";
+            contador++;
+        } while(contador<numeroWhile);
+
+        println(cadena);
+        if (numeroWhile==16) {break;}
+        numeroWhile++;
+    }
+    calificacion= calificacion+3;//buen manejo del ciclo while
+    calificacion= calificacion+3;//buen manejo del ciclo dowhile
+    calificacion= calificacion+4;//buen manejo de sentencia break
+    println("Calificacion= "+calificacion);
+}
+
+call sentencia_while_dowhile();
+
+void sentencia_for(){
+    println("SENTENCIA for :--------------------------");
+    boolean flag = true;
+    if(flag==true){
+        println("parametros en una funcion estan funcionando bien");
+    }
+
+    String retornar="";
+    int w=1945;
+    int x=100;
+    for(x=0;x<11;x=x+2){
+        int w=0;
+        println("\"\tsi\""+w);
+        continue;
+        println("Este mensaje no se puede mostrar :s");
+    }
+    println(retornar+"ganare compi c: "+1+"semestre") ;
+}
+
+call sentencia_for();
+
+
+void expresiones(){
+    println((158+(9*(89+5+97))/(5.0*102)-9+122));
+    println(90/(5+2));
+    println(5**2.5);
+    println(70%80);
+    if((158+(9*(89+5+'a'))/(5.0*'f')-9+'z')==274.37 && 'Z'/(5+2) ==12){
+        println("Operaciones aritmeticas bien! c:");
+    }
+    if("Esta cadena"!="esta otra" && 10+5<=30-15){
+        println("Operaciones relacionales bien! c:");
+    }
+        if(5==5 || false == true){
+        println("Operaciones logicas bien! c:");
+    }
+    int temporal =12;
+    if(temporal++==12){
+            println("Operaciones incremento 1/2 bien! c:"); 
+    }
+    if(temporal==13){
+        println("Operaciones incremento 2/2 bien! c:"); 
+    }
+}
+call expresiones();
+//FIN DE ARCHIVO 

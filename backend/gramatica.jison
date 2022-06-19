@@ -91,10 +91,11 @@
 \"([^\\\"]|\\.)*\"                  { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
 [0-9]+"."([0-9]+)?\b                {return 'DECIMAL'; }
 [0-9]+\b                            { return 'ENTERO'; }
+(\'(\\(["'\\bfnrt]|u[0-9A-Fa-f]{4})|[^\\'])\') { yytext = yytext.substr(1, yyleng-2); return 'CHAR'}
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*            { return 'IDENTIFICADOR'; }
 
 // regex for character
-'\\'[^\\']                          { yytext = yytext.substr(1, yyleng-2); return 'CHAR'}
+
 
 
 
@@ -144,23 +145,17 @@ instrucciones
 instruccion
         : LLAVEABRE instrucciones LLAVECIERRA                                { $$ = instrucciones.nuevoBloque($2, @1.first_line, @1.first_column) }
         | PRINTLN PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintln($3, @1.first_line, @1.first_column) }
-        | PRINTLN PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintlnLogico($3, @1.first_line, @1.first_column) }
 
         | PRINT PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrint($3, @1.first_line, @1.first_column) }
-        | PRINT PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrintLogico($3, @1.first_line, @1.first_column) }
 
 
         | WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile($3, $6, @1.first_line, @1.first_column)}
-        | WHILE PARENTESISABRE TRUE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6, @1.first_line, @1.first_column)}
-        | WHILE PARENTESISABRE FALSE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6, @1.first_line, @1.first_column)}
 
 
         | SWITCH PARENTESISABRE operacionNumerica PARENTESISCIERRA LLAVEABRE cases LLAVECIERRA  { $$ = instrucciones.nuevoSwitch($3, $6, @1.first_line, @1.first_column) }
 
 
         | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, $7, @1.first_line, @1.first_column)}
-        | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE TRUE PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, instrucciones.nuevoValor($7, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), @1.first_line, @1.first_column)}
-        | DO LLAVEABRE instrucciones LLAVECIERRA WHILE PARENTESISABRE FALSE PARENTESISCIERRA PUNTOCOMA        { $$ = instrucciones.nuevoDoWhile($3, instrucciones.nuevoValor($7, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), @1.first_line, @1.first_column)}
 
 
         | FOR PARENTESISABRE IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR INCREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForAsignacionSimbolosMas($3, $5, $7, $9, $13, @1.first_line, @1.first_column) }
@@ -194,15 +189,6 @@ instruccionIf
         : IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA        { $$ = instrucciones.nuevoIf($3, $6) }
         | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoIfElse($3, $6, $10, @1.first_line, @1.first_column) }
         | IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE instruccionIf                             { $$ = instrucciones.nuevoIfElseIf($3, $6, $9, @1.first_line, @1.first_column)}
-
-
-        | IF PARENTESISABRE TRUE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA        { $$ = instrucciones.nuevoIf(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6) }
-        | IF PARENTESISABRE TRUE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoIfElse(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6, $10, @1.first_line, @1.first_column) }
-        | IF PARENTESISABRE TRUE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE instruccionIf                             { $$ = instrucciones.nuevoIfElseIf(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6, $9, @1.first_line, @1.first_column)}
-
-        | IF PARENTESISABRE FALSE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA        { $$ = instrucciones.nuevoIf(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6) }
-        | IF PARENTESISABRE FALSE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoIfElse(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6, $10, @1.first_line, @1.first_column) }
-        | IF PARENTESISABRE FALSE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA ELSE instruccionIf                             { $$ = instrucciones.nuevoIfElseIf(instrucciones.nuevoValor($3, TIPO_VALOR.BOOLEAN, @1.first_line, @1.first_column), $6, $9, @1.first_line, @1.first_column)}
 ;
 
 
@@ -252,12 +238,13 @@ expresionLogica
 ;
 
 expresionRelacional
-        : operacionNumerica MAYOR operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MAYOR, @1.first_line, @1.first_column) }
+        : operacionNumerica                                         { $$ = $1 }                   
+        | operacionNumerica MAYOR operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MAYOR, @1.first_line, @1.first_column) }
         | operacionNumerica MENOR operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MENOR, @1.first_line, @1.first_column) }
         | operacionNumerica MAYORIGUAL operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MAYOR_IGUAL, @1.first_line, @1.first_column) }
         | operacionNumerica MENORIGUAL operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.MENOR_IGUAL, @1.first_line, @1.first_column) }
         | operacionNumerica DOBLEIGUAL operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DOBLE_IGUAL, @1.first_line, @1.first_column) }
-        | operacionNumerica DIFERENTE operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIFERENTE, @1.first_line, @1.first_column) }
+        | operacionNumerica DIFERENTE operacionNumerica                 { $$ = instrucciones.nuevoOperacionBinaria($1, $3, TIPO_OPERACION.DIFERENTE, @1.first_line, @1.first_column) }                                               
 ;
 
 cases 

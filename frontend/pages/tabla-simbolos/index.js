@@ -66,7 +66,7 @@ export default function TablaSimbolos () {
                         {simbolo.tipo}
                       </td>
                       <td className='px-6 py-4'>
-                        {simbolo.valor}
+                        {typeof (simbolo.valor) !== 'object' ? simbolo.valor : 'Object'}
                       </td>
                       <td className='px-6 py-4'>
                         {simbolo.constante.toString()}

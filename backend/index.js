@@ -560,7 +560,6 @@ const interpretarExpresionRelacional = (expresion, tablaDeSimbolos) => {
   let valorIzq
   let valorDer
   if (expresion.operandoDer === undefined) {
-
     valorIzq = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos)
     valorIzq = valorIzq.valor
     if (valorIzq === 'true') {

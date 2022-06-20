@@ -150,6 +150,10 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarMetodoSinParametros(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.CALL_METODO_SIN_PARAMETROS) {
       interpretarCallMetodoSinParametros(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.TERNARIA) {
+      interpretarTernaria(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.TERNARIA_ASIGNACION) {
+      interpretarTernariaAsignacion(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -178,6 +182,8 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     } else {
       return { valor: res, tipo: TIPO_DATO.NUMERO }
     }
+  } else if (expresion.tipo === TIPO_OPERACION.TERNARIA_ASIGNACION) {
+    console.log('entro a if')
   } else if (expresion.tipo === TIPO_OPERACION.TYPEOF) {
     const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo
     return { valor: valorTipo, tipo: TIPO_DATO.STRING }
@@ -511,6 +517,7 @@ const interpretarPrintLogico = (expresion, tablaDeSimbolos) => {
 }
 
 const interpretarDeclaracionAsignacion = (instruccion, tablaDeSimbolos) => {
+  console.log('>> declaracion asignacion', instruccion)
   if (tablaDeSimbolos.exists(instruccion.identificador)) {
     tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE YA FUE DECLARADA')
     return
@@ -855,5 +862,33 @@ const interpretarCallMetodoSinParametros = (instrucciones, tablaDeSimbolos) => {
   } else {
     const tablaSimbolosNuevoBloque = new TablaSimbolos(tablaDeSimbolos._simbolos)
     interpretarBloque(metodo.valor, tablaSimbolosNuevoBloque)
+  }
+}
+
+const interpretarTernaria = (instruccion, tablaDeSimbolos) => {
+  const valorExpresion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
+  if (valorExpresion) {
+    interpretarBloque(instruccion.instruccionesVerdadero, tablaDeSimbolos)
+  } else {
+    interpretarBloque(instruccion.instruccionesFalso, tablaDeSimbolos)
+  }
+}
+
+const interpretarTernariaAsignacion = (instruccion, tablaDeSimbolos) => {
+  const valorExpresion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
+  const objetoAsignacion = {
+    identificador: instruccion.identificador,
+    tipoDato: instruccion.tipoDato,
+    expresionNumerica: undefined,
+    constante: instruccion.constante,
+    linea: instruccion.linea,
+    columna: instruccion.columna
+  }
+  if (valorExpresion) {
+    objetoAsignacion.expresionNumerica = instruccion.instruccionesVerdadero[0]
+    interpretarDeclaracionAsignacion(objetoAsignacion, tablaDeSimbolos)
+  } else {
+    objetoAsignacion.expresionNumerica = instruccion.instruccionesFalso[0]
+    interpretarDeclaracionAsignacion(objetoAsignacion, tablaDeSimbolos)
   }
 }

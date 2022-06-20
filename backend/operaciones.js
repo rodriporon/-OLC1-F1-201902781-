@@ -37,7 +37,9 @@ const TIPO_OPERACION = {
 
   TYPEOF: 'OP_TYPEOF',
 
-  BOOLEAN: 'OP_BOOLEAN'
+  BOOLEAN: 'OP_BOOLEAN',
+
+  TERNARIA_ASIGNACION: 'OP_TERNARIA_ASIGNACION'
 }
 
 const TIPO_INSTRUCCION = {
@@ -78,7 +80,10 @@ const TIPO_INSTRUCCION = {
 
   BREAK: 'INSTR_BREAK',
   CONTINUE: 'INSTR_CONTINUE',
-  BLOQUE: 'INSTR_BLOQUE'
+  BLOQUE: 'INSTR_BLOQUE',
+
+  TERNARIA: 'INSTR_TERNARIA',
+  TERNARIA_ASIGNACION: 'INSTR_TERNARIA_ASIGNACION'
 }
 
 const TIPO_OPCION_SWITCH = {
@@ -313,6 +318,31 @@ const instrucciones = {
       tipo: TIPO_INSTRUCCION.IF,
       expresionLogica,
       instrucciones,
+      linea,
+      columna
+    }
+  },
+
+  nuevoTernaria: (expresionLogica, instruccionesVerdadero, instruccionesFalso, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.TERNARIA,
+      expresionLogica,
+      instruccionesVerdadero,
+      instruccionesFalso,
+      linea,
+      columna
+    }
+  },
+
+  nuevoTernariaAsignacion: (tipoDato, identificador, expresionLogica, instruccionesVerdadero, instruccionesFalso, constante, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.TERNARIA_ASIGNACION,
+      tipoDato,
+      identificador,
+      expresionLogica,
+      instruccionesVerdadero,
+      instruccionesFalso,
+      constante,
       linea,
       columna
     }

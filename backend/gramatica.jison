@@ -81,6 +81,8 @@
 "{"                                 return 'LLAVEABRE';     
 "}"                                 return 'LLAVECIERRA';
 
+"?"                                 return 'INTERROGACIONCIERRA';
+
 [ \r\t]+                            {}
 \n                                  {}
 
@@ -148,6 +150,7 @@ instruccion
 
         | PRINT PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoPrint($3, @1.first_line, @1.first_column) }
 
+        | PARENTESISABRE expresionLogica PARENTESISCIERRA INTERROGACIONCIERRA instruccionTernaria DOSPUNTOS instruccionTernaria PUNTOCOMA        { $$ = instrucciones.nuevoTernaria($2, [$5], [$7], @1.first_line, @1.first_column)}
 
         | WHILE PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA { $$ = instrucciones.nuevoWhile($3, $6, @1.first_line, @1.first_column)}
 
@@ -168,9 +171,13 @@ instruccion
         | VOID IDENTIFICADOR PARENTESISABRE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA             { $$ = instrucciones.nuevoMetodoSinParametros($2, $6, @1.first_line, @1.first_column) }
 
         | CALL IDENTIFICADOR PARENTESISABRE PARENTESISCIERRA PUNTOCOMA                                       { $$ = instrucciones.nuevoCallMetodoSinParametros($2, @1.first_line, @1.first_column) }
+        
+        | tipo_dato IDENTIFICADOR IGUAL expresionLogica  INTERROGACIONCIERRA operacionNumerica DOSPUNTOS operacionNumerica PUNTOCOMA        { $$ = instrucciones.nuevoTernariaAsignacion($1.toUpperCase(), $2, $4, [$6], [$8], false, @1.first_line, @1.first_column)}
+        | CONST tipo_dato IDENTIFICADOR IGUAL  expresionLogica  INTERROGACIONCIERRA operacionNumerica DOSPUNTOS operacionNumerica PUNTOCOMA        { $$ = instrucciones.nuevoTernariaAsignacion($2.toUpperCase(), $3, $5, [$7], [$9], true, @1.first_line, @1.first_column)}
 
         | tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4, false, @1.first_line, @1.first_column)}
         | CONST tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($2.toUpperCase(), $3, $5, true, @1.first_line, @1.first_column)}
+
         | IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA                    { $$ = instrucciones.nuevoAsignacion($1, $3, @1.first_line, @1.first_column)}                     
         | IDENTIFICADOR INCREMENTO PUNTOCOMA                                   { $$ = instrucciones.nuevoPostIncremento($1, @1.first_line, @1.first_column) }
         | IDENTIFICADOR DECREMENTO PUNTOCOMA                                   { $$ = instrucciones.nuevoPostDecremento($1, @1.first_line, @1.first_column) }
@@ -184,6 +191,21 @@ instruccion
         
         
 ;
+
+instruccionTernaria
+        : PRINTLN PARENTESISABRE operacionNumerica PARENTESISCIERRA        { $$ = instrucciones.nuevoPrintln($3, @1.first_line, @1.first_column) }
+        | PRINT PARENTESISABRE operacionNumerica PARENTESISCIERRA          { $$ = instrucciones.nuevoPrint($3, @1.first_line, @1.first_column) }
+
+        | IDENTIFICADOR IGUAL operacionNumerica                    { $$ = instrucciones.nuevoAsignacion($1, $3, @1.first_line, @1.first_column)}                     
+
+        | IDENTIFICADOR INCREMENTO                                 { $$ = instrucciones.nuevoPostIncremento($1, @1.first_line, @1.first_column) }
+        | IDENTIFICADOR DECREMENTO                                 { $$ = instrucciones.nuevoPostDecremento($1, @1.first_line, @1.first_column) }
+        | INCREMENTO IDENTIFICADOR                                 { $$ = instrucciones.nuevoPreIncremento($2, @1.first_line, @1.first_column) }
+        | DECREMENTO IDENTIFICADOR                                 { $$ = instrucciones.nuevoPreDecremento($2, @1.first_line, @1.first_column) }
+
+        | CALL IDENTIFICADOR PARENTESISABRE PARENTESISCIERRA PUNTOCOMA          { $$ = instrucciones.nuevoCallMetodoSinParametros($2, @1.first_line, @1.first_column) }
+;
+
 
 instruccionIf
         : IF PARENTESISABRE expresionLogica PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA        { $$ = instrucciones.nuevoIf($3, $6) }

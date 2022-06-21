@@ -156,6 +156,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarTernariaAsignacion(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.ARRAY) {
       interpretarArray(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.ARRAY_ASIGNACION) {
+      interpretarArrayAsignacion(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -904,7 +906,6 @@ const interpretarTernariaAsignacion = (instruccion, tablaDeSimbolos) => {
 }
 
 const interpretarArray = (instruccion, tablaDeSimbolos) => {
-  console.log(instruccion)
   if (instruccion.tipoDato1 !== instruccion.tipoDato2) {
     tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'Los tipos de datos no coinciden')
     return
@@ -930,4 +931,22 @@ const interpretarArray = (instruccion, tablaDeSimbolos) => {
     }
   }
   tablaDeSimbolos.update(instruccion.identificador, { valor: array, tipo: instruccion.tipoDato1 })
+}
+
+const interpretarArrayAsignacion = (instruccion, tablaDeSimbolos) => {
+  if (tablaDeSimbolos.exists(instruccion.identificador)) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE YA FUE DECLARADA')
+    return
+  }
+  tablaDeSimbolos.add(instruccion.identificador, instruccion.tipoDato, instruccion.constante)
+  const array = []
+  instruccion.listaExpresionNumerica.forEach(expresion => {
+    const valorLista = interpretarExpresionNumerica(expresion, tablaDeSimbolos)
+    if (valorLista.tipo !== instruccion.tipoDato) {
+      tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'Los tipos de datos no coinciden')
+      return
+    }
+    array.push(valorLista.valor)
+  })
+  tablaDeSimbolos.update(instruccion.identificador, { valor: array, tipo: instruccion.tipoDato })
 }

@@ -89,7 +89,8 @@ const TIPO_INSTRUCCION = {
   TERNARIA: 'INSTR_TERNARIA',
   TERNARIA_ASIGNACION: 'INSTR_TERNARIA_ASIGNACION',
 
-  ARRAY: 'INSTR_ARRAY'
+  ARRAY: 'INSTR_ARRAY',
+  ARRAY_ASIGNACION: 'INSTR_ARRAY_ASIGNACION'
 }
 
 const TIPO_OPCION_SWITCH = {
@@ -332,6 +333,18 @@ const instrucciones = {
     }
   },
 
+  nuevoArrayAsignacion: (tipoDato, identificador, listaExpresionNumerica, constante, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.ARRAY_ASIGNACION,
+      tipoDato,
+      identificador,
+      listaExpresionNumerica,
+      constante,
+      linea,
+      columna
+    }
+  },
+
   nuevoIf: (expresionLogica, instrucciones, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.IF,
@@ -412,6 +425,12 @@ const instrucciones = {
     const casos = []
     casos.push(caso)
     return casos
+  },
+
+  nuevoListaExpresionesNumericas: (expresionNumerica) => {
+    const expresionesNumericas = []
+    expresionesNumericas.push(expresionNumerica)
+    return expresionesNumericas
   },
 
   nuevoCase: (expresionNumerica, instrucciones, linea, columna) => {

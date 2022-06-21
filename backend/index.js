@@ -191,6 +191,10 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
   } else if (expresion.tipo === TIPO_OPERACION.TOUPPER) {
     const valorToUpper = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor.toUpperCase()
     return { valor: valorToUpper, tipo: TIPO_DATO.STRING }
+  } else if (expresion.tipo === TIPO_OPERACION.ROUND) {
+    const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
+    const valorRound = Math.round(valor)
+    return { valor: valorRound, tipo: TIPO_DATO.INT }
   } else if (expresion.tipo === TIPO_OPERACION.POST_INCREMENTO) {
     const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
     const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo

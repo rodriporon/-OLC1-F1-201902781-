@@ -53,6 +53,7 @@
 "const"                             return 'CONST';
 "tolower"                           return 'TOLOWER';
 "toupper"                           return 'TOUPPER';
+"round"                             return 'ROUND';
 
 ";"                                 return 'PUNTOCOMA';   
 ","                                 return 'COMA';      
@@ -245,6 +246,8 @@ operacionNumerica
 
         | TOLOWER PARENTESISABRE operacionNumerica PARENTESISCIERRA     { $$ = instrucciones.nuevoOperacionUnaria($3, TIPO_OPERACION.TOLOWER, @1.first_line, @1.first_column) }
         | TOUPPER PARENTESISABRE operacionNumerica PARENTESISCIERRA     { $$ = instrucciones.nuevoOperacionUnaria($3, TIPO_OPERACION.TOUPPER, @1.first_line, @1.first_column) }
+
+        | ROUND PARENTESISABRE operacionNumerica PARENTESISCIERRA     { $$ = instrucciones.nuevoOperacionUnaria($3, TIPO_OPERACION.ROUND, @1.first_line, @1.first_column) }
 
         | MENOS operacionNumerica %prec UMENOS                      { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO, @1.first_line, @1.first_column) }
         | ENTERO                                                    { $$ = instrucciones.nuevoValor(Number($1), TIPO_VALOR.INT, @1.first_line, @1.first_column) } 

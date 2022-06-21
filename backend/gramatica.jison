@@ -51,6 +51,8 @@
 "import"                            return 'IMPORT';
 "main"                              return 'MAIN';
 "const"                             return 'CONST';
+"tolower"                           return 'TOLOWER';
+"toupper"                           return 'TOUPPER';
 
 ";"                                 return 'PUNTOCOMA';   
 ","                                 return 'COMA';      
@@ -240,6 +242,9 @@ operacionNumerica
         | DECREMENTO operacionNumerica                              { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.PRE_DECREMENTO, @1.first_line, @1.first_column) }
         | PARENTESISABRE operacionNumerica PARENTESISCIERRA         { $$ = $2 }
         | TYPEOF PARENTESISABRE operacionNumerica PARENTESISCIERRA  { $$ = instrucciones.nuevoOperacionUnaria($3, TIPO_OPERACION.TYPEOF, @1.first_line, @1.first_column) }
+
+        | TOLOWER PARENTESISABRE operacionNumerica PARENTESISCIERRA     { $$ = instrucciones.nuevoOperacionUnaria($3, TIPO_OPERACION.TOLOWER, @1.first_line, @1.first_column) }
+        | TOUPPER PARENTESISABRE operacionNumerica PARENTESISCIERRA     { $$ = instrucciones.nuevoOperacionUnaria($3, TIPO_OPERACION.TOUPPER, @1.first_line, @1.first_column) }
 
         | MENOS operacionNumerica %prec UMENOS                      { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO, @1.first_line, @1.first_column) }
         | ENTERO                                                    { $$ = instrucciones.nuevoValor(Number($1), TIPO_VALOR.INT, @1.first_line, @1.first_column) } 

@@ -182,11 +182,15 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     } else {
       return { valor: res, tipo: TIPO_DATO.NUMERO }
     }
-  } else if (expresion.tipo === TIPO_OPERACION.TERNARIA_ASIGNACION) {
-    console.log('entro a if')
   } else if (expresion.tipo === TIPO_OPERACION.TYPEOF) {
     const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo
     return { valor: valorTipo, tipo: TIPO_DATO.STRING }
+  } else if (expresion.tipo === TIPO_OPERACION.TOLOWER) {
+    const valorToLower = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor.toLowerCase()
+    return { valor: valorToLower, tipo: TIPO_DATO.STRING }
+  } else if (expresion.tipo === TIPO_OPERACION.TOUPPER) {
+    const valorToUpper = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor.toUpperCase()
+    return { valor: valorToUpper, tipo: TIPO_DATO.STRING }
   } else if (expresion.tipo === TIPO_OPERACION.POST_INCREMENTO) {
     const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
     const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo

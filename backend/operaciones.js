@@ -87,7 +87,9 @@ const TIPO_INSTRUCCION = {
   BLOQUE: 'INSTR_BLOQUE',
 
   TERNARIA: 'INSTR_TERNARIA',
-  TERNARIA_ASIGNACION: 'INSTR_TERNARIA_ASIGNACION'
+  TERNARIA_ASIGNACION: 'INSTR_TERNARIA_ASIGNACION',
+
+  ARRAY: 'INSTR_ARRAY'
 }
 
 const TIPO_OPCION_SWITCH = {
@@ -312,6 +314,19 @@ const instrucciones = {
       tipo: TIPO_INSTRUCCION.ASIGNACION,
       identificador,
       expresionNumerica,
+      linea,
+      columna
+    }
+  },
+
+  nuevoArray: (tipoDato1, identificador, tipoDato2, expresionNumerica, constante, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.ARRAY,
+      tipoDato1,
+      identificador,
+      tipoDato2,
+      expresionNumerica,
+      constante,
       linea,
       columna
     }

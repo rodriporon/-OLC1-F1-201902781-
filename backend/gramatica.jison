@@ -54,6 +54,7 @@
 "tolower"                           return 'TOLOWER';
 "toupper"                           return 'TOUPPER';
 "round"                             return 'ROUND';
+"new"                               return 'NEW';
 
 ";"                                 return 'PUNTOCOMA';   
 ","                                 return 'COMA';      
@@ -83,6 +84,8 @@
 ")"                                 return 'PARENTESISCIERRA'; 
 "{"                                 return 'LLAVEABRE';     
 "}"                                 return 'LLAVECIERRA';
+"["                                 return 'CORCHETEABRE';
+"]"                                 return 'CORCHETECIERRA';
 
 "?"                                 return 'INTERROGACIONCIERRA';
 
@@ -180,6 +183,8 @@ instruccion
 
         | tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4, false, @1.first_line, @1.first_column)}
         | CONST tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($2.toUpperCase(), $3, $5, true, @1.first_line, @1.first_column)}
+
+        | tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA IGUAL NEW tipo_dato CORCHETEABRE operacionNumerica CORCHETECIERRA PUNTOCOMA    { $$ = instrucciones.nuevoArray($1.toUpperCase(), $2, $7.toUpperCase(), $9, false, @1.first_line, @1.first_column) }
 
         | IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA                    { $$ = instrucciones.nuevoAsignacion($1, $3, @1.first_line, @1.first_column)}                     
         | IDENTIFICADOR INCREMENTO PUNTOCOMA                                   { $$ = instrucciones.nuevoPostIncremento($1, @1.first_line, @1.first_column) }

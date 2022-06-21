@@ -154,6 +154,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarTernaria(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.TERNARIA_ASIGNACION) {
       interpretarTernariaAsignacion(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.ARRAY) {
+      interpretarArray(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -899,4 +901,33 @@ const interpretarTernariaAsignacion = (instruccion, tablaDeSimbolos) => {
     objetoAsignacion.expresionNumerica = instruccion.instruccionesFalso[0]
     interpretarDeclaracionAsignacion(objetoAsignacion, tablaDeSimbolos)
   }
+}
+
+const interpretarArray = (instruccion, tablaDeSimbolos) => {
+  console.log(instruccion)
+  if (instruccion.tipoDato1 !== instruccion.tipoDato2) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'Los tipos de datos no coinciden')
+    return
+  }
+  if (tablaDeSimbolos.exists(instruccion.identificador)) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE YA FUE DECLARADA')
+    return
+  }
+  tablaDeSimbolos.add(instruccion.identificador, instruccion.tipoDato1, instruccion.constante)
+  const array = []
+  const tamañoArray = interpretarExpresionCadena(instruccion.expresionNumerica, tablaDeSimbolos).valor
+  for (let i = 0; i < tamañoArray; i++) {
+    if (instruccion.tipoDato1 === TIPO_DATO.INT) {
+      array.push(0)
+    } else if (instruccion.tipoDato1 === TIPO_DATO.DOUBLE) {
+      array.push(0.0)
+    } else if (instruccion.tipoDato1 === TIPO_DATO.CHAR) {
+      array.push('')
+    } else if (instruccion.tipoDato1 === TIPO_DATO.BOOLEAN) {
+      array.push(false)
+    } else if (instruccion.tipoDato1 === TIPO_DATO.STRING) {
+      array.push('')
+    }
+  }
+  tablaDeSimbolos.update(instruccion.identificador, { valor: array, tipo: instruccion.tipoDato1 })
 }

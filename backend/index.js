@@ -197,6 +197,11 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     const valor = interpretarExpresionNumerica(expresion.expresionNumerica, tablaDeSimbolos)
     const simbolo = tablaDeSimbolos.getValue(expresion.identificador)
     return { valor: simbolo.valor[valor.valor], tipo: simbolo.tipo }
+  } else if (expresion.tipo === TIPO_INSTRUCCION.ARRAY2D_ACCESO) {
+    const valor1 = interpretarExpresionNumerica(expresion.expresionNumerica1, tablaDeSimbolos)
+    const valor2 = interpretarExpresionNumerica(expresion.expresionNumerica2, tablaDeSimbolos)
+    const simbolo = tablaDeSimbolos.getValue(expresion.identificador)
+    return { valor: simbolo.valor[valor1.valor][valor2.valor], tipo: simbolo.tipo }
   } else if (expresion.tipo === TIPO_OPERACION.TOLOWER) {
     const valorToLower = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor.toLowerCase()
     return { valor: valorToLower, tipo: TIPO_DATO.STRING }

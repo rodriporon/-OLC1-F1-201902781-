@@ -93,7 +93,8 @@ const TIPO_INSTRUCCION = {
   ARRAY2D: 'INSTR_ARRAY2D',
   ARRAY_ASIGNACION: 'INSTR_ARRAY_ASIGNACION',
   ARRAY2D_ASIGNACION: 'INSTR_ARRAY2D_ASIGNACION',
-  ARRAY_ACCESO: 'INSTR_ARRAY_ACCESO'
+  ARRAY_ACCESO: 'INSTR_ARRAY_ACCESO',
+  ARRAY2D_ACCESO: 'INSTR_ARRAY2D_ACCESO'
 }
 
 const TIPO_OPCION_SWITCH = {
@@ -379,6 +380,17 @@ const instrucciones = {
       tipo: TIPO_INSTRUCCION.ARRAY_ACCESO,
       identificador,
       expresionNumerica,
+      linea,
+      columna
+    }
+  },
+
+  nuevoArray2DAcceso: (identificador, expresionNumerica1, expresionNumerica2, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.ARRAY2D_ACCESO,
+      identificador,
+      expresionNumerica1,
+      expresionNumerica2,
       linea,
       columna
     }

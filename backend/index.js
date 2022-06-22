@@ -516,6 +516,19 @@ const interpretarPrintln = (instruccion, tablaDeSimbolos) => {
     return console.log('ERROR: no se puede acceder a una variable que no ha sido definida')
   }
   const cadena = cadenaAux.valor
+  let cadenaArray = ''
+  if (Array.isArray(cadena)) {
+    for (let i = 0; i < cadena.length; i++) {
+      cadenaArray += '[' + cadena[i] + ']'
+      if (i < cadena.length - 1) {
+        cadenaArray += ',\n'
+      } else {
+        cadenaArray += '\n'
+      }
+    }
+    salidaConsola += cadenaArray + '\n'
+    return
+  }
   salidaConsola += cadena
   salidaConsola += '\n'
   console.log('>> ' + cadena)
@@ -535,6 +548,19 @@ const interpretarPrint = (instruccion, tablaDeSimbolos) => {
     return console.log('ERROR: no se puede acceder a una variable que no ha sido definida')
   }
   const cadena = cadenaAux.valor
+  let cadenaArray = ''
+  if (Array.isArray(cadena)) {
+    for (let i = 0; i < cadena.length; i++) {
+      cadenaArray += '[' + cadena[i] + ']'
+      if (i < cadena.length - 1) {
+        cadenaArray += ',\n'
+      } else {
+        cadenaArray += '\n'
+      }
+    }
+    salidaConsola += cadenaArray
+    return
+  }
   salidaConsola += cadena
   console.log('>> ' + cadena)
 }

@@ -162,6 +162,10 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarArray2D(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.ARRAY2D_ASIGNACION) {
       interpretarArray2DAsignacion(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.ARRAY_MODIFICACION) {
+      interpretarArrayModificacion(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.ARRAY2D_MODIFICACION) {
+      interpretarArray2DModificacion(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -1014,7 +1018,48 @@ const interpretarArray2DAsignacion = (instruccion, tablaDeSimbolos) => {
       }
       array2.push(valorLista.valor)
     })
-    array1.push(array2)
+    array1.unshift(array2)
   })
   tablaDeSimbolos.update(instruccion.identificador, { valor: array1, tipo: instruccion.tipoDato })
+}
+
+const interpretarArrayModificacion = (instruccion, tablaDeSimbolos) => {
+  if (!tablaDeSimbolos.exists(instruccion.identificador)) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE NO FUE DECLARADA')
+    return
+  }
+  const array = tablaDeSimbolos.getValue(instruccion.identificador).valor
+  const posicion = interpretarExpresionNumerica(instruccion.expresionNumerica1, tablaDeSimbolos)
+  if (posicion.tipo !== TIPO_DATO.INT) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'No puede acceder a una posición utilizando un valor !== int')
+    return
+  }
+  const valor = interpretarExpresionNumerica(instruccion.expresionNumerica2, tablaDeSimbolos)
+  if (valor.tipo !== tablaDeSimbolos.getValue(instruccion.identificador).tipo) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'Los tipos de datos no coinciden')
+    return
+  }
+  array[posicion.valor] = valor.valor
+  tablaDeSimbolos.update(instruccion.identificador, { valor: array, tipo: tablaDeSimbolos.getValue(instruccion.identificador).tipo })
+}
+
+const interpretarArray2DModificacion = (instruccion, tablaDeSimbolos) => {
+  if (!tablaDeSimbolos.exists(instruccion.identificador)) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE NO FUE DECLARADA')
+    return
+  }
+  const array = tablaDeSimbolos.getValue(instruccion.identificador).valor
+  const posicion1 = interpretarExpresionNumerica(instruccion.expresionNumerica1, tablaDeSimbolos)
+  const posicion2 = interpretarExpresionNumerica(instruccion.expresionNumerica2, tablaDeSimbolos)
+  if (posicion1.tipo !== TIPO_DATO.INT || posicion2.tipo !== TIPO_DATO.INT) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'No puede acceder a una posición utilizando un valor !== int')
+    return
+  }
+  const valor = interpretarExpresionNumerica(instruccion.expresionNumerica3, tablaDeSimbolos)
+  if (valor.tipo !== tablaDeSimbolos.getValue(instruccion.identificador).tipo) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'Los tipos de datos no coinciden')
+    return
+  }
+  array[posicion1.valor][posicion2.valor] = valor.valor
+  tablaDeSimbolos.update(instruccion.identificador, { valor: array, tipo: tablaDeSimbolos.getValue(instruccion.identificador).tipo })
 }

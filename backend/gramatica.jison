@@ -196,6 +196,9 @@ instruccion
         | tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA IGUAL CORCHETEABRE listaOperacionNumerica CORCHETECIERRA PUNTOCOMA    { $$ = instrucciones.nuevoArrayAsignacion($1.toUpperCase(), $2, $7, false, @1.first_line, @1.first_column) }
         | CONST tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA IGUAL CORCHETEABRE listaOperacionNumerica CORCHETECIERRA PUNTOCOMA    { $$ = instrucciones.nuevoArrayAsignacion($2.toUpperCase(), $3, $8, true, @1.first_line, @1.first_column) }
 
+        | IDENTIFICADOR CORCHETEABRE operacionNumerica CORCHETECIERRA IGUAL operacionNumerica PUNTOCOMA    { $$ = instrucciones.nuevoArrayModificacion($1, $3, $6, @1.first_line, @1.first_column) }
+        | IDENTIFICADOR CORCHETEABRE operacionNumerica CORCHETECIERRA CORCHETEABRE operacionNumerica CORCHETECIERRA IGUAL operacionNumerica PUNTOCOMA    { $$ = instrucciones.nuevoArray2DModificacion($1, $3, $6, $9, @1.first_line, @1.first_column) }
+
         | IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA                    { $$ = instrucciones.nuevoAsignacion($1, $3, @1.first_line, @1.first_column)}                     
         | IDENTIFICADOR INCREMENTO PUNTOCOMA                                   { $$ = instrucciones.nuevoPostIncremento($1, @1.first_line, @1.first_column) }
         | IDENTIFICADOR DECREMENTO PUNTOCOMA                                   { $$ = instrucciones.nuevoPostDecremento($1, @1.first_line, @1.first_column) }

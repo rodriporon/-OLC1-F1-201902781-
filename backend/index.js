@@ -193,6 +193,10 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
   } else if (expresion.tipo === TIPO_OPERACION.TYPEOF) {
     const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo
     return { valor: valorTipo, tipo: TIPO_DATO.STRING }
+  } else if (expresion.tipo === TIPO_INSTRUCCION.ARRAY_ACCESO) {
+    const valor = interpretarExpresionNumerica(expresion.expresionNumerica, tablaDeSimbolos)
+    const simbolo = tablaDeSimbolos.getValue(expresion.identificador)
+    return { valor: simbolo.valor[valor.valor], tipo: simbolo.tipo }
   } else if (expresion.tipo === TIPO_OPERACION.TOLOWER) {
     const valorToLower = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor.toLowerCase()
     return { valor: valorToLower, tipo: TIPO_DATO.STRING }

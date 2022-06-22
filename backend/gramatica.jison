@@ -55,6 +55,7 @@
 "toupper"                           return 'TOUPPER';
 "round"                             return 'ROUND';
 "new"                               return 'NEW';
+"length"                            return 'LENGTH';
 
 ";"                                 return 'PUNTOCOMA';   
 ","                                 return 'COMA';      
@@ -274,7 +275,8 @@ operacionNumerica
 
         | TOLOWER PARENTESISABRE operacionNumerica PARENTESISCIERRA     { $$ = instrucciones.nuevoOperacionUnaria($3, TIPO_OPERACION.TOLOWER, @1.first_line, @1.first_column) }
         | TOUPPER PARENTESISABRE operacionNumerica PARENTESISCIERRA     { $$ = instrucciones.nuevoOperacionUnaria($3, TIPO_OPERACION.TOUPPER, @1.first_line, @1.first_column) }
-
+        | LENGTH PARENTESISABRE operacionNumerica PARENTESISCIERRA     { $$ = instrucciones.nuevoOperacionUnaria($3, TIPO_OPERACION.LENGTH, @1.first_line, @1.first_column) }
+        
         | ROUND PARENTESISABRE operacionNumerica PARENTESISCIERRA     { $$ = instrucciones.nuevoOperacionUnaria($3, TIPO_OPERACION.ROUND, @1.first_line, @1.first_column) }
         | IDENTIFICADOR CORCHETEABRE operacionNumerica CORCHETECIERRA CORCHETEABRE operacionNumerica CORCHETECIERRA { $$ = instrucciones.nuevoArray2DAcceso($1, $3, $6, @1.first_line, @1.first_column) }
         | IDENTIFICADOR CORCHETEABRE operacionNumerica CORCHETECIERRA { $$ = instrucciones.nuevoArrayAcceso($1, $3, @1.first_line, @1.first_column ) }

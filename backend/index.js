@@ -520,17 +520,23 @@ const interpretarPrintln = (instruccion, tablaDeSimbolos) => {
     return console.log('ERROR: no se puede acceder a una variable que no ha sido definida')
   }
   const cadena = cadenaAux.valor
-  let cadenaArray = ''
+  let cadenaArray = '['
+  console.log('CADENA: ', cadena)
   if (Array.isArray(cadena)) {
     for (let i = 0; i < cadena.length; i++) {
-      cadenaArray += '[' + cadena[i] + ']'
-      if (i < cadena.length - 1) {
-        cadenaArray += ',\n'
+      if (Array.isArray(cadena[i])) {
+        cadenaArray += '[' + cadena[i] + ']'
+        if (i < cadena.length - 1) {
+          cadenaArray += ',\n'
+        }
       } else {
-        cadenaArray += '\n'
+        cadenaArray += cadena[i]
+        if (i < cadena.length - 1) {
+          cadenaArray += ','
+        }
       }
     }
-    salidaConsola += cadenaArray + '\n'
+    salidaConsola += cadenaArray + ']' + '\n'
     return
   }
   salidaConsola += cadena
@@ -552,17 +558,23 @@ const interpretarPrint = (instruccion, tablaDeSimbolos) => {
     return console.log('ERROR: no se puede acceder a una variable que no ha sido definida')
   }
   const cadena = cadenaAux.valor
-  let cadenaArray = ''
+  let cadenaArray = '['
+  console.log('CADENA: ', cadena)
   if (Array.isArray(cadena)) {
     for (let i = 0; i < cadena.length; i++) {
-      cadenaArray += '[' + cadena[i] + ']'
-      if (i < cadena.length - 1) {
-        cadenaArray += ',\n'
+      if (Array.isArray(cadena[i])) {
+        cadenaArray += '[' + cadena[i] + ']'
+        if (i < cadena.length - 1) {
+          cadenaArray += ',\n'
+        }
       } else {
-        cadenaArray += '\n'
+        cadenaArray += cadena[i]
+        if (i < cadena.length - 1) {
+          cadenaArray += ','
+        }
       }
     }
-    salidaConsola += cadenaArray
+    salidaConsola += cadenaArray + ']'
     return
   }
   salidaConsola += cadena

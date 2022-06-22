@@ -97,7 +97,8 @@ const TIPO_INSTRUCCION = {
   ARRAY_ACCESO: 'INSTR_ARRAY_ACCESO',
   ARRAY2D_ACCESO: 'INSTR_ARRAY2D_ACCESO',
   ARRAY_MODIFICACION: 'INSTR_ARRAY_MODIFICACION',
-  ARRAY2D_MODIFICACION: 'INSTR_ARRAY2D_MODIFICACION'
+  ARRAY2D_MODIFICACION: 'INSTR_ARRAY2D_MODIFICACION',
+  TO_CHAR_ARRAY: 'INSTR_TO_CHAR_ARRAY'
 }
 
 const TIPO_OPCION_SWITCH = {
@@ -417,6 +418,18 @@ const instrucciones = {
       expresionNumerica1,
       expresionNumerica2,
       expresionNumerica3,
+      linea,
+      columna
+    }
+  },
+
+  nuevoToCharArray: (tipoDato, identificador, expresionCadena, constante, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.TO_CHAR_ARRAY,
+      tipoDato,
+      identificador,
+      expresionCadena,
+      constante,
       linea,
       columna
     }

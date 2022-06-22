@@ -56,6 +56,7 @@
 "round"                             return 'ROUND';
 "new"                               return 'NEW';
 "length"                            return 'LENGTH';
+"tochararray"                       return 'TOCHARARRAY';
 
 ";"                                 return 'PUNTOCOMA';   
 ","                                 return 'COMA';      
@@ -196,6 +197,9 @@ instruccion
 
         | tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA IGUAL CORCHETEABRE listaOperacionNumerica CORCHETECIERRA PUNTOCOMA    { $$ = instrucciones.nuevoArrayAsignacion($1.toUpperCase(), $2, $7, false, @1.first_line, @1.first_column) }
         | CONST tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA IGUAL CORCHETEABRE listaOperacionNumerica CORCHETECIERRA PUNTOCOMA    { $$ = instrucciones.nuevoArrayAsignacion($2.toUpperCase(), $3, $8, true, @1.first_line, @1.first_column) }
+
+        | tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA IGUAL TOCHARARRAY PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA  { $$ = instrucciones.nuevoToCharArray($1.toUpperCase(), $2, $8, false, @1.first_line, @1.first_column) }
+        | CONST tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA IGUAL TOCHARARRAY PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA  { $$ = instrucciones.nuevoToCharArray($2.toUpperCase(), $3, $9, true, @1.first_line, @1.first_column) }
 
         | IDENTIFICADOR CORCHETEABRE operacionNumerica CORCHETECIERRA IGUAL operacionNumerica PUNTOCOMA    { $$ = instrucciones.nuevoArrayModificacion($1, $3, $6, @1.first_line, @1.first_column) }
         | IDENTIFICADOR CORCHETEABRE operacionNumerica CORCHETECIERRA CORCHETEABRE operacionNumerica CORCHETECIERRA IGUAL operacionNumerica PUNTOCOMA    { $$ = instrucciones.nuevoArray2DModificacion($1, $3, $6, $9, @1.first_line, @1.first_column) }

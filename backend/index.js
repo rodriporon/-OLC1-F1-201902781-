@@ -166,6 +166,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarArrayModificacion(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.ARRAY2D_MODIFICACION) {
       interpretarArray2DModificacion(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.TO_CHAR_ARRAY) {
+      interpretarToCharArray(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -1104,4 +1106,23 @@ const interpretarArray2DModificacion = (instruccion, tablaDeSimbolos) => {
   }
   array[posicion1.valor][posicion2.valor] = valor.valor
   tablaDeSimbolos.update(instruccion.identificador, { valor: array, tipo: tablaDeSimbolos.getValue(instruccion.identificador).tipo })
+}
+
+const interpretarToCharArray = (instruccion, tablaDeSimbolos) => {
+  if (instruccion.tipoDato !== TIPO_DATO.CHAR) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'El tipo de dato debe ser char')
+    return
+  }
+  if (tablaDeSimbolos.exists(instruccion.identificador)) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE YA FUE DECLARADA')
+    return
+  }
+  const cadena = interpretarExpresionCadena(instruccion.expresionCadena, tablaDeSimbolos)
+  if (cadena.tipo !== TIPO_DATO.STRING) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'El tipo de dato debe ser string')
+    return
+  }
+  tablaDeSimbolos.add(instruccion.identificador, instruccion.tipoDato, instruccion.constante)
+  const array = [...cadena.valor]
+  tablaDeSimbolos.update(instruccion.identificador, { valor: array, tipo: instruccion.tipoDato })
 }

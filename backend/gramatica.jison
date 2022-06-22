@@ -187,6 +187,12 @@ instruccion
         | tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA IGUAL NEW tipo_dato CORCHETEABRE operacionNumerica CORCHETECIERRA PUNTOCOMA    { $$ = instrucciones.nuevoArray($1.toUpperCase(), $2, $7.toUpperCase(), $9, false, @1.first_line, @1.first_column) }
         | CONST tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA IGUAL NEW tipo_dato CORCHETEABRE operacionNumerica CORCHETECIERRA PUNTOCOMA    { $$ = instrucciones.nuevoArray($2.toUpperCase(), $3, $8.toUpperCase(), $10, true, @1.first_line, @1.first_column) }
 
+        | tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA CORCHETEABRE CORCHETECIERRA IGUAL NEW tipo_dato CORCHETEABRE operacionNumerica CORCHETECIERRA CORCHETEABRE operacionNumerica CORCHETECIERRA PUNTOCOMA    { $$ = instrucciones.nuevoArray2D($1.toUpperCase(), $2, $9.toUpperCase(), $11, $14, false, @1.first_line, @1.first_column) }
+        | CONST tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA CORCHETEABRE CORCHETECIERRA IGUAL NEW tipo_dato CORCHETEABRE operacionNumerica CORCHETECIERRA CORCHETEABRE operacionNumerica CORCHETECIERRA PUNTOCOMA    { $$ = instrucciones.nuevoArray2D($2.toUpperCase(), $3, $10.toUpperCase(), $12, $15, true, @1.first_line, @1.first_column) }
+        
+        | tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA CORCHETEABRE CORCHETECIERRA IGUAL CORCHETEABRE listaArrays CORCHETECIERRA PUNTOCOMA   { $$ = instrucciones.nuevoArray2DAsignacion($1.toUpperCase(), $2, $9, false, @1.first_line, @1.first_column) }
+        | CONST tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA CORCHETEABRE CORCHETECIERRA IGUAL CORCHETEABRE listaArrays CORCHETECIERRA PUNTOCOMA   { $$ = instrucciones.nuevoArray2DAsignacion($2.toUpperCase(), $3, $10, true, @1.first_line, @1.first_column) }
+
         | tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA IGUAL CORCHETEABRE listaOperacionNumerica CORCHETECIERRA PUNTOCOMA    { $$ = instrucciones.nuevoArrayAsignacion($1.toUpperCase(), $2, $7, false, @1.first_line, @1.first_column) }
         | CONST tipo_dato IDENTIFICADOR CORCHETEABRE CORCHETECIERRA IGUAL CORCHETEABRE listaOperacionNumerica CORCHETECIERRA PUNTOCOMA    { $$ = instrucciones.nuevoArrayAsignacion($2.toUpperCase(), $3, $8, true, @1.first_line, @1.first_column) }
 
@@ -237,6 +243,11 @@ tipo_dato
 asignacionOperacion
         : CADENA                                                    { $$ = instrucciones.nuevoValor($1, TIPO_VALOR.CADENA, @1.first_line, @1.first_column) }
         | operacionNumerica                                         { $$ = $1; }
+;
+
+listaArrays
+        : CORCHETEABRE listaOperacionNumerica CORCHETECIERRA COMA listaArrays        { $$ = $5.push($2); $$ = $5 }
+        | CORCHETEABRE listaOperacionNumerica CORCHETECIERRA                         {console.log($2); $$ = instrucciones.nuevoListaArrays($2) }
 ;
 
 listaOperacionNumerica

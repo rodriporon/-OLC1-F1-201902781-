@@ -158,6 +158,10 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarArray(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.ARRAY_ASIGNACION) {
       interpretarArrayAsignacion(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.ARRAY2D) {
+      interpretarArray2D(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.ARRAY2D_ASIGNACION) {
+      interpretarArray2DAsignacion(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -933,6 +937,39 @@ const interpretarArray = (instruccion, tablaDeSimbolos) => {
   tablaDeSimbolos.update(instruccion.identificador, { valor: array, tipo: instruccion.tipoDato1 })
 }
 
+const interpretarArray2D = (instruccion, tablaDeSimbolos) => {
+  if (instruccion.tipoDato1 !== instruccion.tipoDato2) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'Los tipos de datos no coinciden')
+    return
+  }
+  if (tablaDeSimbolos.exists(instruccion.identificador)) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE YA FUE DECLARADA')
+    return
+  }
+  tablaDeSimbolos.add(instruccion.identificador, instruccion.tipoDato1, instruccion.constante)
+  const array = []
+  const tamañoArray1 = interpretarExpresionCadena(instruccion.expresionNumerica1, tablaDeSimbolos).valor
+  const tamañoArray2 = interpretarExpresionCadena(instruccion.expresionNumerica2, tablaDeSimbolos).valor
+  for (let i = 0; i < tamañoArray1; i++) {
+    const array2 = []
+    for (let j = 0; j < tamañoArray2; j++) {
+      if (instruccion.tipoDato1 === TIPO_DATO.INT) {
+        array2.push(0)
+      } else if (instruccion.tipoDato1 === TIPO_DATO.DOUBLE) {
+        array2.push(0.0)
+      } else if (instruccion.tipoDato1 === TIPO_DATO.CHAR) {
+        array2.push('')
+      } else if (instruccion.tipoDato1 === TIPO_DATO.BOOLEAN) {
+        array2.push(false)
+      } else if (instruccion.tipoDato1 === TIPO_DATO.STRING) {
+        array2.push('')
+      }
+    }
+    array.push(array2)
+  }
+  tablaDeSimbolos.update(instruccion.identificador, { valor: array, tipo: instruccion.tipoDato1 })
+}
+
 const interpretarArrayAsignacion = (instruccion, tablaDeSimbolos) => {
   if (tablaDeSimbolos.exists(instruccion.identificador)) {
     tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE YA FUE DECLARADA')
@@ -949,4 +986,26 @@ const interpretarArrayAsignacion = (instruccion, tablaDeSimbolos) => {
     array.push(valorLista.valor)
   })
   tablaDeSimbolos.update(instruccion.identificador, { valor: array, tipo: instruccion.tipoDato })
+}
+
+const interpretarArray2DAsignacion = (instruccion, tablaDeSimbolos) => {
+  if (tablaDeSimbolos.exists(instruccion.identificador)) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE YA FUE DECLARADA')
+    return
+  }
+  tablaDeSimbolos.add(instruccion.identificador, instruccion.tipoDato, instruccion.constante)
+  const array1 = []
+  instruccion.listaArrays.forEach(array => {
+    const array2 = []
+    array.forEach(expresion => {
+      const valorLista = interpretarExpresionNumerica(expresion, tablaDeSimbolos)
+      if (valorLista.tipo !== instruccion.tipoDato) {
+        tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'Los tipos de datos no coinciden')
+        return
+      }
+      array2.push(valorLista.valor)
+    })
+    array1.push(array2)
+  })
+  tablaDeSimbolos.update(instruccion.identificador, { valor: array1, tipo: instruccion.tipoDato })
 }

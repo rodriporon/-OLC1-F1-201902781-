@@ -200,7 +200,7 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
   } else if (expresion.tipo === TIPO_OPERACION.LENGTH) {
     const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
     const valorLength = valor.length
-    return { valor: valorLength, tipo: TIPO_DATO.STRING }
+    return { valor: valorLength, tipo: TIPO_DATO.INT }
   } else if (expresion.tipo === TIPO_INSTRUCCION.ARRAY_ACCESO) {
     const valor = interpretarExpresionNumerica(expresion.expresionNumerica, tablaDeSimbolos)
     const simbolo = tablaDeSimbolos.getValue(expresion.identificador)

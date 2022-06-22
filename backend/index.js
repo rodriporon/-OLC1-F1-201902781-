@@ -176,6 +176,7 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
 }
 
 const interpretarExpresionCadena = (expresion, tablaDeSimbolos) => {
+  console.log('expresion interpretar expresionc adena', expresion)
   if (expresion.tipo === TIPO_VALOR.CADENA) {
     return { valor: expresion.valor, tipo: TIPO_DATO.STRING }
   } else {
@@ -199,6 +200,20 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
   } else if (expresion.tipo === TIPO_OPERACION.TYPEOF) {
     const valorTipo = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).tipo
     return { valor: valorTipo, tipo: TIPO_DATO.STRING }
+  } else if (expresion.tipo === TIPO_INSTRUCCION.INDEX_OF) {
+    console.log('expresion', expresion)
+    if (!tablaDeSimbolos.exists(expresion.identificador)) {
+      tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, expresion.identificador, expresion.linea, expresion.columna, 'VARIABLE NO FUE DECLARADA')
+      return
+    }
+    const simbolo = tablaDeSimbolos.getValue(expresion.identificador)
+    const expresionEvaluar = interpretarExpresionCadena(expresion.expresionNumerica, tablaDeSimbolos).valor
+    if (!Array.isArray(simbolo.valor)) {
+      tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, expresion.identificador, expresion.linea, expresion.columna, 'El tipo de dato debe ser array')
+      return
+    }
+    const find = simbolo.valor.findIndex(item => item === expresionEvaluar)
+    return { valor: find, tipo: TIPO_DATO.INT }
   } else if (expresion.tipo === TIPO_OPERACION.LENGTH) {
     const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
     const valorLength = valor.length

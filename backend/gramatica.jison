@@ -57,6 +57,7 @@
 "new"                               return 'NEW';
 "length"                            return 'LENGTH';
 "tochararray"                       return 'TOCHARARRAY';
+"indexof"                           return 'INDEXOF';
 
 ";"                                 return 'PUNTOCOMA';   
 ","                                 return 'COMA';      
@@ -90,6 +91,7 @@
 "]"                                 return 'CORCHETECIERRA';
 
 "?"                                 return 'INTERROGACIONCIERRA';
+"."                                 return 'PUNTO';
 
 [ \r\t]+                            {}
 \n                                  {}
@@ -284,6 +286,7 @@ operacionNumerica
         | ROUND PARENTESISABRE operacionNumerica PARENTESISCIERRA     { $$ = instrucciones.nuevoOperacionUnaria($3, TIPO_OPERACION.ROUND, @1.first_line, @1.first_column) }
         | IDENTIFICADOR CORCHETEABRE operacionNumerica CORCHETECIERRA CORCHETEABRE operacionNumerica CORCHETECIERRA { $$ = instrucciones.nuevoArray2DAcceso($1, $3, $6, @1.first_line, @1.first_column) }
         | IDENTIFICADOR CORCHETEABRE operacionNumerica CORCHETECIERRA { $$ = instrucciones.nuevoArrayAcceso($1, $3, @1.first_line, @1.first_column ) }
+        | IDENTIFICADOR PUNTO INDEXOF PARENTESISABRE operacionNumerica PARENTESISCIERRA { $$ = instrucciones.nuevoIndexOf($1, $5, @1.first_line, @1.first_column) }
 
         | MENOS operacionNumerica %prec UMENOS                      { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO, @1.first_line, @1.first_column) }
         | ENTERO                                                    { $$ = instrucciones.nuevoValor(Number($1), TIPO_VALOR.INT, @1.first_line, @1.first_column) } 

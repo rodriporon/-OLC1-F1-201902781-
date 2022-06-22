@@ -45,6 +45,7 @@ const TIPO_OPERACION = {
   TOUPPER: 'OP_TOUPPER',
   ROUND: 'OP_ROUND',
   LENGTH: 'OP_LENGTH'
+
 }
 
 const TIPO_INSTRUCCION = {
@@ -98,7 +99,8 @@ const TIPO_INSTRUCCION = {
   ARRAY2D_ACCESO: 'INSTR_ARRAY2D_ACCESO',
   ARRAY_MODIFICACION: 'INSTR_ARRAY_MODIFICACION',
   ARRAY2D_MODIFICACION: 'INSTR_ARRAY2D_MODIFICACION',
-  TO_CHAR_ARRAY: 'INSTR_TO_CHAR_ARRAY'
+  TO_CHAR_ARRAY: 'INSTR_TO_CHAR_ARRAY',
+  INDEX_OF: 'INSTR_INDEX_OF'
 }
 
 const TIPO_OPCION_SWITCH = {
@@ -589,6 +591,16 @@ const instrucciones = {
   nuevoContinue: (linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.CONTINUE,
+      linea,
+      columna
+    }
+  },
+
+  nuevoIndexOf: (identificador, expresionNumerica, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.INDEX_OF,
+      identificador,
+      expresionNumerica,
       linea,
       columna
     }

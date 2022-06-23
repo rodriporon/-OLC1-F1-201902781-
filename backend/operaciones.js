@@ -101,7 +101,8 @@ const TIPO_INSTRUCCION = {
   ARRAY2D_MODIFICACION: 'INSTR_ARRAY2D_MODIFICACION',
   TO_CHAR_ARRAY: 'INSTR_TO_CHAR_ARRAY',
   INDEX_OF: 'INSTR_INDEX_OF',
-  PUSH: 'INSTR_PUSH'
+  PUSH: 'INSTR_PUSH',
+  POP: 'INSTR_POP'
 }
 
 const TIPO_OPCION_SWITCH = {
@@ -612,6 +613,15 @@ const instrucciones = {
       tipo: TIPO_INSTRUCCION.PUSH,
       identificador,
       expresionNumerica,
+      linea,
+      columna
+    }
+  },
+
+  nuevoPop: (identificador, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.POP,
+      identificador,
       linea,
       columna
     }

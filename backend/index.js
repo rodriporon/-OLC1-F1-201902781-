@@ -170,6 +170,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarToCharArray(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.PUSH) {
       interpretarPush(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.POP) {
+      interpretarPop(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -1159,4 +1161,13 @@ const interpretarPush = (instruccion, tablaDeSimbolos) => {
   }
   simbolo.valor.push(expresionCadena.valor)
   return { valor: true, tipo: TIPO_DATO.BOOLEAN }
+}
+
+const interpretarPop = (instruccion, tablaDeSimbolos) => {
+  if (!tablaDeSimbolos.exists(instruccion.identificador)) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE NO FUE DECLARADA')
+    return
+  }
+  const simbolo = tablaDeSimbolos.getValue(instruccion.identificador)
+  simbolo.valor.pop()
 }

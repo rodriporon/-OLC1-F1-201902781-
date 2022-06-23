@@ -217,6 +217,7 @@ instruccion
         | BREAK PUNTOCOMA                                                      { $$ = instrucciones.nuevoBreak(@1.first_line, @1.first_column) }
         | CONTINUE PUNTOCOMA                                                   { $$ = instrucciones.nuevoContinue(@1.first_line, @1.first_column) }         
         | IDENTIFICADOR PUNTO PUSH PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA  { $$ = instrucciones.nuevoPush($1, $5, @1.first_line, @1.first_column) }
+        | IDENTIFICADOR PUNTO POP PARENTESISABRE PARENTESISCIERRA PUNTOCOMA  { $$ = instrucciones.nuevoPop($1, @1.first_line, @1.first_column) }
         | instruccionIf                                                        { $$ = $1 }
         | LLAVEABRE LLAVECIERRA                                                { }
         | error PUNTOCOMA                                                      { console.log("ERROR SINTACTICO EN LINEA: " + (yylineno+1)); tablaErroresLexSin.add(TIPO_ERROR.SINTACTICO, $1, @1.first_line+1, @1.first_column+1, 'ERROR SINTACTICO')}

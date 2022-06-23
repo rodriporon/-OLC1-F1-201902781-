@@ -58,6 +58,9 @@
 "length"                            return 'LENGTH';
 "tochararray"                       return 'TOCHARARRAY';
 "indexof"                           return 'INDEXOF';
+"push"                              return 'PUSH';
+"pop"                               return 'POP';
+"splice"                            return 'SPLICE';
 
 ";"                                 return 'PUNTOCOMA';   
 ","                                 return 'COMA';      
@@ -213,6 +216,7 @@ instruccion
         | DECREMENTO IDENTIFICADOR PUNTOCOMA                                   { $$ = instrucciones.nuevoPreDecremento($2, @1.first_line, @1.first_column) }
         | BREAK PUNTOCOMA                                                      { $$ = instrucciones.nuevoBreak(@1.first_line, @1.first_column) }
         | CONTINUE PUNTOCOMA                                                   { $$ = instrucciones.nuevoContinue(@1.first_line, @1.first_column) }         
+        | IDENTIFICADOR PUNTO PUSH PARENTESISABRE operacionNumerica PARENTESISCIERRA PUNTOCOMA  { $$ = instrucciones.nuevoPush($1, $5, @1.first_line, @1.first_column) }
         | instruccionIf                                                        { $$ = $1 }
         | LLAVEABRE LLAVECIERRA                                                { }
         | error PUNTOCOMA                                                      { console.log("ERROR SINTACTICO EN LINEA: " + (yylineno+1)); tablaErroresLexSin.add(TIPO_ERROR.SINTACTICO, $1, @1.first_line+1, @1.first_column+1, 'ERROR SINTACTICO')}
@@ -287,6 +291,7 @@ operacionNumerica
         | IDENTIFICADOR CORCHETEABRE operacionNumerica CORCHETECIERRA CORCHETEABRE operacionNumerica CORCHETECIERRA { $$ = instrucciones.nuevoArray2DAcceso($1, $3, $6, @1.first_line, @1.first_column) }
         | IDENTIFICADOR CORCHETEABRE operacionNumerica CORCHETECIERRA { $$ = instrucciones.nuevoArrayAcceso($1, $3, @1.first_line, @1.first_column ) }
         | IDENTIFICADOR PUNTO INDEXOF PARENTESISABRE operacionNumerica PARENTESISCIERRA { $$ = instrucciones.nuevoIndexOf($1, $5, @1.first_line, @1.first_column) }
+        | IDENTIFICADOR PUNTO PUSH PARENTESISABRE operacionNumerica PARENTESISCIERRA { $$ = instrucciones.nuevoPush($1, $5, @1.first_line, @1.first_column) }
 
         | MENOS operacionNumerica %prec UMENOS                      { $$ = instrucciones.nuevoOperacionUnaria($2, TIPO_OPERACION.NEGATIVO, @1.first_line, @1.first_column) }
         | ENTERO                                                    { $$ = instrucciones.nuevoValor(Number($1), TIPO_VALOR.INT, @1.first_line, @1.first_column) } 

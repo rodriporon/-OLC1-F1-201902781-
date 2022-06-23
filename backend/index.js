@@ -168,6 +168,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarArray2DModificacion(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.TO_CHAR_ARRAY) {
       interpretarToCharArray(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.PUSH) {
+      interpretarPush(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -214,6 +216,8 @@ const interpretarExpresionNumerica = (expresion, tablaDeSimbolos) => {
     }
     const find = simbolo.valor.findIndex(item => item === expresionEvaluar)
     return { valor: find, tipo: TIPO_DATO.INT }
+  } else if (expresion.tipo === TIPO_INSTRUCCION.PUSH) {
+    return interpretarPush(expresion, tablaDeSimbolos)
   } else if (expresion.tipo === TIPO_OPERACION.LENGTH) {
     const valor = interpretarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos).valor
     const valorLength = valor.length
@@ -1140,4 +1144,19 @@ const interpretarToCharArray = (instruccion, tablaDeSimbolos) => {
   tablaDeSimbolos.add(instruccion.identificador, instruccion.tipoDato, instruccion.constante)
   const array = [...cadena.valor]
   tablaDeSimbolos.update(instruccion.identificador, { valor: array, tipo: instruccion.tipoDato })
+}
+
+const interpretarPush = (instruccion, tablaDeSimbolos) => {
+  if (!tablaDeSimbolos.exists(instruccion.identificador)) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE NO FUE DECLARADA')
+    return
+  }
+  const simbolo = tablaDeSimbolos.getValue(instruccion.identificador)
+  const expresionCadena = interpretarExpresionCadena(instruccion.expresionNumerica, tablaDeSimbolos)
+  if (simbolo.tipo !== expresionCadena.tipo) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'El tipo de dato no coincide con el del array')
+    return { valor: false, tipo: TIPO_DATO.BOOLEAN }
+  }
+  simbolo.valor.push(expresionCadena.valor)
+  return { valor: true, tipo: TIPO_DATO.BOOLEAN }
 }

@@ -100,7 +100,8 @@ const TIPO_INSTRUCCION = {
   ARRAY_MODIFICACION: 'INSTR_ARRAY_MODIFICACION',
   ARRAY2D_MODIFICACION: 'INSTR_ARRAY2D_MODIFICACION',
   TO_CHAR_ARRAY: 'INSTR_TO_CHAR_ARRAY',
-  INDEX_OF: 'INSTR_INDEX_OF'
+  INDEX_OF: 'INSTR_INDEX_OF',
+  PUSH: 'INSTR_PUSH'
 }
 
 const TIPO_OPCION_SWITCH = {
@@ -599,6 +600,16 @@ const instrucciones = {
   nuevoIndexOf: (identificador, expresionNumerica, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.INDEX_OF,
+      identificador,
+      expresionNumerica,
+      linea,
+      columna
+    }
+  },
+
+  nuevoPush: (identificador, expresionNumerica, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.PUSH,
       identificador,
       expresionNumerica,
       linea,

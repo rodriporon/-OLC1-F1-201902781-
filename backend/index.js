@@ -172,6 +172,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarPush(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.POP) {
       interpretarPop(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.SPLICE) {
+      interpretarSplice(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -180,7 +182,6 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
 }
 
 const interpretarExpresionCadena = (expresion, tablaDeSimbolos) => {
-  console.log('expresion interpretar expresionc adena', expresion)
   if (expresion.tipo === TIPO_VALOR.CADENA) {
     return { valor: expresion.valor, tipo: TIPO_DATO.STRING }
   } else {
@@ -1170,4 +1171,24 @@ const interpretarPop = (instruccion, tablaDeSimbolos) => {
   }
   const simbolo = tablaDeSimbolos.getValue(instruccion.identificador)
   simbolo.valor.pop()
+}
+
+const interpretarSplice = (instruccion, tablaDeSimbolos) => {
+  if (!tablaDeSimbolos.exists(instruccion.identificador)) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'VARIABLE NO FUE DECLARADA')
+    return
+  }
+  const simbolo = tablaDeSimbolos.getValue(instruccion.identificador)
+  const expresion1 = interpretarExpresionCadena(instruccion.expresionNumerica1, tablaDeSimbolos)
+  const expresion2 = interpretarExpresionCadena(instruccion.expresionNumerica2, tablaDeSimbolos)
+  if (expresion1.tipo !== TIPO_DATO.INT) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'La posicion a asignar debe ser de tipo INT')
+    return
+  }
+  if (simbolo.tipo !== expresion2.tipo) {
+    tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.identificador, instruccion.linea, instruccion.columna, 'La expresión a ingresar debe ser del mismo tipo del array')
+    return
+  }
+  simbolo.valor.splice(expresion1.valor, 0, expresion2.valor)
+  tablaDeSimbolos.update(instruccion.identificador, { valor: simbolo.valor, tipo: simbolo.tipo })
 }

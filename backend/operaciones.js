@@ -102,7 +102,8 @@ const TIPO_INSTRUCCION = {
   TO_CHAR_ARRAY: 'INSTR_TO_CHAR_ARRAY',
   INDEX_OF: 'INSTR_INDEX_OF',
   PUSH: 'INSTR_PUSH',
-  POP: 'INSTR_POP'
+  POP: 'INSTR_POP',
+  SPLICE: 'INSTR_SPLICE'
 }
 
 const TIPO_OPCION_SWITCH = {
@@ -622,6 +623,17 @@ const instrucciones = {
     return {
       tipo: TIPO_INSTRUCCION.POP,
       identificador,
+      linea,
+      columna
+    }
+  },
+
+  nuevoSplice: (identificador, expresionNumerica1, expresionNumerica2, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.SPLICE,
+      identificador,
+      expresionNumerica1,
+      expresionNumerica2,
       linea,
       columna
     }

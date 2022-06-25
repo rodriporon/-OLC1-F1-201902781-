@@ -174,6 +174,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarPop(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.SPLICE) {
       interpretarSplice(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.GRAFICAR_TS) {
+      interpretarGraficarTS(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -726,7 +728,7 @@ const interpretarIf = (instruccion, tablaDeSimbolos) => {
   console.log(instruccion.expresionLogica)
   const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
   if (valorCondicion) {
-    const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos._simbolos)
+    const tablaSimbolosIf = new TablaSimbolos([...tablaDeSimbolos._simbolos])
     interpretarBloque(instruccion.instrucciones, tablaSimbolosIf)
   }
 }
@@ -735,10 +737,10 @@ const interpretarIfElse = (instruccion, tablaDeSimbolos) => {
   const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
 
   if (valorCondicion) {
-    const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos._simbolos)
+    const tablaSimbolosIf = new TablaSimbolos([...tablaDeSimbolos._simbolos])
     interpretarBloque(instruccion.instruccionesIfVerdadero, tablaSimbolosIf)
   } else {
-    const tablaSimbolosElse = new TablaSimbolos(tablaDeSimbolos._simbolos)
+    const tablaSimbolosElse = new TablaSimbolos([...tablaDeSimbolos._simbolos])
     interpretarBloque(instruccion.instruccionesIfFalso, tablaSimbolosElse)
   }
 }
@@ -749,10 +751,10 @@ const interpretarIfElseIf = (instruccion, tablaDeSimbolos) => {
   const valorCondicionNuevoIf = interpretarExpresionLogica(instruccion.nuevoIf.expresionLogica, tablaDeSimbolos)
 
   if (valorCondicion) {
-    const tablaSimbolosIf = new TablaSimbolos(tablaDeSimbolos._simbolos)
+    const tablaSimbolosIf = new TablaSimbolos([...tablaDeSimbolos._simbolos])
     interpretarBloque(instruccion.instrucciones, tablaSimbolosIf)
   } else if (valorCondicionNuevoIf) {
-    const tablaSimbolosNuevoIf = new TablaSimbolos(tablaDeSimbolos._simbolos)
+    const tablaSimbolosNuevoIf = new TablaSimbolos([...tablaDeSimbolos._simbolos])
     interpretarBloque(instruccion.nuevoIf.instrucciones, tablaSimbolosNuevoIf)
   }
 }
@@ -762,7 +764,7 @@ const interpretarWhile = (instruccion, tablaDeSimbolos) => {
     if (_break) {
       break
     } else {
-      const tablaSimbolosWhile = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      const tablaSimbolosWhile = new TablaSimbolos([...tablaDeSimbolos._simbolos])
       interpretarBloque(instruccion.instrucciones, tablaSimbolosWhile)
     }
   }
@@ -774,7 +776,7 @@ const interpretarDoWhile = (instruccion, tablaDeSimbolos) => {
     if (_break) {
       break
     } else {
-      const tablaSimbolosDoWhile = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      const tablaSimbolosDoWhile = new TablaSimbolos([...tablaDeSimbolos._simbolos])
       interpretarBloque(instruccion.instrucciones, tablaSimbolosDoWhile)
     }
   } while (interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos))
@@ -794,7 +796,7 @@ const interpretarForAsignacionSimbolosMas = (instruccion, tablaDeSimbolos) => {
       console.error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
       break
     } else {
-      const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      const tablaSimbolosFor = new TablaSimbolos([...tablaDeSimbolos._simbolos])
       interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
     }
   }
@@ -814,7 +816,7 @@ const interpretarForAsignacionSimbolosMenos = (instruccion, tablaDeSimbolos) => 
       console.error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
       break
     } else {
-      const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      const tablaSimbolosFor = new TablaSimbolos([...tablaDeSimbolos._simbolos])
       interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
     }
   }
@@ -834,7 +836,7 @@ const interpretarForAsignacionOperacion = (instruccion, tablaDeSimbolos) => {
       console.error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
       break
     } else {
-      const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      const tablaSimbolosFor = new TablaSimbolos([...tablaDeSimbolos._simbolos])
       interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
     }
   }
@@ -858,7 +860,7 @@ const interpretarForDeclaracionOperacion = (instruccion, tablaDeSimbolos) => {
       console.error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
       break
     } else {
-      const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      const tablaSimbolosFor = new TablaSimbolos([...tablaDeSimbolos._simbolos])
       interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
     }
   }
@@ -882,7 +884,7 @@ const interpretarForDeclaracionSimbolosMas = (instruccion, tablaDeSimbolos) => {
       console.error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
       break
     } else {
-      const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      const tablaSimbolosFor = new TablaSimbolos([...tablaDeSimbolos._simbolos])
       interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
     }
   }
@@ -906,7 +908,7 @@ const interpretarForDeclaracionSimbolosMenos = (instruccion, tablaDeSimbolos) =>
       console.error('ERROR SEMANTICO: sentencia BREAK no puede ser accesible en ciclos for')
       break
     } else {
-      const tablaSimbolosFor = new TablaSimbolos(tablaDeSimbolos._simbolos)
+      const tablaSimbolosFor = new TablaSimbolos([...tablaDeSimbolos._simbolos])
       interpretarBloque(instruccion.instrucciones, tablaSimbolosFor)
     }
   }
@@ -925,7 +927,7 @@ const interpretarContinue = (instruccion, tablaDeSimbolos) => {
 const interpretarSwitch = (instruccion, tablaDeSimbolos) => {
   let evaluar = true
   const valorExpresion = interpretarExpresionNumerica(instruccion.expresionNumerica, tablaDeSimbolos)
-  const tablaSimbolosSwitch = new TablaSimbolos(tablaDeSimbolos._simbolos)
+  const tablaSimbolosSwitch = new TablaSimbolos([...tablaDeSimbolos._simbolos])
   instruccion.casos.forEach(caso => {
     if (caso.tipo === TIPO_OPCION_SWITCH.CASO) {
       const valorExpresionCase = interpretarExpresionNumerica(caso.expresionNumerica, tablaSimbolosSwitch)
@@ -942,7 +944,7 @@ const interpretarSwitch = (instruccion, tablaDeSimbolos) => {
 
 const interpretarNuevoBloque = (instruccion, tablaDeSimbolos) => {
   console.log(tablaDeSimbolos)
-  const tablaSimbolosNuevoBloque = new TablaSimbolos(tablaDeSimbolos._simbolos)
+  const tablaSimbolosNuevoBloque = new TablaSimbolos([...tablaDeSimbolos._simbolos])
   interpretarBloque(instruccion.instrucciones, tablaSimbolosNuevoBloque)
 }
 
@@ -955,7 +957,7 @@ const interpretarCallMetodoSinParametros = (instrucciones, tablaDeSimbolos) => {
   if (metodo.tipo !== TIPO_DATO.METODO_SIN_PARAMETROS) {
     tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instrucciones.identificador, instrucciones.linea, instrucciones.columna, 'El identificador indicado no es un metodo')
   } else {
-    const tablaSimbolosNuevoBloque = new TablaSimbolos(tablaDeSimbolos._simbolos)
+    const tablaSimbolosNuevoBloque = new TablaSimbolos([...tablaDeSimbolos._simbolos])
     interpretarBloque(metodo.valor, tablaSimbolosNuevoBloque)
   }
 }
@@ -1191,4 +1193,8 @@ const interpretarSplice = (instruccion, tablaDeSimbolos) => {
   }
   simbolo.valor.splice(expresion1.valor, 0, expresion2.valor)
   tablaDeSimbolos.update(instruccion.identificador, { valor: simbolo.valor, tipo: simbolo.tipo })
+}
+
+const interpretarGraficarTS = (instruccion, tablaDeSimbolos) => {
+  console.log('NUEVA TABLA DE SIMBOLOS:', tablaDeSimbolos, 'en linea:', instruccion.linea, 'columna:', instruccion.columna)
 }

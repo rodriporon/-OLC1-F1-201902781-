@@ -8,6 +8,7 @@ const { TIPO_INSTRUCCION, TIPO_OPERACION, TIPO_VALOR, TIPO_OPCION_SWITCH } = req
 const { TablaSimbolos, TIPO_DATO, tablaErroresSimbolos } = require('./tablaSimbolos')
 const { TIPO_ERROR, TablaErrores } = require('./tablaErrores')
 const { tablaErroresLexSin } = require('./gramatica')
+const ListaTablaSimbolos = require('./listaTablaSimbolos')
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -20,6 +21,7 @@ let _continue = false
 
 const tablaErroresIndex = new TablaErrores([])
 const tablaErroresGlobal = new TablaErrores([])
+const listaTablaSimbolos = new ListaTablaSimbolos([])
 
 app.get('/', (req, res) => {
   res.send('<h1>Server running</>')
@@ -30,6 +32,7 @@ let TablaSimbolosGlobal = new TablaSimbolos([])
 app.post('/compilar', (req, res) => {
   tablaErroresGlobal.clear()
   TablaSimbolosGlobal = new TablaSimbolos([])
+  listaTablaSimbolos.clear()
   salidaConsola = ''
   const entradaJson = req.body
   entradaEditor = entradaJson.fileValue.toString()
@@ -76,6 +79,11 @@ app.get('/tabla-simbolos', (req, res) => {
 app.get('/reporte-ast', (req, res) => {
   // graficarAST(ast)
   res.json(ast)
+})
+
+app.get('/graficas-ts', (req, res) => {
+  console.log('DESDE ENDPOINT: ', listaTablaSimbolos.getList())
+  res.json(listaTablaSimbolos.getList())
 })
 
 const PORT = 3001
@@ -1196,5 +1204,6 @@ const interpretarSplice = (instruccion, tablaDeSimbolos) => {
 }
 
 const interpretarGraficarTS = (instruccion, tablaDeSimbolos) => {
-  console.log('NUEVA TABLA DE SIMBOLOS:', tablaDeSimbolos, 'en linea:', instruccion.linea, 'columna:', instruccion.columna)
+  listaTablaSimbolos.add(tablaDeSimbolos, instruccion.linea, instruccion.columna)
+  console.log('lista tabla de simbolos', listaTablaSimbolos.getList()[0].tablaSimbolos)
 }

@@ -702,7 +702,11 @@ const interpretarExpresionRelacional = (expresion, tablaDeSimbolos) => {
 const interpretarExpresionLogica = (expresion, tablaDeSimbolos) => {
   if (expresion.tipo === TIPO_VALOR.IDENTIFICADOR) {
     const valor = tablaDeSimbolos.getValue(expresion.valor)
-    return valor.valor
+    if (valor.valor === 'true') {
+      return true
+    } else {
+      return false
+    }
   }
   if (expresion.tipo === TIPO_OPERACION.AND) {
     const valorIzq = interpretarExpresionRelacional(expresion.operandoIzq, tablaDeSimbolos)
@@ -745,6 +749,7 @@ const interpretarExpresionLogica = (expresion, tablaDeSimbolos) => {
 const interpretarIf = (instruccion, tablaDeSimbolos) => {
   console.log('IF--------------', instruccion.expresionLogica)
   const valorCondicion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
+  console.log('VALOR CONDICION:', valorCondicion)
   if (valorCondicion) {
     const tablaSimbolosIf = new TablaSimbolos([...tablaDeSimbolos._simbolos])
     interpretarBloque(instruccion.instrucciones, tablaSimbolosIf)

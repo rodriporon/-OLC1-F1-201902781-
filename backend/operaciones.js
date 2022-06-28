@@ -90,6 +90,7 @@ const TIPO_INSTRUCCION = {
 
   TERNARIA: 'INSTR_TERNARIA',
   TERNARIA_ASIGNACION: 'INSTR_TERNARIA_ASIGNACION',
+  TERNARIA_DECLARACION: 'INSTR_TERNARIA_DECLARACION',
 
   ARRAY: 'INSTR_ARRAY',
   ARRAY2D: 'INSTR_ARRAY2D',
@@ -462,15 +463,27 @@ const instrucciones = {
     }
   },
 
-  nuevoTernariaAsignacion: (tipoDato, identificador, expresionLogica, instruccionesVerdadero, instruccionesFalso, constante, linea, columna) => {
+  nuevoTernariaDeclaracion: (tipoDato, identificador, expresionLogica, instruccionesVerdadero, instruccionesFalso, constante, linea, columna) => {
     return {
-      tipo: TIPO_INSTRUCCION.TERNARIA_ASIGNACION,
+      tipo: TIPO_INSTRUCCION.TERNARIA_DECLARACION,
       tipoDato,
       identificador,
       expresionLogica,
       instruccionesVerdadero,
       instruccionesFalso,
       constante,
+      linea,
+      columna
+    }
+  },
+
+  nuevoTernariaAsignacion: (identificador, expresionLogica, instruccionesVerdadero, instruccionesFalso, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.TERNARIA_ASIGNACION,
+      identificador,
+      expresionLogica,
+      instruccionesVerdadero,
+      instruccionesFalso,
       linea,
       columna
     }

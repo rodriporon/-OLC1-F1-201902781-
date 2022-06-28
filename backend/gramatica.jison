@@ -186,8 +186,10 @@ instruccion
 
         | CALL IDENTIFICADOR PARENTESISABRE PARENTESISCIERRA PUNTOCOMA                                       { $$ = instrucciones.nuevoCallMetodoSinParametros($2, @1.first_line, @1.first_column) }
         
-        | tipo_dato IDENTIFICADOR IGUAL expresionLogica  INTERROGACIONCIERRA operacionNumerica DOSPUNTOS operacionNumerica PUNTOCOMA        { $$ = instrucciones.nuevoTernariaAsignacion($1.toUpperCase(), $2, $4, [$6], [$8], false, @1.first_line, @1.first_column)}
-        | CONST tipo_dato IDENTIFICADOR IGUAL  expresionLogica  INTERROGACIONCIERRA operacionNumerica DOSPUNTOS operacionNumerica PUNTOCOMA        { $$ = instrucciones.nuevoTernariaAsignacion($2.toUpperCase(), $3, $5, [$7], [$9], true, @1.first_line, @1.first_column)}
+        | tipo_dato IDENTIFICADOR IGUAL expresionLogica  INTERROGACIONCIERRA operacionNumerica DOSPUNTOS operacionNumerica PUNTOCOMA        { $$ = instrucciones.nuevoTernariaDeclaracion($1.toUpperCase(), $2, $4, [$6], [$8], false, @1.first_line, @1.first_column)}
+        | CONST tipo_dato IDENTIFICADOR IGUAL  expresionLogica  INTERROGACIONCIERRA operacionNumerica DOSPUNTOS operacionNumerica PUNTOCOMA        { $$ = instrucciones.nuevoTernariaDeclaracion($2.toUpperCase(), $3, $5, [$7], [$9], true, @1.first_line, @1.first_column)}
+
+        | IDENTIFICADOR IGUAL expresionLogica INTERROGACIONCIERRA operacionNumerica DOSPUNTOS operacionNumerica PUNTOCOMA        { $$ = instrucciones.nuevoTernariaAsignacion($1, $3, [$5], [$7], @1.first_line, @1.first_column)}
 
         | tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($1.toUpperCase(), $2, $4, false, @1.first_line, @1.first_column)}
         | CONST tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA          { $$ = instrucciones.nuevoDeclaracionAsignacion($2.toUpperCase(), $3, $5, true, @1.first_line, @1.first_column)}

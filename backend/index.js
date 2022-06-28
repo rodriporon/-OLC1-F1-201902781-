@@ -160,6 +160,8 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarCallMetodoSinParametros(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.TERNARIA) {
       interpretarTernaria(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.TERNARIA_DECLARACION) {
+      interpretarTernariaDeclaracion(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.TERNARIA_ASIGNACION) {
       interpretarTernariaAsignacion(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.ARRAY) {
@@ -984,7 +986,7 @@ const interpretarTernaria = (instruccion, tablaDeSimbolos) => {
   }
 }
 
-const interpretarTernariaAsignacion = (instruccion, tablaDeSimbolos) => {
+const interpretarTernariaDeclaracion = (instruccion, tablaDeSimbolos) => {
   const valorExpresion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
   const objetoAsignacion = {
     identificador: instruccion.identificador,
@@ -1000,6 +1002,23 @@ const interpretarTernariaAsignacion = (instruccion, tablaDeSimbolos) => {
   } else {
     objetoAsignacion.expresionNumerica = instruccion.instruccionesFalso[0]
     interpretarDeclaracionAsignacion(objetoAsignacion, tablaDeSimbolos)
+  }
+}
+
+const interpretarTernariaAsignacion = (instruccion, tablaDeSimbolos) => {
+  const valorExpresion = interpretarExpresionLogica(instruccion.expresionLogica, tablaDeSimbolos)
+  const objetoAsignacion = {
+    identificador: instruccion.identificador,
+    expresionNumerica: undefined,
+    linea: instruccion.linea,
+    columna: instruccion.columna
+  }
+  if (valorExpresion) {
+    objetoAsignacion.expresionNumerica = instruccion.instruccionesVerdadero[0]
+    interpretarAsignacion(objetoAsignacion, tablaDeSimbolos)
+  } else {
+    objetoAsignacion.expresionNumerica = instruccion.instruccionesFalso[0]
+    interpretarAsignacion(objetoAsignacion, tablaDeSimbolos)
   }
 }
 

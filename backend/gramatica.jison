@@ -183,8 +183,10 @@ instruccion
         | FOR PARENTESISABRE tipo_dato IDENTIFICADOR IGUAL operacionNumerica PUNTOCOMA expresionLogica PUNTOCOMA IDENTIFICADOR DECREMENTO PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA       { $$ = instrucciones.nuevoForDeclaracionSimbolosMenos($3.toUpperCase(), $4, $6, $8, $10, $14, @1.first_line, @1.first_column) }
 
         | VOID IDENTIFICADOR PARENTESISABRE PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA             { $$ = instrucciones.nuevoMetodoSinParametros($2, $6, @1.first_line, @1.first_column) }
+        | VOID IDENTIFICADOR PARENTESISABRE listaParametros PARENTESISCIERRA LLAVEABRE instrucciones LLAVECIERRA             { $$ = instrucciones.nuevoMetodoConParametros($2, $4, $7, @1.first_line, @1.first_column) }
 
         | CALL IDENTIFICADOR PARENTESISABRE PARENTESISCIERRA PUNTOCOMA                                       { $$ = instrucciones.nuevoCallMetodoSinParametros($2, @1.first_line, @1.first_column) }
+        | CALL IDENTIFICADOR PARENTESISABRE listaOperacionNumerica PARENTESISCIERRA PUNTOCOMA                                       { $$ = instrucciones.nuevoCallMetodoConParametros($2, $4, @1.first_line, @1.first_column) }
         
         | tipo_dato IDENTIFICADOR IGUAL expresionLogica  INTERROGACIONCIERRA operacionNumerica DOSPUNTOS operacionNumerica PUNTOCOMA        { $$ = instrucciones.nuevoTernariaDeclaracion($1.toUpperCase(), $2, $4, [$6], [$8], false, @1.first_line, @1.first_column)}
         | CONST tipo_dato IDENTIFICADOR IGUAL  expresionLogica  INTERROGACIONCIERRA operacionNumerica DOSPUNTOS operacionNumerica PUNTOCOMA        { $$ = instrucciones.nuevoTernariaDeclaracion($2.toUpperCase(), $3, $5, [$7], [$9], true, @1.first_line, @1.first_column)}
@@ -336,3 +338,11 @@ case    : CASE operacionNumerica DOSPUNTOS instrucciones BREAK PUNTOCOMA       {
         | DEFAULT DOSPUNTOS instrucciones                BREAK PUNTOCOMA       { $$ = instrucciones.nuevoCaseDefault($3, @1.first_line, @1.first_column)}
 ;
 
+listaParametros
+        : listaParametros COMA parametro                                          { $1.push($3); $$ = $1; }
+        | parametro                                                               { $$ = instrucciones.nuevoListaParametros($1)}
+;
+
+parametro
+        : tipo_dato IDENTIFICADOR                                                 { $$ = instrucciones.nuevoParametro($1, $2, @1.first_line, @1.first_column)}
+;

@@ -186,6 +186,10 @@ const interpretarBloque = (instruccion, tablaSimbolos) => {
       interpretarSplice(instruccion, tablaSimbolos)
     } else if (instruccion.tipo === TIPO_INSTRUCCION.GRAFICAR_TS) {
       interpretarGraficarTS(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.METODO_CON_PARAMETROS) {
+      interpretarMetodoConParametros(instruccion, tablaSimbolos)
+    } else if (instruccion.tipo === TIPO_INSTRUCCION.CALL_METODO_CON_PARAMETROS) {
+      interpretarCallMetodoConParametros(instruccion, tablaSimbolos)
     } else {
       tablaErroresIndex.add(TIPO_ERROR.SEMANTICO, instruccion.id, instruccion.linea, instruccion.columna, 'TIPO DE OPERACION O INSTRUCCION NO ACEPTADO')
       console.error('ERROR SEMANTICO: tipo de operacion/instrucción no aceptado -> ' + instruccion)
@@ -1230,4 +1234,24 @@ const interpretarSplice = (instruccion, tablaDeSimbolos) => {
 const interpretarGraficarTS = (instruccion, tablaDeSimbolos) => {
   listaTablaSimbolos.add(tablaDeSimbolos, instruccion.linea, instruccion.columna)
   console.log('lista tabla de simbolos', listaTablaSimbolos.getList()[0].tablaSimbolos)
+}
+
+const interpretarMetodoConParametros = (instruccion, tablaDeSimbolos) => {
+  tablaDeSimbolos.addMetodo(instruccion.identificador, instruccion.parametros, instruccion.instrucciones)
+}
+
+const interpretarCallMetodoConParametros = (instruccion, tablaDeSimbolos) => {
+  const identificadoresAgregados = []
+  const metodo = tablaDeSimbolos.getValue(instruccion.identificador)
+  const tablaSimbolosMetodoConParametros = new TablaSimbolos([...tablaDeSimbolos._simbolos])
+  metodo.tipo.forEach(parametro => {
+    tablaSimbolosMetodoConParametros.add(parametro.identificador, parametro.tipoDato.toUpperCase(), false)
+    identificadoresAgregados.push(parametro.identificador)
+  })
+  instruccion.parametros.forEach((parametro, index) => {
+    const expresion = interpretarExpresionCadena(parametro, tablaSimbolosMetodoConParametros)
+    console.log(expresion)
+    tablaSimbolosMetodoConParametros.update(identificadoresAgregados[index], { valor: expresion.valor, tipo: expresion.tipo })
+  })
+  interpretarBloque(metodo.valor, tablaSimbolosMetodoConParametros)
 }

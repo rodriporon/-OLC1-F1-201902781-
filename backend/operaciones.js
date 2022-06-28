@@ -44,7 +44,8 @@ const TIPO_OPERACION = {
   TOLOWER: 'OP_TOLOWER',
   TOUPPER: 'OP_TOUPPER',
   ROUND: 'OP_ROUND',
-  LENGTH: 'OP_LENGTH'
+  LENGTH: 'OP_LENGTH',
+  PARAMETRO: 'OP_PARAMETRO'
 
 }
 
@@ -83,6 +84,7 @@ const TIPO_INSTRUCCION = {
   METODO_CON_PARAMETROS: 'INSTR_METODO_CON_PARAMETROS',
 
   CALL_METODO_SIN_PARAMETROS: 'INSTR_CALL_METODO_SIN_PARAMETROS',
+  CALL_METODO_CON_PARAMETROS: 'INSTR_CALL_METODO_CON_PARAMETROS',
 
   BREAK: 'INSTR_BREAK',
   CONTINUE: 'INSTR_CONTINUE',
@@ -548,6 +550,22 @@ const instrucciones = {
     return listaArrays
   },
 
+  nuevoListaParametros: (parametro) => {
+    const listaParametros = []
+    listaParametros.push(parametro)
+    return listaParametros
+  },
+
+  nuevoParametro: (tipoDato, identificador, linea, columna) => {
+    return {
+      tipo: TIPO_OPERACION.PARAMETRO,
+      tipoDato,
+      identificador,
+      linea,
+      columna
+    }
+  },
+
   nuevoCase: (expresionNumerica, instrucciones, linea, columna) => {
     return {
       tipo: TIPO_OPCION_SWITCH.CASO,
@@ -577,10 +595,31 @@ const instrucciones = {
     }
   },
 
+  nuevoMetodoConParametros: (identificador, parametros, instrucciones, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.METODO_CON_PARAMETROS,
+      identificador,
+      parametros,
+      instrucciones,
+      linea,
+      columna
+    }
+  },
+
   nuevoCallMetodoSinParametros: (identificador, linea, columna) => {
     return {
       tipo: TIPO_INSTRUCCION.CALL_METODO_SIN_PARAMETROS,
       identificador,
+      linea,
+      columna
+    }
+  },
+
+  nuevoCallMetodoConParametros: (identificador, parametros, linea, columna) => {
+    return {
+      tipo: TIPO_INSTRUCCION.CALL_METODO_CON_PARAMETROS,
+      identificador,
+      parametros,
       linea,
       columna
     }

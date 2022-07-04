@@ -7,7 +7,7 @@ export default function ReporteErrores () {
   const [loading, setLoading] = useState(true)
   const loadErrors = async () => {
     try {
-      const response = await fetch('http://localhost:3001/reporte-errores')
+      const response = await fetch('http://lfscript-api.vercel.app/reporte-errores')
       const items = await response.json()
       setErrores(items)
       setLoading(false)

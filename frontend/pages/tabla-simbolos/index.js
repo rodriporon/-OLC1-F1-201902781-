@@ -8,7 +8,7 @@ export default function TablaSimbolos () {
 
   const loadSimbolos = async () => {
     try {
-      const response = await fetch('http://localhost:3001/tabla-simbolos')
+      const response = await fetch('http://lfscript-api.vercel.app/tabla-simbolos')
       const items = await response.json()
       setSimbolos(items)
       setLoading(false)

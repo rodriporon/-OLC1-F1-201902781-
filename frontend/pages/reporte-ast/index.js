@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 export default function ReporteAst () {
   const loadAST = async () => {
     try {
-      const response = await fetch('http://localhost:3001/reporte-ast')
+      const response = await fetch('http://lfscript-api.vercel.app/reporte-ast')
       const items = await response.json()
       console.log(items)
     } catch (e) {

@@ -82,7 +82,7 @@ export default function Header () {
                           {({ active }) => (
 
                             <a
-                              href='http://lfscript-api.vercel.app/reporte-ast'
+                              href='https://lfscript-api.vercel.app/reporte-ast'
                               className={`${
                           active ? 'bg-rose-400 text-white' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}

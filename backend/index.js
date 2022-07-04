@@ -1,8 +1,9 @@
 const express = require('express')
 const cors = require('cors')
+const https = require('https')
 const app = express()
 const bodyParser = require('body-parser')
-// const fs = require('fs')
+const fs = require('fs')
 const parser = require('./gramatica')
 const { TIPO_INSTRUCCION, TIPO_OPERACION, TIPO_VALOR, TIPO_OPCION_SWITCH } = require('./operaciones')
 const { TablaSimbolos, TIPO_DATO, tablaErroresSimbolos } = require('./tablaSimbolos')
@@ -84,6 +85,15 @@ app.get('/reporte-ast', (req, res) => {
 app.get('/graficas-ts', (req, res) => {
   console.log('DESDE ENDPOINT: ', listaTablaSimbolos.getList())
   res.json(listaTablaSimbolos.getList())
+})
+
+https.createServer({
+  key: fs.readFileSync('server.key'),
+  cert: fs.readFileSync('server.cert')
+},
+app
+).listen(3000, () => {
+  console.log('server running on port 3000')
 })
 
 const PORT = 3001

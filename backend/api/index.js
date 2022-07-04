@@ -25,13 +25,13 @@ const tablaErroresIndex = new TablaErrores([])
 const tablaErroresGlobal = new TablaErrores([])
 const listaTablaSimbolos = new ListaTablaSimbolos([])
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('<h1>Server running</>')
 })
 
 let TablaSimbolosGlobal = new TablaSimbolos([])
 
-app.post('/compilar', (req, res) => {
+app.post('/api/compilar', (req, res) => {
   tablaErroresGlobal.clear()
   TablaSimbolosGlobal = new TablaSimbolos([])
   listaTablaSimbolos.clear()
@@ -68,22 +68,22 @@ app.post('/compilar', (req, res) => {
 })
 
 // creando get para enviar los datos de tablaErroresGlobal
-app.get('/reporte-errores', (req, res) => {
+app.get('/api/reporte-errores', (req, res) => {
   res.json(tablaErroresGlobal.getErrores())
 })
 
 // getting for tabla simbolos
-app.get('/tabla-simbolos', (req, res) => {
+app.get('/api/tabla-simbolos', (req, res) => {
   res.json(TablaSimbolosGlobal.getSymbols())
 })
 
 // graficar AST
-app.get('/reporte-ast', (req, res) => {
+app.get('/api/reporte-ast', (req, res) => {
   // graficarAST(ast)
   res.json(ast)
 })
 
-app.get('/graficas-ts', (req, res) => {
+app.get('/api/graficas-ts', (req, res) => {
   console.log('DESDE ENDPOINT: ', listaTablaSimbolos.getList())
   res.json(listaTablaSimbolos.getList())
 })

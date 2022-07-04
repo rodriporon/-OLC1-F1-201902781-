@@ -8,7 +8,7 @@ export default function GraficasTs () {
 
   const loadTablasSimbolos = async () => {
     try {
-      const response = await fetch('http://lfscript-api.vercel.app/graficas-ts')
+      const response = await fetch('https://lfscript-api.vercel.app/graficas-ts')
       const items = await response.json()
       setGraficas(items)
       setLoading(false)

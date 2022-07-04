@@ -21,7 +21,7 @@ export default function Pestaña ({ isHidden }) {
 
   const handlerBotonEjecutar = e => {
     e.preventDefault()
-    fetch('http://lfscript-api.vercel.app/compilar', {
+    fetch('https://localhost:3001/compilar', {
       method: 'POST',
       body: JSON.stringify({ fileValue }),
       headers: {

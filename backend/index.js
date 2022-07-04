@@ -13,6 +13,7 @@ const ListaTablaSimbolos = require('./listaTablaSimbolos')
 
 app.use(cors())
 app.use(bodyParser.json())
+const PORT = 3000
 
 let ast
 let entradaEditor
@@ -92,12 +93,7 @@ https.createServer({
   cert: fs.readFileSync('server.cert')
 },
 app
-).listen(3000, () => {
-  console.log('server running on port 3000')
-})
-
-const PORT = 3001
-app.listen(PORT, () => {
+).listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
 

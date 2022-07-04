@@ -1260,3 +1260,5 @@ const interpretarCallMetodoConParametros = (instruccion, tablaDeSimbolos) => {
   })
   interpretarBloque(metodo.valor, tablaSimbolosMetodoConParametros)
 }
+
+module.exports = app

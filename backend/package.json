@@ -26,5 +26,8 @@
     "ignorePatterns": [
       "gramatica.js"
     ]
+  },
+  "engines": {
+    "node": "16.13.1"
   }
 }

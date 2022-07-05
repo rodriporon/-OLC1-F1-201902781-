@@ -7,7 +7,7 @@ export default function ReporteErrores () {
   const [loading, setLoading] = useState(true)
   const loadErrors = async () => {
     try {
-      const response = await fetch('https://lfscript-api.vercel.app/reporte-errores')
+      const response = await fetch('https://scenic-grand-canyon-91782.herokuapp.com/reporte-errores')
       const items = await response.json()
       setErrores(items)
       setLoading(false)

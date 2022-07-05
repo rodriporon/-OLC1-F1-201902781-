@@ -8,7 +8,7 @@ export default function TablaSimbolos () {
 
   const loadSimbolos = async () => {
     try {
-      const response = await fetch('https://lfscript-api.vercel.app/tabla-simbolos')
+      const response = await fetch('https://scenic-grand-canyon-91782.herokuapp.com/tabla-simbolos')
       const items = await response.json()
       setSimbolos(items)
       setLoading(false)

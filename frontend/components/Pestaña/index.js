@@ -21,7 +21,7 @@ export default function Pestaña ({ isHidden }) {
 
   const handlerBotonEjecutar = e => {
     e.preventDefault()
-    fetch('https://lfscript-api.vercel.app/compilar', {
+    fetch('https://scenic-grand-canyon-91782.herokuapp.com/compilar', {
       method: 'POST',
       body: JSON.stringify({ fileValue }),
       headers: {

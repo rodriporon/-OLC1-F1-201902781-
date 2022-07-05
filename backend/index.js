@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+// const https = require('https')
 const app = express()
 const bodyParser = require('body-parser')
 // const fs = require('fs')
@@ -12,6 +13,7 @@ const ListaTablaSimbolos = require('./listaTablaSimbolos')
 
 app.use(cors())
 app.use(bodyParser.json())
+const PORT = 3000
 
 let ast
 let entradaEditor
@@ -86,7 +88,6 @@ app.get('/graficas-ts', (req, res) => {
   res.json(listaTablaSimbolos.getList())
 })
 
-const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
